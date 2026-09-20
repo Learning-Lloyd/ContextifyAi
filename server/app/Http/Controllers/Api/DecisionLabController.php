@@ -140,6 +140,65 @@ class DecisionLabController extends Controller
         ]);
     }
 
+    public function saveSimulation(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'scenarios' => 'required|array|min:1',
+            'scenarios.*.id' => 'nullable|integer',
+            'scenarios.*.title' => 'required|string|max:255',
+            'scenarios.*.description' => 'nullable|string',
+            'scenarios.*.importance' => 'required|integer|min:1|max:10',
+            'scenarios.*.urgency' => 'required|integer|min:1|max:10',
+            'scenarios.*.time_availability' => 'required|integer|min:1|max:10',
+            'scenarios.*.current_workload' => 'required|integer|min:1|max:10',
+            'scenarios.*.due_date' => 'nullable|date',
+            'scenarios.*.due_time' => 'nullable|date_format:H:i',
+            'scenarios.*.location' => 'nullable|string|max:255',
+            'scenarios.*.weather_condition' => 'nullable|string|max:255',
+            'scenarios.*.temperature' => 'nullable|numeric',
+            'scenarios.*.rain_probability' => 'nullable|numeric',
+        ]);
+
+        $scenarios = collect($validated['scenarios'])->map(function (array $scenario) use ($request) {
+            if (! empty($scenario['id'])) {
+                $task = Task::find($scenario['id']);
+                if ($task && $task->user_id === $request->user()->id) {
+                    return array_merge($this->taskToArray($task), $scenario);
+                }
+            }
+
+            return $scenario;
+        })->all();
+
+        $analysis = $this->decisionService->simulateWhatIf($scenarios, $this->resolveUserWeatherContext($request));
+
+        $saved = $request->user()->decisionAnalyses()->create([
+            'task_ids' => collect($scenarios)->pluck('id')->filter()->values()->all(),
+            'ranked_tasks' => $analysis['ranked_tasks'],
+            'summary' => array_merge($analysis['summary'] ?? [], [
+                'type' => 'what_if_scenario',
+                'scenario_title' => $validated['title'] ?? 'What-If Simulation Scenario',
+                'ai_explanation' => $analysis['ai_explanation'] ?? null,
+                'weather_context' => $analysis['weather_context'] ?? null,
+            ]),
+            'recommendation' => $analysis['recommendation'],
+            'conflicts' => $analysis['conflicts'],
+            'total_selected' => count($analysis['ranked_tasks']),
+        ]);
+
+        $this->auditLogService->log($request->user()->id, 'decision_simulation_saved', $request, [
+            'analysis_id' => $saved->id,
+            'task_count' => count($analysis['ranked_tasks']),
+        ]);
+
+        return response()->json([
+            'message' => 'What-If simulation scenario saved successfully',
+            'analysis_id' => $saved->id,
+            'analysis' => $analysis,
+        ], 201);
+    }
+
     public function insights(Request $request): JsonResponse
     {
         $user = $request->user();

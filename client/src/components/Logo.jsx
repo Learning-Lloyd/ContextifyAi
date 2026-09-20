@@ -1,4 +1,8 @@
-export default function Logo({ size = 'md', showText = false, className = '' }) {
+import { useTheme } from '../context/ThemeContext';
+
+export default function Logo({ size = 'md', showText = false, variant, className = '' }) {
+  const { theme } = useTheme();
+
   const sizes = {
     sm: 'h-7',
     md: 'h-8',
@@ -8,10 +12,16 @@ export default function Logo({ size = 'md', showText = false, className = '' }) 
 
   const height = sizes[size] || sizes.md;
 
+  // variant="dark" → white text for dark/blue backgrounds
+  // variant="light" → dark text for light backgrounds
+  // If no variant, auto-detect from theme
+  const useDarkBg = variant === 'dark' || (!variant && theme === 'dark');
+  const logoSrc = useDarkBg ? '/logo-dark-bg.png' : '/logo-transparent.png';
+
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <img
-        src="/logo.png"
+        src={logoSrc}
         alt="Contextify"
         className={`${height} w-auto object-contain`}
         draggable={false}

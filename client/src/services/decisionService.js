@@ -194,6 +194,11 @@ export const decisionService = {
     return response.data;
   },
 
+  async saveSimulation(scenarios, title = null) {
+    const response = await api.post('/decision-lab/save-simulation', { scenarios, title });
+    return response.data;
+  },
+
   async getInsights() {
     const response = await api.get('/decision-lab/insights');
     return response.data;

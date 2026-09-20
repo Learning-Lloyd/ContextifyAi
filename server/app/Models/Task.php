@@ -70,10 +70,10 @@ class Task extends Model
             }
 
             $task->priority_score = PriorityCalculator::calculate(
-                $task->importance,
-                $task->urgency,
-                $task->time_availability,
-                $task->current_workload
+                (int) ($task->importance ?? 5),
+                (int) ($task->urgency ?? 5),
+                (int) ($task->time_availability ?? 5),
+                (int) ($task->current_workload ?? 5)
             );
         });
     }

@@ -50,4 +50,19 @@ export const taskService = {
     const response = await api.post('/tasks/analyze-importance', { title, description });
     return response.data;
   },
+
+  async previewScoring({ title, description, due_date, due_time }) {
+    const response = await api.post('/tasks/scoring-preview', {
+      title,
+      description,
+      due_date,
+      due_time,
+    });
+    return response.data;
+  },
+
+  async getCalendarContext(params = {}) {
+    const response = await api.get('/tasks/calendar-context', { params });
+    return response.data;
+  },
 };

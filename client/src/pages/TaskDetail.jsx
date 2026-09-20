@@ -1,17 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiCheck, FiEdit2, FiMapPin } from 'react-icons/fi';
+import {
+  FiArrowLeft,
+  FiCalendar,
+  FiCheck,
+  FiClock,
+  FiCpu,
+  FiEdit2,
+  FiInfo,
+  FiMapPin,
+  FiZap,
+} from 'react-icons/fi';
 import Layout from '../components/Layout';
 import PriorityBadge from '../components/PriorityBadge';
+import ScoreRing from '../components/ScoreRing';
+import FactorBar from '../components/FactorBar';
 import TaskForm from '../components/TaskForm';
 import { taskService } from '../services/taskService';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
 
-const breakdownLabels = {
-  importance: 'Importance',
-  urgency: 'Urgency',
-  time_availability: 'Time Availability',
-  current_workload: 'Current Workload',
+const FACTOR_META = {
+  importance: { label: 'Task Importance', weight: 0.4, color: '#2563EB' },
+  urgency: { label: 'Deadline Urgency', weight: 0.3, color: '#F59E0B' },
+  time_availability: { label: 'Time Availability', weight: 0.2, color: '#14B8A6' },
+  current_workload: { label: 'Current Workload', weight: 0.1, color: '#64748B' },
 };
 
 export default function TaskDetail() {
@@ -55,8 +67,12 @@ export default function TaskDetail() {
   if (loading) {
     return (
       <Layout>
-        <div className="flex items-center justify-center h-64">
-          <div className="spinner" />
+        <div className="max-w-3xl mx-auto space-y-6">
+          <div className="h-6 w-36 bg-[var(--app-muted)] rounded animate-pulse" />
+          <div className="card p-8 space-y-4">
+            <div className="h-8 w-3/4 bg-[var(--app-muted)] rounded animate-pulse" />
+            <div className="h-4 w-1/2 bg-[var(--app-muted)] rounded animate-pulse" />
+          </div>
         </div>
       </Layout>
     );
@@ -65,124 +81,220 @@ export default function TaskDetail() {
   if (!task) {
     return (
       <Layout>
-        <div className="text-center py-12">
-          <p className="text-[var(--app-text-secondary)]">Task not found</p>
-          <Link to="/dashboard" className="text-[#2563EB] mt-4 inline-block hover:underline">Back to Dashboard</Link>
+        <div className="max-w-md mx-auto text-center py-16 card p-8">
+          <p className="text-base font-semibold text-[var(--app-text)]">Task Not Found</p>
+          <p className="text-xs text-[var(--app-text-secondary)] mt-1 mb-6">
+            The requested task record might have been deleted or archived.
+          </p>
+          <Link to="/tasks" className="btn btn-primary inline-flex">
+            Back to Task List
+          </Link>
         </div>
       </Layout>
     );
   }
 
-  const breakdown = task.breakdown;
+  const breakdown = task.breakdown || {};
   const countdown = task.countdown || getCountdownLabel(task.due_date, task.due_time);
 
   return (
     <Layout>
       <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-        <Link to="/dashboard" className="inline-flex items-center gap-2 text-[var(--app-text-secondary)] hover:text-[#2563EB] transition-colors text-sm">
-          <FiArrowLeft size={16} />
-          Back to Dashboard
-        </Link>
+        {/* Navigation Breadcrumb Back */}
+        <div>
+          <Link
+            to="/tasks"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--app-text-secondary)] hover:text-[#2563EB] transition-colors"
+          >
+            <FiArrowLeft size={14} /> Back to Tasks
+          </Link>
+        </div>
 
+        {/* Environmental Weather Snapshot if Available */}
         {task.weather_condition && (
-          <div className="card p-5">
-            <p className="text-sm text-[var(--app-text-secondary)] mb-2">Current Weather</p>
-            <div className="flex items-center gap-4">
-              <span className="text-3xl">{weatherIcon(task.weather_condition)}</span>
+          <div className="card p-4 bg-[var(--app-card)] flex items-center justify-between border-l-4 border-l-[#14B8A6]">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{weatherIcon(task.weather_condition)}</span>
               <div>
-                <p className="font-semibold flex items-center gap-1 text-sm">
-                  <FiMapPin size={14} className="text-[#2563EB]" /> {task.location}
+                <p className="text-xs font-semibold text-[var(--app-text)] flex items-center gap-1">
+                  <FiMapPin size={12} className="text-[#2563EB]" /> {task.location}
                 </p>
-                <p className="text-xl font-bold mt-1">{task.temperature}°C · {task.weather_condition}</p>
-                {task.rain_probability != null && (
-                  <p className="text-sm text-[var(--app-text-secondary)]">Chance of Rain: {task.rain_probability}%</p>
-                )}
+                <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
+                  {task.temperature}°C · {task.weather_condition}
+                  {task.rain_probability != null && ` · 💧 ${task.rain_probability}% rain chance`}
+                </p>
               </div>
             </div>
+            <span className="text-[10px] text-[var(--app-text-muted)] italic">
+              Advisory context
+            </span>
           </div>
         )}
 
-        <div className="card p-8">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="badge badge-primary text-sm">Score: {task.priority_score}</span>
+        {/* Main Task Card */}
+        <div className="card p-7 space-y-6 shadow-sm">
+          {/* Header Row with Badges, Actions, and Score Ring */}
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-2 flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <PriorityBadge level={task.priority_level} />
-                <span className={`badge ${task.status === 'completed' ? 'badge-success' : 'badge-warning'}`}>
+                <span
+                  className={`badge ${
+                    task.status === 'completed' ? 'badge-success' : 'badge-neutral'
+                  } uppercase text-[10px] tracking-wider`}
+                >
                   {task.status}
                 </span>
                 {countdown && (
-                  <span className={`badge ${countdown === 'Overdue' ? 'badge-danger' : 'badge-primary'}`}>
+                  <span
+                    className={`badge ${
+                      countdown === 'Overdue' ? 'badge-danger' : 'badge-primary'
+                    } text-xs font-medium`}
+                  >
                     {countdown}
                   </span>
                 )}
+                {task.category && (
+                  <span className="badge badge-neutral text-xs">{task.category}</span>
+                )}
               </div>
-              <h1 className="text-2xl font-bold">{task.title}</h1>
+
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--app-text)] leading-tight">
+                {task.title}
+              </h1>
+
               {task.description && (
-                <p className="text-[var(--app-text-secondary)] mt-2">{task.description}</p>
-              )}
-              {task.due_date && (
-                <p className="text-sm text-[var(--app-text-muted)] mt-2">
-                  Due: {task.due_date}{task.due_time ? ` at ${task.due_time}` : ''}
+                <p className="text-sm text-[var(--app-text-secondary)] leading-relaxed pt-1">
+                  {task.description}
                 </p>
               )}
+
+              {/* Schedule and Meta */}
+              <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--app-text-muted)] pt-2">
+                {task.due_date && (
+                  <span className="inline-flex items-center gap-1.5 font-medium text-[var(--app-text)]">
+                    <FiCalendar size={13} className="text-[#2563EB]" />
+                    {task.due_date}
+                    {task.due_time && (
+                      <span className="inline-flex items-center gap-0.5 text-[var(--app-text-muted)]">
+                        <FiClock size={11} /> {task.due_time}
+                      </span>
+                    )}
+                  </span>
+                )}
+                {task.estimated_time_minutes && (
+                  <span>⏱ {task.estimated_time_minutes} min duration</span>
+                )}
+              </div>
             </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleToggle}
-                className="btn btn-ghost btn-icon"
-                title="Toggle complete"
-                aria-label="Toggle complete"
-              >
-                <FiCheck size={18} className="text-[#22C55E]" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setFormOpen(true)}
-                className="btn btn-ghost btn-icon"
-                title="Edit task"
-                aria-label="Edit task"
-              >
-                <FiEdit2 size={18} className="text-[#2563EB]" />
-              </button>
+
+            {/* Score Ring Hero */}
+            <div className="flex flex-col items-center shrink-0">
+              <ScoreRing score={task.priority_score} variant="lg" />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--app-text-muted)] mt-1">
+                Priority Score
+              </span>
             </div>
           </div>
 
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3 pt-3 border-t border-[var(--app-border)]">
+            <button
+              type="button"
+              onClick={handleToggle}
+              className={`btn btn-sm ${
+                task.status === 'completed' ? 'btn-secondary text-[#F59E0B]' : 'btn-primary'
+              }`}
+            >
+              <FiCheck size={15} />
+              {task.status === 'completed' ? 'Mark as Incomplete' : 'Mark as Completed'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormOpen(true)}
+              className="btn btn-secondary btn-sm"
+            >
+              <FiEdit2 size={14} />
+              Edit Details
+            </button>
+          </div>
+
+          {/* AI Explanation Callout */}
           {task.explanation && (
-            <div className="mb-6 card-kpi">
-              <p className="text-sm font-medium text-[var(--app-text)] mb-1">Explanation</p>
-              <p className="text-[var(--app-text-secondary)] text-sm leading-relaxed">{task.explanation}</p>
+            <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/[0.03] space-y-1.5">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#14B8A6] uppercase tracking-wider">
+                <FiZap size={14} />
+                <span>AI Contextual Explanation</span>
+              </div>
+              <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
+                {task.explanation}
+              </p>
+              <p className="text-[10px] text-[var(--app-text-muted)] italic pt-1">
+                This narrative is produced by the language model to interpret your deterministic score.
+              </p>
             </div>
           )}
 
-          <div className="border-t border-[var(--app-border)] pt-6">
-            <h2 className="section-title mb-4">Priority Calculation Breakdown</h2>
-            <div className="space-y-3">
-              {Object.entries(breakdownLabels).map(([key, label]) => {
-                const item = breakdown[key];
+          {/* Priority Calculation Breakdown */}
+          <div className="pt-4 border-t border-[var(--app-border)] space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
+                  Contextual Factor Breakdown
+                </h2>
+                <p className="text-xs text-[var(--app-text-muted)]">
+                  Formula: (Importance × 0.40) + (Urgency × 0.30) + (Time × 0.20) + (Workload × 0.10)
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              {Object.entries(FACTOR_META).map(([key, meta]) => {
+                const item = breakdown[key] || { value: task[key] ?? 5, weighted: '—' };
                 return (
                   <div
                     key={key}
-                    className="flex items-center justify-between card-kpi p-4"
+                    className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/30 space-y-1"
                   >
-                    <div>
-                      <p className="font-medium text-sm">{label}</p>
-                      <p className="text-sm text-[var(--app-text-muted)]">
-                        {item.value} × {item.weight} = {item.weighted}
-                      </p>
-                    </div>
-                    <span className="text-lg font-bold text-[#2563EB]">{item.weighted}</span>
+                    <FactorBar
+                      label={meta.label}
+                      factorKey={key}
+                      value={item.value}
+                      weight={meta.weight}
+                      showFormula={true}
+                    />
                   </div>
                 );
               })}
+            </div>
 
-              <div className="flex items-center justify-between card-kpi p-5 mt-2 border-[rgba(37,99,235,0.2)]">
-                <p className="font-semibold">Final Score</p>
-                <p className="text-2xl font-bold text-[#2563EB]">{breakdown.final_score}</p>
+            {/* Final Total Banner */}
+            <div className="p-4 rounded-xl bg-blue-500/[0.05] border border-[#2563EB]/25 flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold text-[var(--app-text)] uppercase tracking-wider">
+                  Computed Deterministic Priority
+                </p>
+                <p className="text-[11px] text-[var(--app-text-muted)]">
+                  Exact mathematical sum of weighted factors
+                </p>
               </div>
+              <span className="text-2xl font-extrabold text-[#2563EB] font-mono">
+                {task.priority_score}
+              </span>
             </div>
           </div>
+
+          {/* Notes Section if Present */}
+          {task.notes && (
+            <div className="pt-4 border-t border-[var(--app-border)] space-y-1.5">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
+                Internal Notes
+              </h3>
+              <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] whitespace-pre-wrap bg-[var(--app-muted)]/40 p-3 rounded-lg border border-[var(--app-border)]">
+                {task.notes}
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

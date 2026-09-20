@@ -1,18 +1,28 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FiArchive, FiCopy, FiFilter, FiPlus, FiRotateCcw, FiSearch } from 'react-icons/fi';
+import {
+  FiArchive,
+  FiCopy,
+  FiFilter,
+  FiPlus,
+  FiRotateCcw,
+  FiSearch,
+} from 'react-icons/fi';
 import Layout from '../components/Layout';
 import TaskCard from '../components/TaskCard';
 import TaskForm from '../components/TaskForm';
+import ConfirmDialog from '../components/ConfirmDialog';
+import EmptyState from '../components/EmptyState';
+import LoadingSkeleton from '../components/LoadingSkeleton';
 import { useToast } from '../hooks/useToast';
 import { taskService } from '../services/taskService';
 
 const SORT_OPTIONS = [
   { value: 'priority_score', label: 'Priority Score' },
-  { value: 'due_date', label: 'Deadline' },
+  { value: 'due_date', label: 'Deadline Proximity' },
   { value: 'importance', label: 'Importance' },
   { value: 'urgency', label: 'Urgency' },
   { value: 'created_at', label: 'Created Date' },
-  { value: 'title', label: 'Title' },
+  { value: 'title', label: 'Alphabetical Title' },
 ];
 
 export default function Tasks() {
@@ -22,6 +32,7 @@ export default function Tasks() {
   const [formOpen, setFormOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, taskId: null });
   const [filters, setFilters] = useState({
     search: '',
     sort: 'priority_score',
@@ -92,29 +103,34 @@ export default function Tasks() {
     await fetchTasks();
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      await taskService.delete(id);
-      showToast('Task deleted', 'success');
+  const confirmDelete = async () => {
+    if (!deleteConfirm.taskId) return;
+    try {
+      await taskService.delete(deleteConfirm.taskId);
+      showToast('Task deleted successfully', 'success');
       await fetchTasks();
+    } catch {
+      showToast('Failed to delete task', 'error');
+    } finally {
+      setDeleteConfirm({ isOpen: false, taskId: null });
     }
   };
 
   const handleArchive = async (id) => {
     await taskService.archive(id);
-    showToast('Task archived', 'success');
+    showToast('Task moved to archive', 'success');
     await fetchTasks();
   };
 
   const handleRestore = async (id) => {
     await taskService.restore(id);
-    showToast('Task restored', 'success');
+    showToast('Task restored to active view', 'success');
     await fetchTasks();
   };
 
   const handleDuplicate = async (id) => {
     await taskService.duplicate(id);
-    showToast('Task duplicated', 'success');
+    showToast('Task cloned with recalculated factors', 'success');
     await fetchTasks();
   };
 
@@ -125,137 +141,177 @@ export default function Tasks() {
   return (
     <Layout>
       <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Page Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
-            <h1 className="page-title">Tasks</h1>
-            <p className="page-subtitle">Search, sort, and filter your task list</p>
+            <h1 className="page-title">Tasks Management</h1>
+            <p className="page-subtitle text-xs sm:text-sm">
+              Search, filter, organize, and inspect all contextual priority scores
+            </p>
           </div>
           <button
             type="button"
-            onClick={() => { setEditingTask(null); setFormOpen(true); }}
-            className="btn btn-primary"
+            onClick={() => {
+              setEditingTask(null);
+              setFormOpen(true);
+            }}
+            className="btn btn-primary text-xs sm:text-sm shadow-sm"
           >
             <FiPlus size={16} />
             New Task
           </button>
         </div>
 
-        <div className="card p-4 space-y-4">
-          <div className="flex flex-col lg:flex-row gap-3">
+        {/* Filter and Search Bar */}
+        <div className="card p-4 space-y-3.5 shadow-sm">
+          {/* Row 1: Search and Sort */}
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]" size={16} />
+              <FiSearch
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                size={16}
+              />
               <input
                 type="text"
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                placeholder="Search title, description, category, notes..."
-                className="input pl-9"
+                placeholder="Search title, description, category, location..."
+                className="input pl-9 text-xs sm:text-sm"
               />
             </div>
-            <select
-              value={filters.sort}
-              onChange={(e) => updateFilter('sort', e.target.value)}
-              className="input lg:w-44"
-            >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
-              ))}
-            </select>
-            <select
-              value={filters.direction}
-              onChange={(e) => updateFilter('direction', e.target.value)}
-              className="input lg:w-32"
-            >
-              <option value="desc">Descending</option>
-              <option value="asc">Ascending</option>
-            </select>
+            <div className="flex gap-2 shrink-0">
+              <select
+                value={filters.sort}
+                onChange={(e) => updateFilter('sort', e.target.value)}
+                className="input text-xs sm:text-sm w-44"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={filters.direction}
+                onChange={(e) => updateFilter('direction', e.target.value)}
+                className="input text-xs sm:text-sm w-28"
+              >
+                <option value="desc">High → Low</option>
+                <option value="asc">Low → High</option>
+              </select>
+            </div>
           </div>
 
-          <div className="flex flex-wrap gap-3 items-center">
-            <FiFilter className="text-[var(--app-text-muted)]" size={16} />
+          {/* Row 2: Status, Category, Priority Filters */}
+          <div className="flex flex-wrap gap-2.5 items-center pt-2 border-t border-[var(--app-border)] text-xs">
+            <div className="flex items-center gap-1.5 text-[var(--app-text-muted)] mr-1">
+              <FiFilter size={14} />
+              <span className="font-semibold uppercase tracking-wider text-[10px]">Filter:</span>
+            </div>
+
             <select
               value={filters.status}
               onChange={(e) => updateFilter('status', e.target.value)}
-              className="input w-auto min-w-[120px]"
+              className="input w-auto text-xs py-1.5 px-2.5"
             >
-              <option value="">All Status</option>
+              <option value="">All Statuses</option>
               <option value="pending">Pending</option>
               <option value="completed">Completed</option>
             </select>
+
             <select
               value={filters.category}
               onChange={(e) => updateFilter('category', e.target.value)}
-              className="input w-auto min-w-[140px]"
+              className="input w-auto text-xs py-1.5 px-2.5"
             >
               <option value="">All Categories</option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
+
             <select
               value={filters.priority_level}
               onChange={(e) => updateFilter('priority_level', e.target.value)}
-              className="input w-auto min-w-[140px]"
+              className="input w-auto text-xs py-1.5 px-2.5"
             >
-              <option value="">All Priority</option>
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
+              <option value="">All Priorities</option>
+              <option value="high">High Priority (≥8.0)</option>
+              <option value="medium">Medium Priority (5.0–7.9)</option>
+              <option value="low">Low Priority (&lt;5.0)</option>
             </select>
-            <label className="flex items-center gap-2 text-sm text-[var(--app-text-secondary)] cursor-pointer">
+
+            <label className="flex items-center gap-2 text-xs font-medium text-[var(--app-text-secondary)] ml-auto cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={filters.archived}
                 onChange={(e) => updateFilter('archived', e.target.checked)}
-                className="accent-[#2563EB]"
+                className="w-3.5 h-3.5 rounded text-[#2563EB] focus:ring-blue-500 cursor-pointer"
               />
               Show archived
             </label>
           </div>
         </div>
 
+        {/* Task List Content */}
         {loading ? (
-          <div className="flex items-center justify-center h-48">
-            <div className="spinner" />
-          </div>
+          <LoadingSkeleton variant="task-card" count={4} />
         ) : tasks.length === 0 ? (
-          <div className="card p-12 text-center">
-            <p className="text-[var(--app-text-secondary)]">No tasks match your filters.</p>
+          <div className="card">
+            <EmptyState
+              title="No tasks match your criteria"
+              description="Try adjusting your search terms or clearing your filters to see active tasks."
+              action={{
+                label: 'Create New Task',
+                icon: FiPlus,
+                onClick: () => {
+                  setEditingTask(null);
+                  setFormOpen(true);
+                },
+              }}
+            />
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="space-y-3.5">
             {tasks.map((task) => (
-              <div key={task.id} className="relative">
+              <div key={task.id} className="group relative">
                 <TaskCard
                   task={task}
                   onToggle={handleToggle}
-                  onDelete={handleDelete}
-                  onEdit={(t) => { setEditingTask(t); setFormOpen(true); }}
+                  onDelete={(id) => setDeleteConfirm({ isOpen: true, taskId: id })}
+                  onEdit={(t) => {
+                    setEditingTask(t);
+                    setFormOpen(true);
+                  }}
                 />
-                <div className="flex gap-2 mt-2 ml-2">
+                {/* Secondary Quick Action Bar */}
+                <div className="flex items-center gap-2 mt-1.5 ml-4 text-[11px] text-[var(--app-text-muted)]">
                   {task.is_archived ? (
                     <button
                       type="button"
                       onClick={() => handleRestore(task.id)}
-                      className="btn btn-ghost text-xs py-1 px-2"
+                      className="hover:text-[#2563EB] inline-flex items-center gap-1 transition-colors"
                     >
-                      <FiRotateCcw size={12} /> Restore
+                      <FiRotateCcw size={11} /> Restore Task
                     </button>
                   ) : (
                     <button
                       type="button"
                       onClick={() => handleArchive(task.id)}
-                      className="btn btn-ghost text-xs py-1 px-2"
+                      className="hover:text-[var(--app-text)] inline-flex items-center gap-1 transition-colors"
                     >
-                      <FiArchive size={12} /> Archive
+                      <FiArchive size={11} /> Archive
                     </button>
                   )}
+                  <span>·</span>
                   <button
                     type="button"
                     onClick={() => handleDuplicate(task.id)}
-                    className="btn btn-ghost text-xs py-1 px-2"
+                    className="hover:text-[#2563EB] inline-flex items-center gap-1 transition-colors"
                   >
-                    <FiCopy size={12} /> Duplicate
+                    <FiCopy size={11} /> Duplicate
                   </button>
                 </div>
               </div>
@@ -264,12 +320,27 @@ export default function Tasks() {
         )}
       </div>
 
+      {/* Task Modal */}
       <TaskForm
         isOpen={formOpen}
-        onClose={() => { setFormOpen(false); setEditingTask(null); }}
+        onClose={() => {
+          setFormOpen(false);
+          setEditingTask(null);
+        }}
         onSubmit={editingTask ? handleUpdate : handleCreate}
         task={editingTask}
         loading={formLoading}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This will remove its contextual scoring record."
+        confirmLabel="Delete Task"
+        variant="danger"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteConfirm({ isOpen: false, taskId: null })}
       />
     </Layout>
   );

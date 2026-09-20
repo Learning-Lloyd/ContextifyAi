@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiX, FiZap } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiX, FiZap } from 'react-icons/fi';
 import LocationSearch from './LocationSearch';
 import { suggestUrgencyFromDueDate } from '../utils/taskUtils';
 import { taskService } from '../services/taskService';
@@ -15,11 +15,14 @@ const defaultValues = {
   location: '',
   latitude: null,
   longitude: null,
+};
+
+const defaultFactors = {
   importance: 5,
   urgency: 5,
-  urgency_manual: false,
   time_availability: 5,
   current_workload: 5,
+  priority_score: '5.00',
 };
 
 function calculateScore(importance, urgency, timeAvailability, currentWorkload) {
@@ -31,12 +34,46 @@ function calculateScore(importance, urgency, timeAvailability, currentWorkload) 
   ).toFixed(2);
 }
 
+const sourceLabels = {
+  ai: 'AI determined',
+  heuristic: 'Keyword-based fallback',
+  default: 'Default fallback',
+  calendar: 'Based on calendar',
+};
+
+function AutoFactorRow({ label, value, source, reason, loading }) {
+  return (
+    <div className="flex items-start justify-between gap-3 py-2 border-b border-[var(--app-border)] last:border-b-0">
+      <div className="min-w-0">
+        <p className="text-sm font-medium text-[var(--app-text)]">{label}</p>
+        {loading ? (
+          <p className="text-xs text-[var(--app-text-muted)] mt-0.5">Calculating...</p>
+        ) : (
+          <>
+            <p className="text-xs text-[#2563EB] mt-0.5">{source}</p>
+            {reason && (
+              <p className="text-xs text-[var(--app-text-secondary)] mt-1">{reason}</p>
+            )}
+          </>
+        )}
+      </div>
+      <span className="text-sm font-semibold text-[#2563EB] shrink-0">
+        {loading ? '—' : `${value}/10`}
+      </span>
+    </div>
+  );
+}
+
 export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loading = false }) {
   const [form, setForm] = useState(defaultValues);
+  const [factors, setFactors] = useState(defaultFactors);
   const [errors, setErrors] = useState({});
-  const [importanceSuggestion, setImportanceSuggestion] = useState(null);
-  const [analyzingImportance, setAnalyzingImportance] = useState(false);
-  const analyzeTimerRef = useRef(null);
+  const [importanceAnalysis, setImportanceAnalysis] = useState(null);
+  const [calendarContext, setCalendarContext] = useState(null);
+  const [analyzingFactors, setAnalyzingFactors] = useState(false);
+  const [analysisError, setAnalysisError] = useState(null);
+  const previewTimerRef = useRef(null);
+  const previewRequestIdRef = useRef(0);
 
   useEffect(() => {
     if (task) {
@@ -51,91 +88,122 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         location: task.location || '',
         latitude: task.latitude ?? null,
         longitude: task.longitude ?? null,
+      });
+      setFactors({
         importance: task.importance || 5,
         urgency: task.urgency || 5,
-        urgency_manual: task.urgency_manual || false,
         time_availability: task.time_availability || 5,
         current_workload: task.current_workload || 5,
+        priority_score: task.priority_score?.toFixed?.(2) ?? calculateScore(
+          task.importance || 5,
+          task.urgency || 5,
+          task.time_availability || 5,
+          task.current_workload || 5
+        ),
       });
     } else {
       setForm(defaultValues);
+      setFactors(defaultFactors);
     }
     setErrors({});
-    setImportanceSuggestion(null);
+    setImportanceAnalysis(null);
+    setCalendarContext(null);
+    setAnalysisError(null);
   }, [task, isOpen]);
 
   useEffect(() => {
-    if (!isOpen || task) return undefined;
+    if (!isOpen) return undefined;
 
-    if (analyzeTimerRef.current) {
-      clearTimeout(analyzeTimerRef.current);
+    if (previewTimerRef.current) {
+      clearTimeout(previewTimerRef.current);
     }
 
     const title = form.title.trim();
     if (title.length < 3) {
-      setImportanceSuggestion(null);
+      setImportanceAnalysis(null);
+      setCalendarContext(null);
+      setFactors((prev) => ({
+        ...prev,
+        importance: 5,
+        urgency: form.due_date ? suggestUrgencyFromDueDate(form.due_date) : 5,
+        priority_score: calculateScore(
+          5,
+          form.due_date ? suggestUrgencyFromDueDate(form.due_date) : 5,
+          prev.time_availability,
+          prev.current_workload
+        ),
+      }));
       return undefined;
     }
 
-    analyzeTimerRef.current = setTimeout(async () => {
-      setAnalyzingImportance(true);
+    previewTimerRef.current = setTimeout(async () => {
+      const requestId = ++previewRequestIdRef.current;
+      setAnalyzingFactors(true);
+      setAnalysisError(null);
+
       try {
-        const result = await taskService.analyzeImportance(title, form.description || '');
-        const analysis = result.analysis;
-        setImportanceSuggestion(analysis);
-        setForm((prev) => ({ ...prev, importance: analysis.importance }));
+        const result = await taskService.previewScoring({
+          title,
+          description: form.description || '',
+          due_date: form.due_date || null,
+          due_time: form.due_time || null,
+        });
+
+        if (requestId !== previewRequestIdRef.current) return;
+
+        const preview = result.preview;
+        setFactors({
+          importance: preview.importance,
+          urgency: preview.urgency,
+          time_availability: preview.time_availability,
+          current_workload: preview.current_workload,
+          priority_score: preview.priority_score?.toFixed?.(2) ?? calculateScore(
+            preview.importance,
+            preview.urgency,
+            preview.time_availability,
+            preview.current_workload
+          ),
+        });
+        setImportanceAnalysis(preview.importance_analysis || null);
+        setCalendarContext(preview.calendar_context || null);
       } catch {
-        setImportanceSuggestion(null);
+        if (requestId !== previewRequestIdRef.current) return;
+
+        setAnalysisError('Automatic scoring preview is temporarily unavailable. The server will still compute values when you save.');
+        setImportanceAnalysis(null);
+        setFactors((prev) => ({
+          ...prev,
+          urgency: form.due_date ? suggestUrgencyFromDueDate(form.due_date) : prev.urgency,
+          priority_score: calculateScore(
+            prev.importance,
+            form.due_date ? suggestUrgencyFromDueDate(form.due_date) : prev.urgency,
+            prev.time_availability,
+            prev.current_workload
+          ),
+        }));
       } finally {
-        setAnalyzingImportance(false);
+        if (requestId === previewRequestIdRef.current) {
+          setAnalyzingFactors(false);
+        }
       }
-    }, 700);
+    }, 750);
 
     return () => {
-      if (analyzeTimerRef.current) clearTimeout(analyzeTimerRef.current);
+      if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
     };
-  }, [form.title, form.description, isOpen, task]);
+  }, [form.title, form.description, form.due_date, form.due_time, isOpen]);
 
   if (!isOpen) return null;
 
-  const previewScore = calculateScore(
-    form.importance,
-    form.urgency,
-    form.time_availability,
-    form.current_workload
-  );
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => {
-      const next = {
-        ...prev,
-        [name]: ['title', 'description', 'category', 'notes', 'due_date', 'due_time', 'estimated_time_minutes'].includes(name)
-          ? value
-          : Number(value),
-      };
-
-      if (name === 'due_date' && !prev.urgency_manual) {
-        next.urgency = suggestUrgencyFromDueDate(value);
-      }
-
-      if (name === 'importance') {
-        setImportanceSuggestion(null);
-      }
-
-      return next;
-    });
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }));
     }
-  };
-
-  const handleUrgencyChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      urgency: Number(e.target.value),
-      urgency_manual: true,
-    }));
   };
 
   const handleLocationChange = (locationData) => {
@@ -152,10 +220,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     const newErrors = {};
     if (!form.title.trim()) newErrors.title = 'Title is required';
     if (!form.due_date) newErrors.due_date = 'Due date is required';
-    if (form.importance < 1 || form.importance > 10) newErrors.importance = 'Must be 1-10';
-    if (form.urgency < 1 || form.urgency > 10) newErrors.urgency = 'Must be 1-10';
-    if (form.time_availability < 1 || form.time_availability > 10) newErrors.time_availability = 'Must be 1-10';
-    if (form.current_workload < 1 || form.current_workload > 10) newErrors.current_workload = 'Must be 1-10';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -180,19 +244,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         setErrors(mapped);
       }
     }
-  };
-
-  const sliders = [
-    { name: 'importance', label: 'Importance', weight: '× 0.40', manual: false },
-    { name: 'urgency', label: 'Urgency', weight: '× 0.30', manual: true },
-    { name: 'time_availability', label: 'Time Availability', weight: '× 0.20', manual: false },
-    { name: 'current_workload', label: 'Current Workload', weight: '× 0.10', manual: false },
-  ];
-
-  const sourceLabels = {
-    ai: 'AI suggestion',
-    heuristic: 'Keyword-based suggestion',
-    default: 'Default',
   };
 
   return (
@@ -307,62 +358,73 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             error={errors.location}
           />
 
-          {(importanceSuggestion || analyzingImportance) && (
-            <div className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
-              <div className="flex items-center gap-2 text-sm font-medium text-[#2563EB] mb-2">
-                <FiZap size={14} />
-                {analyzingImportance ? 'Analyzing importance...' : 'Importance Suggestion'}
-              </div>
-              {importanceSuggestion && !analyzingImportance && (
-                <>
-                  <p className="text-sm text-[var(--app-text)]">
-                    Suggested: <strong>{importanceSuggestion.importance}/10</strong>
-                    {' · '}
-                    Confidence: {importanceSuggestion.confidence}%
-                    {' · '}
-                    <span className="text-[var(--app-text-muted)]">
-                      {sourceLabels[importanceSuggestion.source] || importanceSuggestion.source}
-                    </span>
-                  </p>
-                  <p className="text-xs text-[var(--app-text-secondary)] mt-1">{importanceSuggestion.reason}</p>
-                  <p className="text-xs text-[var(--app-text-muted)] mt-2">
-                    You can adjust the importance slider below.
-                  </p>
-                </>
+          <div className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
+            <div className="flex items-center gap-2 text-sm font-medium text-[#2563EB] mb-3">
+              <FiZap size={14} />
+              Automatic Scoring Factors
+              {analyzingFactors && (
+                <span className="text-xs font-normal text-[var(--app-text-muted)]">(updating...)</span>
               )}
             </div>
-          )}
 
-          {sliders.map(({ name, label, weight, manual }) => (
-            <div key={name}>
-              <div className="flex justify-between mb-2">
-                <label className="text-sm font-medium text-[var(--app-text)]">
-                  {label} <span className="text-[var(--app-text-muted)]">{weight}</span>
-                  {manual && form.urgency_manual && (
-                    <span className="text-xs text-[#2563EB] ml-2">(manual)</span>
-                  )}
-                  {manual && !form.urgency_manual && form.due_date && (
-                    <span className="text-xs text-[#14B8A6] ml-2">(auto from deadline)</span>
-                  )}
-                </label>
-                <span className="text-sm font-semibold text-[#2563EB]">{form[name]}</span>
-              </div>
-              <input
-                type="range"
-                name={name}
-                min="1"
-                max="10"
-                value={form[name]}
-                onChange={manual ? handleUrgencyChange : handleChange}
-                className="w-full"
-              />
-              {errors[name] && <p className="form-error">{errors[name]}</p>}
-            </div>
-          ))}
+            {analysisError && (
+              <p className="text-xs text-[#F59E0B] mb-3">{analysisError}</p>
+            )}
+
+            <AutoFactorRow
+              label="Importance"
+              value={factors.importance}
+              source={importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'AI determined') : 'Enter a title to analyze'}
+              reason={importanceAnalysis?.reason}
+              loading={analyzingFactors && form.title.trim().length >= 3}
+            />
+
+            <AutoFactorRow
+              label="Urgency"
+              value={factors.urgency}
+              source="Automatically calculated from deadline"
+              reason={form.due_date ? 'Derived from how soon the due date arrives.' : 'Set a due date to calculate urgency.'}
+              loading={false}
+            />
+
+            <AutoFactorRow
+              label="Time Availability"
+              value={factors.time_availability}
+              source={calendarContext ? sourceLabels[calendarContext.source] || 'Based on calendar' : 'Based on calendar'}
+              reason={calendarContext?.reason_time_availability}
+              loading={analyzingFactors && form.title.trim().length >= 3}
+            />
+
+            <AutoFactorRow
+              label="Current Workload"
+              value={factors.current_workload}
+              source={calendarContext ? sourceLabels[calendarContext.source] || 'Based on calendar' : 'Based on calendar'}
+              reason={calendarContext?.reason_current_workload}
+              loading={analyzingFactors && form.title.trim().length >= 3}
+            />
+
+            {importanceAnalysis && !analyzingFactors && (
+              <p className="text-xs text-[var(--app-text-muted)] mt-3 flex items-center gap-1">
+                <FiClock size={12} />
+                Importance confidence: {importanceAnalysis.confidence}%
+              </p>
+            )}
+
+            {calendarContext?.commitments_count > 0 && !analyzingFactors && (
+              <p className="text-xs text-[var(--app-text-muted)] mt-1 flex items-center gap-1">
+                <FiCalendar size={12} />
+                {calendarContext.commitments_count} upcoming calendar commitment(s) considered
+              </p>
+            )}
+
+            <p className="text-xs text-[var(--app-text-muted)] mt-3">
+              These factors are determined automatically and cannot be edited manually.
+            </p>
+          </div>
 
           <div className="card-kpi text-center">
             <p className="card-kpi-label">Preview Priority Score</p>
-            <p className="card-kpi-value text-[#2563EB]">{previewScore}</p>
+            <p className="card-kpi-value text-[#2563EB]">{factors.priority_score}</p>
           </div>
 
           <button type="submit" disabled={loading} className="btn btn-primary w-full">

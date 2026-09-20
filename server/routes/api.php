@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\DecisionLabController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ImportanceAnalysisController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TaskScoringController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index']);
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze']);
+    Route::post('/tasks/scoring-preview', [TaskScoringController::class, 'preview']);
+    Route::get('/tasks/calendar-context', [TaskScoringController::class, 'calendarContext']);
     Route::get('/tasks/{task}', [TaskController::class, 'show']);
     Route::put('/tasks/{task}', [TaskController::class, 'update']);
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
@@ -47,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/decision-lab/compare', [DecisionLabController::class, 'compare']);
     Route::post('/decision-lab/analyze', [DecisionLabController::class, 'analyze']);
     Route::post('/decision-lab/simulate', [DecisionLabController::class, 'simulate']);
+    Route::post('/decision-lab/save-simulation', [DecisionLabController::class, 'saveSimulation']);
     Route::get('/decision-lab/insights', [DecisionLabController::class, 'insights']);
     Route::get('/decision-lab/timeline', [DecisionLabController::class, 'timeline']);
     Route::get('/decision-lab/analyses', [DecisionLabController::class, 'analysisHistory']);

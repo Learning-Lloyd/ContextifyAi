@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Services\AuditLogService;
 use App\Services\ExplanationService;
+use App\Services\TaskScoringService;
 use App\Services\WeatherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class TaskController extends Controller
     public function __construct(
         private readonly WeatherService $weatherService,
         private readonly ExplanationService $explanationService,
-        private readonly AuditLogService $auditLogService
+        private readonly AuditLogService $auditLogService,
+        private readonly TaskScoringService $taskScoringService
     ) {
     }
 
@@ -94,6 +96,7 @@ class TaskController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $this->validateTask($request);
+        $validated = $this->applyAutomaticScoringFactors($request, $validated);
         $validated = $this->weatherService->applyWeatherToTaskData($validated);
 
         $task = $request->user()->tasks()->create($validated);
@@ -124,6 +127,7 @@ class TaskController extends Controller
         $this->authorizeTask($request, $task);
 
         $validated = $this->validateTask($request, false);
+        $validated = $this->applyAutomaticScoringFactors($request, $validated, $task);
         $validated = $this->weatherService->applyWeatherToTaskData($validated);
         $task->update($validated);
 
@@ -239,19 +243,31 @@ class TaskController extends Controller
             'longitude' => 'nullable|numeric|between:-180,180',
             'due_date' => ($requireTitle ? 'required' : 'sometimes') . '|date',
             'due_time' => 'nullable|date_format:H:i',
-            'importance' => 'required|integer|min:1|max:10',
-            'urgency' => 'required|integer|min:1|max:10',
-            'urgency_manual' => 'sometimes|boolean',
-            'time_availability' => 'required|integer|min:1|max:10',
-            'current_workload' => 'required|integer|min:1|max:10',
             'status' => 'sometimes|in:pending,completed',
         ];
 
-        $validated = $request->validate($rules);
+        return $request->validate($rules);
+    }
 
-        if (! ($validated['urgency_manual'] ?? false) && ! empty($validated['due_date'])) {
-            $validated['urgency_manual'] = false;
-        }
+    /**
+     * Scoring factors are always computed server-side and must not be trusted from the client.
+     *
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function applyAutomaticScoringFactors(Request $request, array $validated, ?Task $existingTask = null): array
+    {
+        $factors = $this->taskScoringService->resolveFactors(
+            $request->user(),
+            $validated,
+            $existingTask
+        );
+
+        $validated['importance'] = $factors['importance'];
+        $validated['urgency'] = $factors['urgency'];
+        $validated['urgency_manual'] = false;
+        $validated['time_availability'] = $factors['time_availability'];
+        $validated['current_workload'] = $factors['current_workload'];
 
         return $validated;
     }
