@@ -6,6 +6,7 @@ import {
   FiFileText,
   FiHome,
   FiLogOut,
+  FiMessageSquare,
   FiPieChart,
   FiShield,
   FiUsers,
@@ -39,6 +40,7 @@ export default function AdminLayout({ children }) {
     { to: '/admin/analytics', icon: FiPieChart, label: 'Platform Analytics' },
     { to: '/admin/audit-logs', icon: FiActivity, label: 'Audit Trail' },
     { to: '/admin/notifications', icon: FiBell, label: 'Alerts & Notices' },
+    { to: '/admin/feedback', icon: FiMessageSquare, label: 'User Feedback' },
     { to: '/admin/reports', icon: FiFileText, label: 'Export Reports' },
   ];
 

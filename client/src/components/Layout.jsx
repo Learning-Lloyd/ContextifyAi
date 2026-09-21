@@ -7,6 +7,7 @@ import {
   FiHome,
   FiList,
   FiLogOut,
+  FiMessageSquare,
   FiSettings,
   FiShield,
   FiTrendingUp,
@@ -43,6 +44,7 @@ export default function Layout({ children }) {
     { to: '/decision-lab', icon: FiCpu, label: 'Decision Lab' },
     { to: '/decision-insights', icon: FiTrendingUp, label: 'Decision Insights' },
     { to: '/decision-history', icon: FiClock, label: 'Decision Timeline' },
+    { to: '/feedback', icon: FiMessageSquare, label: 'Feedback' },
   ];
 
   const sidebarWidth = collapsed ? 'w-[72px]' : 'w-64';

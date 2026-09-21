@@ -31,6 +31,8 @@ const ROUTE_LABELS = {
   '/admin/audit-logs': 'Audit Logs',
   '/admin/notifications': 'Notifications',
   '/admin/reports': 'Reports Center',
+  '/feedback': 'Feedback & Suggestions',
+  '/admin/feedback': 'User Feedback Management',
 };
 
 function getBreadcrumbs(pathname) {

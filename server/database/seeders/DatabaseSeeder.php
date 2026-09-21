@@ -10,15 +10,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
-            ['email' => 'admin@contextify.ai'],
-            [
-                'name' => 'Admin User',
-                'password' => Hash::make('password123'),
-                'role' => 'admin',
-                'is_active' => true,
-            ]
-        );
+        $this->call(AdminSeeder::class);
 
         User::updateOrCreate(
             ['email' => 'test@example.com'],

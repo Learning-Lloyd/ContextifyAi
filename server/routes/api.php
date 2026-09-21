@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\Api\DecisionLabController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\AdminFeedbackController;
+use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\ImportanceAnalysisController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TaskScoringController;
@@ -57,6 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/decision-lab/save', [DecisionLabController::class, 'store']);
     Route::get('/decision-lab/history', [DecisionLabController::class, 'history']);
 
+    Route::get('/feedback', [FeedbackController::class, 'index']);
+    Route::post('/feedback', [FeedbackController::class, 'store']);
+
     Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index']);
         Route::get('/users', [AdminUserController::class, 'index']);
@@ -78,5 +83,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/notifications', [AdminNotificationController::class, 'index']);
         Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'markRead']);
+
+        Route::get('/feedback', [AdminFeedbackController::class, 'index']);
+        Route::get('/feedback/{feedback}', [AdminFeedbackController::class, 'show']);
+        Route::patch('/feedback/{feedback}', [AdminFeedbackController::class, 'update']);
+        Route::post('/feedback/{feedback}/respond', [AdminFeedbackController::class, 'respond']);
+        Route::delete('/feedback/{feedback}', [AdminFeedbackController::class, 'destroy']);
     });
 });
