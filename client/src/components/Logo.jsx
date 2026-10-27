@@ -16,7 +16,7 @@ export default function Logo({ size = 'md', showText = false, variant, className
   // variant="light" → dark text for light backgrounds
   // If no variant, auto-detect from theme
   const useDarkBg = variant === 'dark' || (!variant && theme === 'dark');
-  const logoSrc = useDarkBg ? '/logo-dark-bg.png' : '/logo-transparent.png';
+  const logoSrc = `${import.meta.env.BASE_URL}${useDarkBg ? 'logo-dark-bg.png' : 'logo-transparent.png'}`;
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>

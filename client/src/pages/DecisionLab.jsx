@@ -90,13 +90,12 @@ export default function DecisionLab() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
+      <div className="decision-lab-workspace animate-fade-in">
         {/* Page Title & Main Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
+        <div className="decision-lab-header">
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="page-title">Decision Lab</h1>
-            </div>
+            <p className="eyebrow"><span className="eyebrow-dot" /> COMPARATIVE ANALYSIS</p>
+            <h1 className="page-title">Decision Lab</h1>
             <p className="page-subtitle text-xs sm:text-sm">
               Multi-factor contextual task prioritization engine and comparative analysis
             </p>
@@ -131,14 +130,16 @@ export default function DecisionLab() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-[var(--app-border)] gap-6">
+        <div className="decision-lab-tabs" role="tablist" aria-label="Decision Lab tools">
           <button
             type="button"
             onClick={() => setActiveTab('analyze')}
-            className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+            role="tab"
+            aria-selected={activeTab === 'analyze'}
+            className={`decision-tab ${
               activeTab === 'analyze'
-                ? 'border-[#2563EB] text-[#2563EB]'
-                : 'border-transparent text-[var(--app-text-secondary)] hover:text-[var(--app-text)]'
+                ? 'is-active'
+                : ''
             }`}
           >
             <FiCpu size={16} />
@@ -147,10 +148,12 @@ export default function DecisionLab() {
           <button
             type="button"
             onClick={() => setActiveTab('what-if')}
-            className={`pb-3 text-sm font-semibold flex items-center gap-2 border-b-2 transition-colors ${
+            role="tab"
+            aria-selected={activeTab === 'what-if'}
+            className={`decision-tab ${
               activeTab === 'what-if'
-                ? 'border-[#2563EB] text-[#2563EB]'
-                : 'border-transparent text-[var(--app-text-secondary)] hover:text-[var(--app-text)]'
+                ? 'is-active'
+                : ''
             }`}
           >
             <FiSliders size={16} />
@@ -163,7 +166,7 @@ export default function DecisionLab() {
         ) : (
           <div className="space-y-6">
             {/* Task Selector Card */}
-            <div className="card p-6 space-y-4 shadow-sm">
+            <div className="candidate-selection-panel">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div>
                   <h2 className="text-base font-bold text-[var(--app-text)]">
@@ -203,10 +206,10 @@ export default function DecisionLab() {
                     return (
                       <label
                         key={task.id}
-                        className={`flex items-center gap-4 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                        className={`candidate-task-row ${
                           isSelected
-                            ? 'border-[#2563EB]/40 bg-blue-500/[0.04] shadow-sm'
-                            : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-text-muted)]/40'
+                            ? 'is-selected'
+                            : ''
                         }`}
                       >
                         <input

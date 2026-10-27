@@ -265,9 +265,9 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="simulation-workbench animate-fade-in">
       {/* 1. Header & Workflow Flow Banner */}
-      <div className="card p-5 bg-[var(--app-card)] border-l-4 border-l-[#2563EB]">
+      <div className="simulation-workflow-header">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
@@ -303,7 +303,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
       </div>
 
       {/* 2. Fixed Weights & Deterministic Formula Banner */}
-      <div className="card p-4 bg-slate-50 dark:bg-slate-900/50 border border-[var(--app-border)]">
+      <div className="simulation-formula-band">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -338,7 +338,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
       </div>
 
       {/* 3. Task Selection & Interactive Factor Adjustments */}
-      <div className="card p-6 space-y-5">
+      <div className="simulation-selection-workspace">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>
             <h3 className="text-sm font-bold text-[var(--app-text)]">
@@ -388,7 +388,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
               return (
                 <div
                   key={task.id}
-                  className={`p-4 rounded-xl border transition-all ${
+                  className={`simulation-candidate-row ${
                     isSelected
                       ? isModified
                         ? 'border-[#2563EB] bg-blue-500/[0.04] shadow-sm'

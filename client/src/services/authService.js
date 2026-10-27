@@ -11,6 +11,16 @@ export const authService = {
     return response.data;
   },
 
+  async forgotPassword(data) {
+    const response = await api.post('/forgot-password', data);
+    return response.data;
+  },
+
+  async resetPassword(data) {
+    const response = await api.post('/reset-password', data);
+    return response.data;
+  },
+
   async logout() {
     const response = await api.post('/logout');
     return response.data;
@@ -25,4 +35,5 @@ export const authService = {
     const response = await api.put('/user/profile', data);
     return response.data;
   },
+
 };

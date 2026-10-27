@@ -9,6 +9,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -22,7 +25,7 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
@@ -39,7 +42,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registration successful',
+            'message' => 'Registration successful. You are now signed in.',
             'user' => $this->formatUser($user),
             'token' => $token,
         ], 201);
@@ -117,6 +120,36 @@ class AuthController extends Controller
             'message' => 'Profile updated successfully',
             'user' => $this->formatUser($request->user()->fresh()),
         ]);
+    }
+
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate(['email' => 'required|email']);
+        Password::sendResetLink($request->only('email'));
+
+        return response()->json([
+            'message' => 'If an account exists for that email, a password reset link will be sent.',
+        ]);
+    }
+
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'token' => 'required|string',
+            'email' => 'required|email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $status = Password::reset($validated, function (User $user, string $password) {
+            $user->forceFill([
+                'password' => $password,
+                'remember_token' => Str::random(60),
+            ])->save();
+            $user->tokens()->delete();
+            event(new PasswordReset($user));
+        });
+
+        return response()->json(['message' => __($status)], $status === Password::PASSWORD_RESET ? 200 : 422);
     }
 
     private function formatUser(User $user): array

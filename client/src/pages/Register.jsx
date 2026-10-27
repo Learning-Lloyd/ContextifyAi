@@ -30,7 +30,7 @@ export default function Register() {
 
     try {
       await register(form);
-      navigate('/dashboard');
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       const apiErrors = err.response?.data?.errors;
       if (apiErrors) {
@@ -177,11 +177,12 @@ export default function Register() {
                 <input
                   id="password"
                   type="password"
+                  minLength={8}
                   name="password"
                   value={form.password}
                   onChange={handleChange}
                   className="input pl-9 text-xs sm:text-sm"
-                  placeholder="Min. 6 characters"
+                  placeholder="Min. 8 characters"
                   required
                 />
               </div>

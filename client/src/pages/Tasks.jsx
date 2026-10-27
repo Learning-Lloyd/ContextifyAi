@@ -7,6 +7,7 @@ import {
   FiRotateCcw,
   FiSearch,
 } from 'react-icons/fi';
+import { useSearchParams } from 'react-router-dom';
 import Layout from '../components/Layout';
 import TaskCard from '../components/TaskCard';
 import TaskForm from '../components/TaskForm';
@@ -26,6 +27,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function Tasks() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,7 @@ export default function Tasks() {
   const [formLoading, setFormLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, taskId: null });
   const [filters, setFilters] = useState({
-    search: '',
+    search: searchParams.get('search') || '',
     sort: 'priority_score',
     direction: 'desc',
     status: '',
@@ -43,6 +45,15 @@ export default function Tasks() {
     archived: false,
   });
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setFormOpen(true);
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('new');
+      setSearchParams(nextParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const fetchTasks = useCallback(async () => {
     setLoading(true);
@@ -140,14 +151,13 @@ export default function Tasks() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+      <div className="task-workbench animate-fade-in">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
+        <div className="task-page-heading">
           <div>
-            <h1 className="page-title">Tasks Management</h1>
-            <p className="page-subtitle text-xs sm:text-sm">
-              Search, filter, organize, and inspect all contextual priority scores
-            </p>
+            <p className="eyebrow"><span className="eyebrow-dot" /> PRIORITY QUEUE</p>
+            <h1 className="page-title">Your tasks, <em>in order.</em></h1>
+            <p className="page-subtitle">Search and tune the queue. Priority stays grounded in Contextify’s fixed scoring model.</p>
           </div>
           <button
             type="button"
@@ -155,15 +165,15 @@ export default function Tasks() {
               setEditingTask(null);
               setFormOpen(true);
             }}
-            className="btn btn-primary text-xs sm:text-sm shadow-sm"
+            className="btn btn-primary task-add-button"
           >
             <FiPlus size={16} />
-            New Task
+            Add task
           </button>
         </div>
 
         {/* Filter and Search Bar */}
-        <div className="card p-4 space-y-3.5 shadow-sm">
+        <div className="queue-controls">
           {/* Row 1: Search and Sort */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -175,7 +185,7 @@ export default function Tasks() {
                 type="text"
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                placeholder="Search title, description, category, location..."
+                placeholder="Search title, notes, or category…"
                 className="input pl-9 text-xs sm:text-sm"
               />
             </div>
@@ -203,7 +213,7 @@ export default function Tasks() {
           </div>
 
           {/* Row 2: Status, Category, Priority Filters */}
-          <div className="flex flex-wrap gap-2.5 items-center pt-2 border-t border-[var(--app-border)] text-xs">
+          <div className="flex flex-wrap gap-2.5 items-center pt-2 text-xs">
             <div className="flex items-center gap-1.5 text-[var(--app-text-muted)] mr-1">
               <FiFilter size={14} />
               <span className="font-semibold uppercase tracking-wider text-[10px]">Filter:</span>
@@ -259,7 +269,7 @@ export default function Tasks() {
         {loading ? (
           <LoadingSkeleton variant="task-card" count={4} />
         ) : tasks.length === 0 ? (
-          <div className="card">
+          <div className="queue-empty-state">
             <EmptyState
               title="No tasks match your criteria"
               description="Try adjusting your search terms or clearing your filters to see active tasks."
@@ -274,7 +284,7 @@ export default function Tasks() {
             />
           </div>
         ) : (
-          <div className="space-y-3.5">
+          <div className="task-queue-list">
             {tasks.map((task) => (
               <div key={task.id} className="group relative">
                 <TaskCard
@@ -287,7 +297,7 @@ export default function Tasks() {
                   }}
                 />
                 {/* Secondary Quick Action Bar */}
-                <div className="flex items-center gap-2 mt-1.5 ml-4 text-[11px] text-[var(--app-text-muted)]">
+                <div className="task-row-secondary-actions">
                   {task.is_archived ? (
                     <button
                       type="button"

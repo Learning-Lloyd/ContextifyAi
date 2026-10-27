@@ -98,15 +98,16 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <main className="flex-1 max-w-6xl mx-auto px-6 py-16 sm:py-24 space-y-20">
-        <div className="text-center space-y-6 max-w-3xl mx-auto animate-fade-in">
+      <main className="home-editorial">
+        <section className="home-hero">
+        <div className="home-hero-copy animate-fade-in">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[#2563EB] text-xs font-bold uppercase tracking-wider">
             <span>Decision Support System</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--app-text)] leading-[1.15]">
             Multi-Factor Contextual <br />
-            <span className="text-[#2563EB]">Daily Task Prioritization</span>
+              <span className="text-[#2563EB]">Daily Task Prioritization</span>
           </h1>
 
           <p className="text-base sm:text-lg text-[var(--app-text-secondary)] leading-relaxed max-w-2xl mx-auto">
@@ -128,10 +129,21 @@ export default function Home() {
             </Link>
           </div>
         </div>
+        <aside className="home-hero-note" aria-label="How Contextify ranks work">
+          <p className="eyebrow">A CLEARER NEXT STEP</p>
+          <p className="home-note-copy">One recommendation, grounded in four signals. Your score stays mathematical; explanations make it understandable.</p>
+          <div className="home-weight-row"><span>Importance</span><strong>40</strong></div>
+          <div className="home-weight-row"><span>Urgency</span><strong>30</strong></div>
+          <div className="home-weight-row"><span>Time available</span><strong>20</strong></div>
+          <div className="home-weight-row"><span>Workload</span><strong>10</strong></div>
+          <Link to="/register" className="home-note-link">Build your first queue <FiArrowRight /></Link>
+        </aside>
+        </section>
 
         {/* 4 Contextual Factors Cards */}
-        <div className="space-y-6">
-          <div className="text-center space-y-2">
+        <section className="home-factors">
+          <div className="home-section-heading">
+            <p className="eyebrow">01 / THE MODEL</p>
             <h2 className="text-xl font-bold text-[var(--app-text)]">
               Four-Factor Multi-Contextual Evaluation
             </h2>
@@ -144,7 +156,7 @@ export default function Home() {
             {factors.map((f) => (
               <div
                 key={f.name}
-                className={`card p-5 border-l-4 ${f.color} space-y-2 shadow-sm`}
+                className="home-factor-row"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-[var(--app-text)]">{f.name}</span>
@@ -154,10 +166,10 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* Formula Showcase Banner */}
-        <div className="card p-8 bg-gradient-to-br from-[var(--app-card)] to-[var(--app-muted)]/40 border border-[var(--app-border)] text-center space-y-3 shadow-sm">
+        <section className="home-formula-strip">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
             Core Deterministic Equation
           </span>
@@ -167,25 +179,26 @@ export default function Home() {
           <p className="text-xs text-[var(--app-text-muted)] max-w-md mx-auto">
             100% deterministic arithmetic. AI provides explainability and keyword suggestion only.
           </p>
-        </div>
+        </section>
 
         {/* Feature Grid */}
-        <div className="grid md:grid-cols-3 gap-6 pt-4">
+        <section className="home-feature-ledger">
+          <div className="home-section-heading"><p className="eyebrow">02 / THE WORKFLOW</p><h2>From signal to decision</h2></div>
           {features.map((item) => {
             const Icon = item.icon;
             return (
-              <div key={item.title} className="card p-6 card-hover shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
+              <article key={item.title} className="home-feature-row">
+                <div className="home-feature-icon">
                   <Icon size={20} />
                 </div>
                 <h3 className="text-base font-bold text-[var(--app-text)]">{item.title}</h3>
                 <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
                   {item.desc}
                 </p>
-              </div>
+              </article>
             );
           })}
-        </div>
+        </section>
       </main>
 
       {/* Footer */}

@@ -142,6 +142,7 @@ export default function Login() {
                 <label className="label text-xs font-semibold" htmlFor="password">
                   Password
                 </label>
+                <Link to="/forgot-password" className="text-xs text-[#2563EB] hover:underline">Forgot password?</Link>
               </div>
               <div className="relative">
                 <FiLock
