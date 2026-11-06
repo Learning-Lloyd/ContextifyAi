@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiCalendar, FiClock, FiX, FiZap } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiFileText, FiX, FiZap } from 'react-icons/fi';
 import LocationSearch from './LocationSearch';
 import { suggestUrgencyFromDueDate } from '../utils/taskUtils';
 import { taskService } from '../services/taskService';
@@ -72,6 +72,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
   const [calendarContext, setCalendarContext] = useState(null);
   const [analyzingFactors, setAnalyzingFactors] = useState(false);
   const [analysisError, setAnalysisError] = useState(null);
+  const [generatingDescription, setGeneratingDescription] = useState(false);
+  const [descriptionError, setDescriptionError] = useState(null);
   const previewTimerRef = useRef(null);
   const previewRequestIdRef = useRef(0);
 
@@ -109,6 +111,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     setImportanceAnalysis(null);
     setCalendarContext(null);
     setAnalysisError(null);
+    setDescriptionError(null);
+    setGeneratingDescription(false);
   }, [task, isOpen]);
 
   useEffect(() => {
@@ -215,6 +219,23 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     }));
   };
 
+  const handleGenerateDescription = async () => {
+    if (!form.title.trim()) {
+      setDescriptionError('Enter a task title first.');
+      return;
+    }
+    setGeneratingDescription(true);
+    setDescriptionError(null);
+    try {
+      const result = await taskService.generateDescription(form.title.trim(), form.description.trim());
+      setForm((previous) => ({ ...previous, description: result.description }));
+    } catch (error) {
+      setDescriptionError(error.response?.data?.message || 'Could not generate a description. Try again.');
+    } finally {
+      setGeneratingDescription(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
@@ -273,7 +294,12 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
           </div>
 
           <div>
-            <label className="label" htmlFor="task-description">Description</label>
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <label className="label mb-0" htmlFor="task-description">Description <span className="text-[var(--app-text-muted)] font-normal">(optional)</span></label>
+              <button type="button" onClick={handleGenerateDescription} disabled={generatingDescription || !form.title.trim()} className="btn btn-ghost text-xs px-2 py-1 disabled:opacity-50">
+                <FiFileText size={13} /> {generatingDescription ? 'Writing…' : 'Help me write'}
+              </button>
+            </div>
             <textarea
               id="task-description"
               name="description"
@@ -283,6 +309,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               className="input resize-none"
               placeholder="Optional description"
             />
+            {descriptionError && <p className="form-error mt-1">{descriptionError}</p>}
+            <p className="text-[11px] text-[var(--app-text-muted)] mt-1">AI suggestions only expand your task notes; the prioritization engine calculates the score separately.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -420,11 +448,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             <p className="text-xs text-[var(--app-text-muted)] mt-3">
               These factors are determined automatically and cannot be edited manually.
             </p>
-          </div>
-
-          <div className="card-kpi text-center">
-            <p className="card-kpi-label">Preview Priority Score</p>
-            <p className="card-kpi-value text-[#2563EB]">{factors.priority_score}</p>
           </div>
 
           <button type="submit" disabled={loading} className="btn btn-primary w-full">

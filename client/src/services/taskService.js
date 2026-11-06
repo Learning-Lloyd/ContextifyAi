@@ -51,6 +51,11 @@ export const taskService = {
     return response.data;
   },
 
+  async generateDescription(title, description) {
+    const response = await api.post('/tasks/generate-description', { title, description });
+    return response.data;
+  },
+
   async previewScoring({ title, description, due_date, due_time }) {
     const response = await api.post('/tasks/scoring-preview', {
       title,

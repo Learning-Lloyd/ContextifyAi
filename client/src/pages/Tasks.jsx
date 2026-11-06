@@ -18,10 +18,7 @@ import { useToast } from '../hooks/useToast';
 import { taskService } from '../services/taskService';
 
 const SORT_OPTIONS = [
-  { value: 'priority_score', label: 'Priority Score' },
   { value: 'due_date', label: 'Deadline Proximity' },
-  { value: 'importance', label: 'Importance' },
-  { value: 'urgency', label: 'Urgency' },
   { value: 'created_at', label: 'Created Date' },
   { value: 'title', label: 'Alphabetical Title' },
 ];
@@ -37,11 +34,10 @@ export default function Tasks() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, taskId: null });
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
-    sort: 'priority_score',
-    direction: 'desc',
+    sort: 'due_date',
+    direction: 'asc',
     status: '',
     category: '',
-    priority_level: '',
     archived: false,
   });
   const { showToast } = useToast();
@@ -66,7 +62,6 @@ export default function Tasks() {
       if (filters.search.trim()) params.search = filters.search.trim();
       if (filters.status) params.status = filters.status;
       if (filters.category) params.category = filters.category;
-      if (filters.priority_level) params.priority_level = filters.priority_level;
 
       const result = await taskService.getAll(params);
       setTasks(result.tasks || []);
@@ -156,8 +151,8 @@ export default function Tasks() {
         <div className="task-page-heading">
           <div>
             <p className="eyebrow"><span className="eyebrow-dot" /> PRIORITY QUEUE</p>
-            <h1 className="page-title">Your tasks, <em>in order.</em></h1>
-            <p className="page-subtitle">Search and tune the queue. Priority stays grounded in Contextify’s fixed scoring model.</p>
+            <h1 className="page-title">Your tasks, <em>in context.</em></h1>
+            <p className="page-subtitle">Review deadlines and analysis status. Select tasks in Decision Lab to calculate their priority scores.</p>
           </div>
           <button
             type="button"
@@ -206,13 +201,13 @@ export default function Tasks() {
                 onChange={(e) => updateFilter('direction', e.target.value)}
                 className="input text-xs sm:text-sm w-28"
               >
-                <option value="desc">High → Low</option>
-                <option value="asc">Low → High</option>
+                <option value="asc">Soonest / Oldest</option>
+                <option value="desc">Latest / Newest</option>
               </select>
             </div>
           </div>
 
-          {/* Row 2: Status, Category, Priority Filters */}
+          {/* Row 2: Status and Category Filters */}
           <div className="flex flex-wrap gap-2.5 items-center pt-2 text-xs">
             <div className="flex items-center gap-1.5 text-[var(--app-text-muted)] mr-1">
               <FiFilter size={14} />
@@ -240,17 +235,6 @@ export default function Tasks() {
                   {cat}
                 </option>
               ))}
-            </select>
-
-            <select
-              value={filters.priority_level}
-              onChange={(e) => updateFilter('priority_level', e.target.value)}
-              className="input w-auto text-xs py-1.5 px-2.5"
-            >
-              <option value="">All Priorities</option>
-              <option value="high">High Priority (≥8.0)</option>
-              <option value="medium">Medium Priority (5.0–7.9)</option>
-              <option value="low">Low Priority (&lt;5.0)</option>
             </select>
 
             <label className="flex items-center gap-2 text-xs font-medium text-[var(--app-text-secondary)] ml-auto cursor-pointer select-none">

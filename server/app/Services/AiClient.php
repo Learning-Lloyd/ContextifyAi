@@ -44,9 +44,17 @@ class AiClient
         }
 
         try {
-            $response = Http::timeout(config('ai.timeout'))
-                ->withToken(config('ai.api_key'))
-                ->post(config('ai.base_url') . '/chat/completions', [
+            $request = Http::timeout(config('ai.timeout'))
+                ->withToken(config('ai.api_key'));
+
+            if (config('ai.provider') === 'openrouter') {
+                $request = $request->withHeaders([
+                    'HTTP-Referer' => config('app.url'),
+                    'X-Title' => config('app.name', 'Contextify AI'),
+                ]);
+            }
+
+            $response = $request->post(config('ai.base_url') . '/chat/completions', [
                     'model' => config('ai.model'),
                     'temperature' => 0.3,
                     'response_format' => ['type' => 'json_object'],

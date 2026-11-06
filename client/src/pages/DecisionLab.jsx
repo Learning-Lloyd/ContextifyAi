@@ -10,7 +10,6 @@ import {
 import AiExplanationPanel from '../components/AiExplanationPanel';
 import DecisionSummaryCard from '../components/DecisionSummaryCard';
 import Layout from '../components/Layout';
-import PriorityBadge from '../components/PriorityBadge';
 import RankedTaskCard from '../components/RankedTaskCard';
 import RecommendationPanel from '../components/RecommendationPanel';
 import WhatIfSimulator from '../components/WhatIfSimulator';
@@ -29,11 +28,13 @@ export default function DecisionLab() {
   const [activeTab, setActiveTab] = useState('analyze');
   const { showToast } = useToast();
 
-  const fetchTasks = () => {
-    taskService
-      .getAll()
-      .then((result) => setTasks(result.tasks || []))
-      .catch(() => setTasks([]));
+  const fetchTasks = async () => {
+    try {
+      const result = await taskService.getAll({ sort: 'due_date', direction: 'asc' });
+      setTasks(result.tasks || []);
+    } catch {
+      setTasks([]);
+    }
   };
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function DecisionLab() {
   };
 
   const selectAll = () => setSelectedIds(tasks.map((t) => t.id));
+  const unanalyzedTaskCount = tasks.filter((task) => !task.analyzed).length;
   const clearAll = () => {
     setSelectedIds([]);
     setAnalysis(null);
@@ -62,6 +64,7 @@ export default function DecisionLab() {
     try {
       const result = await decisionService.analyzeMultiple(selectedIds);
       setAnalysis(result.analysis);
+      await fetchTasks();
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } catch {
       showToast('Failed to analyze tasks', 'error');
@@ -200,7 +203,13 @@ export default function DecisionLab() {
                   description="Create some tasks on the Dashboard or Tasks page first before analyzing decisions."
                 />
               ) : (
-                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+                <>
+                {unanalyzedTaskCount > 0 && (
+                  <p className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[var(--app-text-secondary)]">
+                    {unanalyzedTaskCount} task{unanalyzedTaskCount === 1 ? ' needs' : 's need'} analysis. Select task{unanalyzedTaskCount === 1 ? '' : 's'} and run the analysis to calculate and reveal priority scores.
+                  </p>
+                )}
+                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 mt-3">
                   {tasks.map((task) => {
                     const isSelected = selectedIds.includes(task.id);
                     return (
@@ -223,7 +232,9 @@ export default function DecisionLab() {
                             <span className="font-semibold text-sm text-[var(--app-text)] truncate">
                               {task.title}
                             </span>
-                            <PriorityBadge level={task.priority_level} />
+                            <span className={`rounded px-2 py-0.5 text-[10px] font-semibold ${task.analyzed ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'bg-amber-500/10 text-amber-700 dark:text-amber-300'}`}>
+                              {task.analyzed ? 'Analyzed' : 'Needs analysis'}
+                            </span>
                           </div>
                           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-[var(--app-text-muted)]">
                             {task.due_date && <span>📅 Due: {task.due_date}</span>}
@@ -235,18 +246,11 @@ export default function DecisionLab() {
                             )}
                           </div>
                         </div>
-                        <div className="text-right shrink-0">
-                          <span className="text-[10px] uppercase font-bold text-[var(--app-text-muted)] block">
-                            Score
-                          </span>
-                          <span className="text-base font-extrabold text-[#2563EB] font-mono">
-                            {task.priority_score}
-                          </span>
-                        </div>
                       </label>
                     );
                   })}
                 </div>
+                </>
               )}
             </div>
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\AdminFeedbackController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\ImportanceAnalysisController;
 use App\Http\Controllers\Api\TaskController;
+use App\Http\Controllers\Api\TaskDescriptionController;
 use App\Http\Controllers\Api\TaskScoringController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index']);
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze']);
+    Route::post('/tasks/generate-description', [TaskDescriptionController::class, 'generate']);
     Route::post('/tasks/scoring-preview', [TaskScoringController::class, 'preview']);
     Route::get('/tasks/calendar-context', [TaskScoringController::class, 'calendarContext']);
     Route::get('/tasks/{task}', [TaskController::class, 'show']);

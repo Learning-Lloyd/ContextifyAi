@@ -167,4 +167,42 @@ class WhatIfSimulationTest extends TestCase
         $this->assertSame(4, $task->importance);
         $this->assertSame(4, $task->urgency);
     }
+
+    public function test_insights_summarize_saved_rankings_and_exclude_what_if_previews(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $rankedTask = [
+            'title' => 'Finish report',
+            'priority_score' => 8.4,
+            'breakdown' => [
+                'importance' => ['weighted' => 2.4],
+                'urgency' => ['weighted' => 3.0],
+                'time_availability' => ['weighted' => 1.8],
+                'current_workload' => ['weighted' => 1.2],
+            ],
+        ];
+        $user->decisionAnalyses()->create([
+            'task_ids' => [1],
+            'ranked_tasks' => [$rankedTask],
+            'summary' => [],
+            'recommendation' => [],
+            'conflicts' => [],
+            'total_selected' => 1,
+        ]);
+        $user->decisionAnalyses()->create([
+            'task_ids' => [1],
+            'ranked_tasks' => [$rankedTask],
+            'summary' => ['type' => 'what_if_scenario'],
+            'recommendation' => [],
+            'conflicts' => [],
+            'total_selected' => 1,
+        ]);
+
+        $response = $this->getJson('/api/decision-lab/insights')->assertOk();
+        $this->assertSame(1, $response->json('insights.total_analyses'));
+        $this->assertSame('Finish report', $response->json('insights.most_frequent_top_task'));
+        $this->assertSame('urgency', $response->json('insights.most_influential_factor'));
+        $this->assertSame(8.4, $response->json('insights.average_top_score'));
+    }
 }

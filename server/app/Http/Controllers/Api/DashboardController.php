@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DecisionComparison;
 use App\Models\Task;
 use App\Services\DeadlineUrgencyService;
+use App\Services\TaskAnalysisStatusService;
 use App\Services\WeatherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $tasks = $user->tasks()->active()->orderByDesc('priority_score')->get();
+        $analysisStatus = app(TaskAnalysisStatusService::class)->forTasks($user, $tasks);
 
         $totalTasks = $tasks->count();
         $completedTasks = $tasks->where('status', 'completed')->count();
@@ -41,6 +43,7 @@ class DashboardController extends Controller
         foreach ($tasks as $task) {
             $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'));
             $formatted = $this->formatTask($task);
+            $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
             if (isset($grouped[$group])) {
                 $grouped[$group][] = $formatted;
             }
@@ -83,7 +86,16 @@ class DashboardController extends Controller
 
         $weather = $this->resolveDashboardWeather($request, $tasks);
 
-        $allTasks = $tasks->map(fn (Task $task) => $this->formatTask($task));
+        $allTasks = $tasks->map(function (Task $task) use ($analysisStatus) {
+            $formatted = $this->formatTask($task);
+            $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
+
+            return $formatted;
+        });
+        $unanalyzedPendingCount = $tasks
+            ->where('status', 'pending')
+            ->filter(fn (Task $task) => ! ($analysisStatus[$task->id] ?? false))
+            ->count();
 
         return response()->json([
             'user' => $user->only(['id', 'name', 'email', 'city', 'city_latitude', 'city_longitude']),
@@ -113,6 +125,7 @@ class DashboardController extends Controller
                 'status' => $highestPriorityTask->status,
             ] : null,
             'tasks' => $allTasks,
+            'unanalyzed_pending_count' => $unanalyzedPendingCount,
         ]);
     }
 

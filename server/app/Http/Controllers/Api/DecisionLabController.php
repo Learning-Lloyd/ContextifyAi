@@ -202,17 +202,35 @@ class DecisionLabController extends Controller
     public function insights(Request $request): JsonResponse
     {
         $user = $request->user();
-        $analyses = $user->decisionAnalyses()->latest()->take(50)->get();
-        $comparisons = $user->decisionComparisons()->latest()->take(20)->get();
+        $analyses = $user->decisionAnalyses()->latest()->get();
+        $decisionAnalyses = $analyses->reject(fn (DecisionAnalysis $analysis) =>
+            ($analysis->summary['type'] ?? null) === 'what_if_scenario'
+        );
+        $comparisons = $user->decisionComparisons()->latest()->get();
 
         $topTaskCounts = [];
-        foreach ($analyses as $analysis) {
+        $dominantFactorCounts = [];
+        $topScores = [];
+        foreach ($decisionAnalyses as $analysis) {
             $top = $analysis->ranked_tasks[0]['title'] ?? null;
             if ($top) {
                 $topTaskCounts[$top] = ($topTaskCounts[$top] ?? 0) + 1;
+                $topTask = $analysis->ranked_tasks[0];
+                if (isset($topTask['priority_score'])) {
+                    $topScores[] = (float) $topTask['priority_score'];
+                }
+                $breakdown = $topTask['breakdown'] ?? [];
+                $weightedFactors = collect(['importance', 'urgency', 'time_availability', 'current_workload'])
+                    ->filter(fn (string $factor) => isset($breakdown[$factor]['weighted']))
+                    ->sortByDesc(fn (string $factor) => (float) $breakdown[$factor]['weighted']);
+                $dominantFactor = $weightedFactors->first();
+                if ($dominantFactor) {
+                    $dominantFactorCounts[$dominantFactor] = ($dominantFactorCounts[$dominantFactor] ?? 0) + 1;
+                }
             }
         }
         arsort($topTaskCounts);
+        arsort($dominantFactorCounts);
 
         $confidenceCounts = ['high' => 0, 'medium' => 0, 'low' => 0];
         foreach ($comparisons as $comparison) {
@@ -222,7 +240,7 @@ class DecisionLabController extends Controller
             }
         }
 
-        $recentAnalyses = $analyses->take(5)->map(fn (DecisionAnalysis $a) => [
+        $recentAnalyses = $decisionAnalyses->take(5)->map(fn (DecisionAnalysis $a) => [
             'id' => $a->id,
             'total_selected' => $a->total_selected,
             'top_task' => $a->ranked_tasks[0]['title'] ?? null,
@@ -233,16 +251,19 @@ class DecisionLabController extends Controller
 
         return response()->json([
             'insights' => [
-                'total_analyses' => $analyses->count(),
+                'total_analyses' => $decisionAnalyses->count(),
                 'total_comparisons' => $comparisons->count(),
-                'avg_tasks_per_analysis' => $analyses->count() > 0
-                    ? round($analyses->avg('total_selected'), 1)
+                'avg_tasks_per_analysis' => $decisionAnalyses->count() > 0
+                    ? round($decisionAnalyses->avg('total_selected'), 1)
                     : 0,
-                'total_conflicts_detected' => $analyses->sum(fn (DecisionAnalysis $a) => count($a->conflicts ?? [])),
+                'total_conflicts_detected' => $decisionAnalyses->sum(fn (DecisionAnalysis $a) => count($a->conflicts ?? [])),
                 'most_frequent_top_task' => array_key_first($topTaskCounts),
+                'most_influential_factor' => array_key_first($dominantFactorCounts),
+                'most_influential_factor_count' => $dominantFactorCounts ? reset($dominantFactorCounts) : 0,
+                'average_top_score' => $topScores ? round(array_sum($topScores) / count($topScores), 2) : null,
                 'confidence_distribution' => $confidenceCounts,
                 'recent_analyses' => $recentAnalyses,
-                'monthly_analyses' => $analyses
+                'monthly_analyses' => $decisionAnalyses
                     ->groupBy(fn (DecisionAnalysis $a) => $a->created_at->format('Y-m'))
                     ->map(fn ($group, $month) => ['month' => $month, 'count' => $group->count()])
                     ->values(),

@@ -127,4 +127,35 @@ class ImportanceAnalysisTest extends TestCase
 
         $this->assertSame('heuristic', $result['source']);
     }
+
+    public function test_generate_description_expands_user_notes_without_creating_a_score(): void
+    {
+        Http::fake([
+            'https://api.openai.com/v1/chat/completions' => Http::response([
+                'choices' => [['message' => ['content' => json_encode([
+                    'description' => 'Review the assigned chapters and prepare concise notes for the study session.',
+                ])]]],
+            ]),
+        ]);
+        Sanctum::actingAs(User::factory()->create());
+
+        $response = $this->postJson('/api/tasks/generate-description', [
+            'title' => 'Prepare for study group',
+            'description' => 'Read chapters 2 and 3',
+        ]);
+
+        $response->assertOk()->assertJsonStructure(['description']);
+        $this->assertStringContainsString('chapters', $response->json('description'));
+        $this->assertArrayNotHasKey('priority_score', $response->json());
+    }
+
+    public function test_generate_description_reports_unconfigured_provider(): void
+    {
+        config(['ai.api_key' => null]);
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/tasks/generate-description', ['title' => 'Prepare for study group'])
+            ->assertStatus(503)
+            ->assertJsonStructure(['message']);
+    }
 }

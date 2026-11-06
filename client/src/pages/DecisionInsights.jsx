@@ -97,6 +97,26 @@ export default function DecisionInsights() {
           />
         </div>
 
+        {insights.total_analyses === 0 && insights.total_comparisons === 0 ? (
+          <EmptyState
+            title="No decision history yet"
+            description="Run an analysis or compare tasks in Decision Lab. Insights will summarize your saved decisions here; no sample data is shown."
+          />
+        ) : (
+          <>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="card p-5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">Most influential factor</p>
+                <p className="text-xl font-bold text-[var(--app-text)] mt-2 capitalize">{insights.most_influential_factor?.replaceAll('_', ' ') || 'Not enough ranked history'}</p>
+                <p className="text-xs text-[var(--app-text-secondary)] mt-1">Led the weighted factor contributions in {insights.most_influential_factor_count || 0} saved recommendation(s).</p>
+              </div>
+              <div className="card p-5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">Average recommended score</p>
+                <p className="text-xl font-bold text-[var(--app-text)] mt-2">{insights.average_top_score ?? '—'}<span className="text-sm font-medium text-[var(--app-text-muted)]"> / 10</span></p>
+                <p className="text-xs text-[var(--app-text-secondary)] mt-1">Calculated from saved multi-task analyses, excluding what-if previews.</p>
+              </div>
+            </div>
+
         {/* Highlight Banner: Frequent Top Task */}
         {insights.most_frequent_top_task && (
           <div className="card p-5 bg-blue-500/[0.04] border-l-4 border-l-[#2563EB] flex items-center justify-between gap-4">
@@ -190,7 +210,7 @@ export default function DecisionInsights() {
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
                 Recent Analysis Logs
               </h3>
-              <span className="text-xs text-[var(--app-text-muted)]">Last 10 records</span>
+              <span className="text-xs text-[var(--app-text-muted)]">Last 5 records</span>
             </div>
             <div className="space-y-2">
               {insights.recent_analyses.map((item) => (
@@ -218,6 +238,8 @@ export default function DecisionInsights() {
               ))}
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </Layout>

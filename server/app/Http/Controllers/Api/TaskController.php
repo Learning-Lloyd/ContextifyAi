@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Services\AuditLogService;
 use App\Services\ExplanationService;
 use App\Services\TaskScoringService;
+use App\Services\TaskAnalysisStatusService;
 use App\Services\WeatherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -77,7 +78,13 @@ class TaskController extends Controller
             $query->orderBy('due_date');
         }
 
-        $tasks = $query->get()->map(fn (Task $task) => $this->formatTask($task));
+        $taskModels = $query->get();
+        $analysisStatus = app(TaskAnalysisStatusService::class)->forTasks($request->user(), $taskModels);
+        $tasks = $taskModels->map(function (Task $task) use ($analysisStatus) {
+            return array_merge($this->formatTask($task), [
+                'analyzed' => $analysisStatus[$task->id] ?? false,
+            ]);
+        });
 
         $categories = $request->user()->tasks()
             ->active()

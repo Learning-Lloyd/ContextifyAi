@@ -1,6 +1,5 @@
 import { FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiEdit2, FiMapPin, FiTrash2 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import PriorityBadge from './PriorityBadge';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
 
 function prettyDate(value) {
@@ -15,10 +14,11 @@ export default function TaskCard({ task, onToggle, onDelete, onEdit }) {
 
   return (
     <article className={`task-queue-row ${completed ? 'is-complete' : ''} ${overdue ? 'is-overdue' : ''}`}>
-      <div className="task-row-score"><span>{Number(task.priority_score || 0).toFixed(2)}</span><small>score</small></div>
       <div className="task-row-content">
         <div className="task-row-markers">
-          {task.priority_level && <PriorityBadge level={task.priority_level} />}
+          <span className={`task-analysis-tag ${task.analyzed ? 'is-analyzed' : 'needs-analysis'}`}>
+            {task.analyzed ? 'Analyzed' : 'Needs analysis'}
+          </span>
           {overdue && <span className="task-overdue-tag">Overdue</span>}
           {task.category && <span className="task-category-tag">{task.category}</span>}
           {task.is_archived && <span className="task-category-tag">Archived</span>}
