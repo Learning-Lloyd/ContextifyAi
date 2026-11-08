@@ -24,7 +24,7 @@ export default function TaskCard({ task, onToggle, onDelete, onEdit }) {
           {task.is_archived && <span className="task-category-tag">Archived</span>}
         </div>
         <Link to={`/tasks/${task.id}`} className="task-row-title">{task.title}<FiArrowUpRight aria-hidden="true" /></Link>
-        {task.description && <p className="task-row-description">{task.description}</p>}
+        {task.description && <p className="task-row-description line-clamp-2">{task.description}</p>}
         <div className="task-row-meta">
           <span><FiCalendar /> {prettyDate(task.due_date)}{task.due_time ? ` · ${task.due_time.slice(0, 5)}` : ''}</span>
           {task.estimated_time_minutes && <span><FiClock /> {task.estimated_time_minutes} min</span>}
@@ -32,12 +32,6 @@ export default function TaskCard({ task, onToggle, onDelete, onEdit }) {
           {task.weather_condition && <span>{weatherIcon(task.weather_condition)} {task.weather_condition}{task.temperature != null ? ` · ${task.temperature}°` : ''}</span>}
           {!overdue && countdown && <span className="task-countdown">{countdown}</span>}
         </div>
-      </div>
-      <div className="task-row-factors" aria-label="Task scoring factors">
-        <span title="Importance">I <b>{task.importance}</b></span>
-        <span title="Urgency">U <b>{task.urgency}</b></span>
-        <span title="Time availability">T <b>{task.time_availability}</b></span>
-        <span title="Current workload">W <b>{task.current_workload}</b></span>
       </div>
       <div className="task-row-actions">
         <button type="button" className={`task-action-button ${completed ? 'undo' : ''}`} onClick={() => onToggle(task.id)} aria-label={completed ? `Mark ${task.title} pending` : `Mark ${task.title} complete`} title={completed ? 'Mark pending' : 'Complete task'}><FiCheckCircle /></button>

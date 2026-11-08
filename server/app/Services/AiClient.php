@@ -67,7 +67,7 @@ class AiClient
             if (! $response->successful()) {
                 Log::warning('AI API request failed', [
                     'status' => $response->status(),
-                    'body' => $response->body(),
+                    'provider' => config('ai.provider'),
                 ]);
 
                 return null;
@@ -75,7 +75,10 @@ class AiClient
 
             return $response->json('choices.0.message.content');
         } catch (\Throwable $exception) {
-            Log::warning('AI API exception', ['message' => $exception->getMessage()]);
+            Log::warning('AI API connection failed', [
+                'provider' => config('ai.provider'),
+                'exception' => $exception::class,
+            ]);
 
             return null;
         }

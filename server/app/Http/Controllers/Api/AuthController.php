@@ -107,6 +107,11 @@ class AuthController extends Controller
             'city' => 'nullable|string|max:255',
             'city_latitude' => 'nullable|numeric|between:-90,90',
             'city_longitude' => 'nullable|numeric|between:-180,180',
+            'task_reminders_enabled' => 'sometimes|boolean',
+            'overdue_reminders_enabled' => 'sometimes|boolean',
+            'deadline_reminder_minutes' => 'sometimes|integer|in:60,360,720,1440,2880',
+            'daily_available_minutes' => 'nullable|integer|min:1|max:720',
+            'workday_start_time' => 'nullable|date_format:H:i',
         ]);
 
         if (array_key_exists('city', $validated) && empty($validated['city'])) {
@@ -164,6 +169,11 @@ class AuthController extends Controller
             'city',
             'city_latitude',
             'city_longitude',
+            'task_reminders_enabled',
+            'overdue_reminders_enabled',
+            'deadline_reminder_minutes',
+            'daily_available_minutes',
+            'workday_start_time',
             'created_at',
         ]);
     }

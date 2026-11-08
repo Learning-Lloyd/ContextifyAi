@@ -9,19 +9,16 @@ export default function DecisionSummaryCard({ summary, confidence }) {
     <div className="card p-6 space-y-5 animate-fade-in shadow-sm">
       <div className="flex items-center justify-between gap-4 flex-wrap border-b border-[var(--app-border)] pb-3">
         <div>
-          <h2 className="text-base font-bold text-[var(--app-text)]">Multi-Task Decision Summary</h2>
-          <p className="text-xs text-[var(--app-text-muted)]">
-            High-level overview of multi-factor contextual ranking results
-          </p>
+          <h2 className="text-base font-bold text-[var(--app-text)]">Analysis results</h2>
         </div>
         {confidence && <DecisionConfidenceBadge confidence={confidence} showGap />}
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {/* Analyzed */}
         <div className="card-kpi p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
-            <span className="card-kpi-label text-[10px]">Tasks Analyzed</span>
+            <span className="card-kpi-label text-xs">Tasks analyzed</span>
             <FiList size={14} className="text-[#2563EB]" />
           </div>
           <p className="text-2xl font-bold text-[var(--app-text)]">{summary.tasks_analyzed}</p>
@@ -30,7 +27,7 @@ export default function DecisionSummaryCard({ summary, confidence }) {
         {/* Top Priority Task */}
         <div className="card-kpi p-3.5 col-span-2 flex flex-col justify-between border-l-2 border-l-[#2563EB]">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
-            <span className="card-kpi-label text-[10px] text-[#2563EB]">Top Priority Task</span>
+            <span className="card-kpi-label text-xs text-[#2563EB]">Recommended task</span>
             <FiAward size={14} className="text-[#2563EB]" />
           </div>
           <div className="flex items-baseline justify-between gap-2">
@@ -48,7 +45,7 @@ export default function DecisionSummaryCard({ summary, confidence }) {
         {/* Conflicts */}
         <div className="card-kpi p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
-            <span className="card-kpi-label text-[10px]">Conflicts</span>
+            <span className="card-kpi-label text-xs">Deadline conflicts</span>
             <FiAlertTriangle
               size={14}
               className={summary.potential_deadline_conflicts > 0 ? 'text-[#F59E0B]' : 'text-[var(--app-text-muted)]'}
@@ -75,18 +72,6 @@ export default function DecisionSummaryCard({ summary, confidence }) {
           </div>
         </div>
 
-        {/* Lowest Priority */}
-        <div className="card-kpi p-3.5 flex flex-col justify-between">
-          <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
-            <span className="card-kpi-label text-[10px]">Lowest Priority</span>
-          </div>
-          <p className="text-xs font-semibold text-[var(--app-text-secondary)] truncate">
-            {summary.lowest_priority?.title ?? '—'}
-          </p>
-          <span className="text-[10px] text-[var(--app-text-muted)] font-mono">
-            Score: {summary.lowest_priority?.score ?? '—'}
-          </span>
-        </div>
       </div>
 
       {/* Recommendation & Narrative */}

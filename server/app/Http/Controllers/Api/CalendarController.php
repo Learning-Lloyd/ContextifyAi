@@ -22,7 +22,6 @@ class CalendarController extends Controller
                 'title' => $task->title,
                 'due_date' => $task->due_date?->format('Y-m-d'),
                 'due_time' => $task->due_time,
-                'priority_score' => $task->priority_score,
                 'priority_level' => $task->priority_level,
                 'status' => $task->status,
                 'location' => $task->location,

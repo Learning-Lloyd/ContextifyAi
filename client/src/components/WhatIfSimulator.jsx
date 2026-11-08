@@ -168,7 +168,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
   // Run full backend simulation
   const handleSimulate = async () => {
     if (selectedIds.length === 0) {
-      showToast('Select at least one task to simulate', 'error');
+      showToast('Select a task first', 'error');
       return;
     }
 
@@ -192,9 +192,9 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
 
       const result = await decisionService.simulateWhatIf(scenarios);
       setSimulation(result.analysis);
-      showToast('What-If simulation calculated successfully', 'success');
+      showToast('Scenario ready', 'success');
     } catch {
-      showToast('Failed to run simulation engine', 'error');
+      showToast('Could not run simulation', 'error');
     } finally {
       setSimulating(false);
     }
@@ -274,78 +274,60 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
               <FiSliders size={20} />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[var(--app-text)]">What-If Decision Simulator</h2>
-              <p className="text-xs text-[var(--app-text-secondary)]">
-                Hypothetical sensitivity analysis: adjust contextual variables to observe ranking shifts before applying changes
-              </p>
+              <h2 className="text-base font-bold text-[var(--app-text)]">What if?</h2>
+              <p className="text-sm text-[var(--app-text-secondary)]">Adjust factors to see how rankings could change.</p>
             </div>
           </div>
 
           {/* Workflow Sequence Indicator */}
           <div className="hidden md:flex items-center gap-1.5 text-xs font-semibold text-[var(--app-text-muted)]">
             <span className="bg-[var(--app-muted)] px-2.5 py-1 rounded-full text-[var(--app-text)]">
-              1. Select Tasks
+              1. Select
             </span>
             <FiArrowRight size={11} />
             <span className="bg-[var(--app-muted)] px-2.5 py-1 rounded-full text-[var(--app-text)]">
-              2. Inspect Baseline
+              2. Compare
             </span>
             <FiArrowRight size={11} />
             <span className="bg-[var(--app-muted)] px-2.5 py-1 rounded-full text-[var(--app-text)]">
-              3. Adjust Factors
+              3. Adjust
             </span>
             <FiArrowRight size={11} />
             <span className="bg-blue-500/10 text-[#2563EB] px-2.5 py-1 rounded-full">
-              4. Compare & Apply
+              4. Apply
             </span>
           </div>
         </div>
       </div>
 
-      {/* 2. Fixed Weights & Deterministic Formula Banner */}
-      <div className="simulation-formula-band">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
-                Deterministic Scoring Formula (Fixed Weights)
-              </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-[#2563EB]">
-                Strictly Non-Editable
-              </span>
-            </div>
-            <p className="text-xs font-mono text-[var(--app-text-secondary)]">
-              Priority Score = (Importance × 0.40) + (Urgency × 0.30) + (Time Availability × 0.20) + (Current Workload × 0.10)
-            </p>
-          </div>
-
-          {/* Factor Weight Chips */}
-          <div className="flex items-center gap-2 flex-wrap text-xs">
+      {/* Optional scoring method details */}
+      <details className="simulation-formula-band">
+        <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">Scoring weights</summary>
+        <div className="mt-3 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <p className="text-sm text-[var(--app-text-secondary)]">
+            Importance 40% · Urgency 30% · Available time 20% · Workload 10%
+          </p>
+          <div className="flex items-center gap-2 flex-wrap text-sm">
             {FACTORS.map((f) => (
-              <span
-                key={f.key}
-                className="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 border border-[var(--app-border)] bg-[var(--app-card)]"
-              >
+              <span key={f.key} className="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1.5 border border-[var(--app-border)] bg-[var(--app-card)]">
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: f.color }} />
                 <span className="text-[var(--app-text)]">{f.label}:</span>
-                <span className="font-mono font-bold" style={{ color: f.color }}>
-                  {f.weight}
-                </span>
+                <span className="font-mono font-bold" style={{ color: f.color }}>{f.weight}</span>
               </span>
             ))}
           </div>
         </div>
-      </div>
+      </details>
 
       {/* 3. Task Selection & Interactive Factor Adjustments */}
       <div className="simulation-selection-workspace">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>
             <h3 className="text-sm font-bold text-[var(--app-text)]">
-              Select Tasks to Simulate ({selectedIds.length} of {tasks.length} selected)
+              Select tasks · {selectedIds.length} selected
             </h3>
             <p className="text-xs text-[var(--app-text-muted)]">
-              Check candidate tasks below to inspect original values and test hypothetical factor modifications
+              Choose tasks, then adjust their factors.
             </p>
           </div>
 
@@ -355,14 +337,14 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
               onClick={selectAll}
               className="btn btn-secondary btn-sm text-xs"
             >
-              Select All
+              Select all
             </button>
             <button
               type="button"
               onClick={clearAll}
               className="btn btn-ghost btn-sm text-xs"
             >
-              Clear Selection
+              Clear
             </button>
           </div>
         </div>
@@ -370,7 +352,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
         {tasks.length === 0 ? (
           <EmptyState
             title="No tasks available"
-            description="Create tasks on your Dashboard or Tasks page first to run What-If simulations."
+            description="Add a task to get started."
           />
         ) : (
           <div className="space-y-4 max-h-[560px] overflow-y-auto pr-1">
@@ -413,7 +395,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           <PriorityBadge level={task.priority_level} />
                           {isModified && (
                             <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-[#D97706] dark:text-[#FBBF24]">
-                              Simulated Override
+                              Edited
                             </span>
                           )}
                         </div>
@@ -421,7 +403,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         {/* Baseline Factors Row */}
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-[var(--app-text-muted)]">
                           <span>
-                            Original: I:{task.importance ?? 5} · U:{task.urgency ?? 5} · T:{task.time_availability ?? 5} · W:{task.current_workload ?? 5}
+                            Current: I:{task.importance ?? 5} · U:{task.urgency ?? 5} · T:{task.time_availability ?? 5} · W:{task.current_workload ?? 5}
                           </span>
                           {task.due_date && <span>📅 Due: {task.due_date}</span>}
                         </div>
@@ -492,7 +474,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                     <div className="mt-4 pt-3 border-t border-[var(--app-border)]/60 space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-[var(--app-text-secondary)]">
-                          Adjust Hypothetical Factors (1 to 10):
+                          Adjust factors (1–10)
                         </span>
                         {isModified && (
                           <button
@@ -569,7 +551,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                 className="btn btn-primary text-xs sm:text-sm shadow-sm"
               >
                 <FiZap size={15} />
-                {simulating ? 'Evaluating Engine...' : `Run Full Engine Simulation (${selectedIds.length})`}
+                {simulating ? 'Running…' : `Run simulation (${selectedIds.length})`}
               </button>
 
               <button
@@ -578,7 +560,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                 disabled={selectedIds.length === 0}
                 className="btn btn-secondary text-xs sm:text-sm"
               >
-                <FiSave size={15} /> Save Scenario
+                <FiSave size={15} /> Save scenario
               </button>
 
               <button
@@ -610,10 +592,10 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
             <div>
               <h3 className="text-base font-bold text-[var(--app-text)] flex items-center gap-2">
                 <FiCheckSquare className="text-[#2563EB]" size={18} />
-                Original vs. Simulated Comparative Ranking
+                Ranking comparison
               </h3>
               <p className="text-xs text-[var(--app-text-muted)]">
-                Live comparison showing how hypothetical factor adjustments affect the final execution order
+                See how your changes affect task order.
               </p>
             </div>
 
@@ -628,8 +610,8 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
             {/* Column 1: Baseline Original Ranking */}
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs font-bold text-[var(--app-text-muted)] uppercase tracking-wider pb-1">
-                <span>Original Baseline Ranking</span>
-                <span>Priority Score</span>
+                <span>Current order</span>
+                <span>Score</span>
               </div>
 
               <div className="space-y-2.5">
@@ -658,8 +640,8 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
             {/* Column 2: Simulated Ranking */}
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs font-bold text-[#2563EB] uppercase tracking-wider pb-1">
-                <span>Simulated What-If Ranking</span>
-                <span>Simulated Score & Shift</span>
+                <span>New order</span>
+                <span>New score and change</span>
               </div>
 
               <div className="space-y-2.5">
@@ -912,7 +894,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
         </div>
       )}
 
-      {/* Save Scenario Modal */}
+      {/* Save scenario Modal */}
       {showSaveModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
@@ -965,7 +947,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                 className="btn btn-primary text-xs"
               >
                 <FiSave size={14} />
-                {savingScenario ? 'Saving Scenario...' : 'Save Scenario'}
+                {savingScenario ? 'Saving Scenario...' : 'Save scenario'}
               </button>
             </div>
           </div>

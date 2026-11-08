@@ -11,9 +11,9 @@ import { taskService } from '../services/taskService';
 
 const factors = [
   { key: 'importance', label: 'Importance', weight: '40%' },
-  { key: 'urgency', label: 'Deadline urgency', weight: '30%' },
-  { key: 'time_availability', label: 'Time available', weight: '20%' },
-  { key: 'current_workload', label: 'Current workload', weight: '10%' },
+  { key: 'urgency', label: 'Deadline', weight: '30%' },
+  { key: 'time_availability', label: 'Available time', weight: '20%' },
+  { key: 'current_workload', label: 'Workload', weight: '10%' },
 ];
 
 const PRODUCTIVE_MINUTES_PER_DAY = 480;
@@ -102,7 +102,8 @@ export default function Dashboard() {
     if (Number(data?.unanalyzed_pending_count || 0) > 0) {
       return pending.sort((a, b) => (a.due_date || '9999-12-31').localeCompare(b.due_date || '9999-12-31'));
     }
-    return pending.sort((a, b) => Number(b.priority_score || 0) - Number(a.priority_score || 0));
+    // The API has already ranked tasks; keep its order without exposing scores to this view.
+    return pending;
   }, [data]);
 
   if (loading) return <Layout><div className="workspace-loading"><p className="eyebrow">Preparing your day</p><LoadingSkeleton variant="task-card" count={3} /></div></Layout>;
@@ -113,6 +114,12 @@ export default function Dashboard() {
   const needsAnalysis = unanalyzedCount > 0;
   const focusTask = needsAnalysis ? null : queue.find((task) => task.id === highestPriorityTask?.id) || queue[0] || null;
   const timeFit = focusTask ? getTimeFit(focusTask, queue) : null;
+  const topReasonLabels = focusTask
+    ? [...factors]
+      .sort((a, b) => (Number(focusTask[b.key] || 0) * parseFloat(b.weight)) - (Number(focusTask[a.key] || 0) * parseFloat(a.weight)))
+      .slice(0, 2)
+      .map((factor) => factor.label.toLowerCase())
+    : [];
   const greeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
 
   return (
@@ -122,18 +129,26 @@ export default function Dashboard() {
           <div>
             <p className="eyebrow"><span className="eyebrow-dot" /> DAILY BRIEF · {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
             <h1>{greeting}, <em>{user?.name?.split(' ')[0] || 'there'}.</em></h1>
-            <p className="daily-subtitle">A clear next step, grounded in your time, workload, and deadlines.</p>
           </div>
           <button type="button" className="text-action" onClick={() => setFormOpen(true)}><FiPlus /> Add a task</button>
         </div>
+
+        <section className="card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4" aria-label="Task progress">
+          <div className="min-w-0 flex-1">
+            <div className="flex justify-between gap-3 text-sm"><strong className="text-[var(--app-text)]">Daily Progress</strong><span className="text-[var(--app-text-muted)]">{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining</span></div>
+            <div className="h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="block h-full rounded-full bg-[#285E4D] transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
+          </div>
+          <span className="text-sm font-bold text-[#285E4D]">{stats.completion_percent || 0}%</span>
+          {stats.unread_notifications > 0 && <Link to="/notifications" className="text-xs font-semibold text-[#285E4D]">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
+        </section>
 
         {needsAnalysis ? (
           <section className="first-task-prompt analysis-needed-prompt">
             <div className="first-task-mark"><FiCpu /></div>
             <div>
               <p className="eyebrow">ANALYSIS RECOMMENDED FIRST</p>
-              <h2>Analyze your tasks to get a recommendation.</h2>
-              <p>{unanalyzedCount} open task{unanalyzedCount === 1 ? ' has' : 's have'} not been analyzed yet, or changed since the last analysis. Select the task{unanalyzedCount === 1 ? '' : 's'} in Decision Lab and run the analysis to see priority scores and rankings.</p>
+              <h2>Analyze tasks to see what comes first.</h2>
+              <p>{unanalyzedCount} task{unanalyzedCount === 1 ? '' : 's'} need analysis.</p>
               <Link to="/decision-lab" className="btn btn-primary"><FiCpu /> Analyze tasks <FiArrowRight /></Link>
             </div>
           </section>
@@ -153,16 +168,18 @@ export default function Dashboard() {
                 <button type="button" className="btn btn-quiet" onClick={() => handleToggle(focusTask.id)}><FiCheckCircle /> Mark complete</button>
               </div>
             </div>
-            <aside className="focus-reasoning" aria-label="Priority explanation">
-              <p className="reasoning-caption">Why this is next</p>
-              <p className="factor-explanation-note">This task was recommended in Decision Lab. Its factors explain the recommendation; see the exact score in the analysis results.</p>
-              <div className="factor-list">
+            <aside className="focus-reasoning" aria-label="Recommendation details">
+              <p className="text-sm text-[var(--app-text-secondary)] mb-3">Most influenced by {topReasonLabels.join(' and ')}.</p>
+              <details>
+              <summary className="reasoning-caption cursor-pointer">Why recommended?</summary>
+              <div className="factor-list mt-3">
                 {factors.map(({ key, label, weight }) => {
                   const value = Math.max(0, Math.min(10, Number(focusTask[key] || 0)));
                   return <div className="factor-row" key={key}><div className="factor-label"><span>{label}</span><span>{weight}</span></div><div className="factor-track"><span style={{ width: `${value * 10}%` }} /></div><span className="factor-value">{value.toFixed(1)}<small> / 10</small></span></div>;
                 })}
               </div>
-              <Link to="/decision-lab" className="reasoning-link">View analysis results <FiArrowUpRight /></Link>
+              <Link to="/decision-lab" className="reasoning-link mt-3">View analysis <FiArrowUpRight /></Link>
+              </details>
             </aside>
           </section>
         ) : (
@@ -176,9 +193,9 @@ export default function Dashboard() {
           <section className="time-fit-strip" aria-label="Estimated time fit">
             <div className="time-fit-mark"><FiClock /></div>
             <div className="time-fit-copy">
-              <p className="eyebrow">TIME FIT · CALENDAR ESTIMATE</p>
-              <strong>{timeFit.estimate ? `${timeFit.estimate >= 60 ? `${(timeFit.estimate / 60).toFixed(timeFit.estimate % 60 ? 1 : 0)} h` : `${timeFit.estimate} min`} estimated for this task` : 'Add an estimate to check this task’s time fit'}</strong>
-              <span>About {Math.floor(timeFit.available / 60)} h of estimated open capacity in the next 7 days, based on dated task estimates.</span>
+              <p className="eyebrow">TIME FIT</p>
+              <strong>{timeFit.estimate ? `${timeFit.estimate} min estimated` : 'Add an estimate to check time fit'}</strong>
+              <span>About {Math.floor(timeFit.available / 60)} hours available this week.</span>
             </div>
             {timeFit.estimate && <span className={`time-fit-status ${timeFit.estimate <= timeFit.available ? 'is-fit' : 'is-tight'}`}>
               {timeFit.estimate <= timeFit.available ? 'Fits the estimate' : 'May need more time'}
@@ -188,23 +205,28 @@ export default function Dashboard() {
 
         <div className="workspace-lower-grid">
           <section className="priority-queue" aria-labelledby="queue-heading">
-            <div className="queue-heading-row"><div><p className="eyebrow">YOUR NEXT DECISIONS</p><h2 id="queue-heading">Priority queue <span>{queue.length}</span></h2></div><Link to="/tasks" className="text-action">View all <FiArrowRight /></Link></div>
-            {queue.length > (focusTask ? 1 : 0) ? <ol className="queue-list">{queue.slice(focusTask ? 1 : 0, focusTask ? 6 : 5).map((task, index) => <li key={task.id} className="queue-item"><span className="queue-index">{String(index + (focusTask ? 2 : 1)).padStart(2, '0')}</span><div className="queue-copy"><Link to={`/tasks/${task.id}`}>{task.title}</Link><span>{dateLabel(task.due_date)}{task.category ? ` · ${task.category}` : ''}</span></div><button type="button" aria-label={`Mark ${task.title} complete`} className="queue-complete" onClick={() => handleToggle(task.id)}><FiCheckCircle /></button></li>)}</ol> : <div className="queue-empty">{queue.length ? 'You have one task to focus on. Finish it, then we’ll help choose the next.' : 'Create a task to build your priority queue.'}</div>}
+            <div className="queue-heading-row"><div><p className="eyebrow">UP NEXT</p><h2 id="queue-heading">Priority Queue <span>{queue.length}</span></h2></div><Link to="/tasks" className="text-action">View all <FiArrowRight /></Link></div>
+            {queue.length > (focusTask ? 1 : 0) ? <ol className="queue-list">{queue.slice(focusTask ? 1 : 0, focusTask ? 6 : 5).map((task, index) => <li key={task.id} className="queue-item"><span className="queue-index">{String(index + (focusTask ? 2 : 1)).padStart(2, '0')}</span><div className="queue-copy"><Link to={`/tasks/${task.id}`}>{task.title}</Link><span>{dateLabel(task.due_date)}{task.category ? ` · ${task.category}` : ''}</span></div><button type="button" aria-label={`Mark ${task.title} complete`} className="queue-complete" onClick={() => handleToggle(task.id)}><FiCheckCircle /></button></li>)}</ol> : <div className="queue-empty">{queue.length ? 'One task at a time. You’ve got this.' : 'Add a task to start your queue.'}</div>}
           </section>
 
           <aside className="day-context">
             <div className="context-heading"><span className="eyebrow">CAPACITY CHECK</span><Link to="/calendar" aria-label="Open calendar"><FiArrowUpRight /></Link></div>
             <div className="capacity-number">{stats.current_workload ?? 0}<small> / 10</small></div>
-            <p className="capacity-caption">Current workload index</p>
+            <p className="capacity-caption">Workload</p>
             <div className="capacity-rule"><span style={{ width: `${Math.max(0, Math.min(100, Number(stats.current_workload || 0) * 10))}%` }} /></div>
             <div className="context-pair"><span>Due today</span><strong>{stats.tasks_due_today ?? 0}</strong></div>
             <div className="context-pair"><span>Needs attention</span><strong>{stats.overdue_tasks ?? 0}</strong></div>
             {widgets.weather && <div className="weather-context"><WeatherWidget weather={widgets.weather} /></div>}
-            <Link to="/decision-lab" className="context-link">Explore another ranking <FiArrowRight /></Link>
+            <Link to="/decision-lab" className="context-link">Open Decision Lab <FiArrowRight /></Link>
           </aside>
         </div>
 
-        <div className="daily-footer-note"><span>DETERMINISTIC BY DESIGN</span><span>Importance 40 · Urgency 30 · Time 20 · Workload 10</span><Link to="/decision-lab">How Contextify decides <FiArrowUpRight /></Link></div>
+        <section className="card p-5 space-y-3" aria-labelledby="recent-activity-heading">
+          <div className="flex items-center justify-between"><div><p className="eyebrow">YOUR WORKSPACE</p><h2 id="recent-activity-heading" className="text-lg font-bold text-[var(--app-text)] mt-1">Recent activity</h2></div><Link to="/tasks" className="text-action">Task queue <FiArrowRight /></Link></div>
+          {widgets.recent_activity?.length ? <ul className="divide-y divide-[var(--app-border)]">{widgets.recent_activity.map((activity) => <li key={activity.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"><span className="font-medium text-[var(--app-text-secondary)]">{activity.label}</span><time className="text-xs text-[var(--app-text-muted)] shrink-0">{new Date(activity.created_at).toLocaleString()}</time></li>)}</ul> : <p className="text-sm text-[var(--app-text-muted)] py-3">Your task updates will appear here.</p>}
+        </section>
+
+        <div className="daily-footer-note"><Link to="/help">How priorities work <FiArrowUpRight /></Link></div>
       </div>
 
       <TaskForm isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleSave} loading={formLoading} />

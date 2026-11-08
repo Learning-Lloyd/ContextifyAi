@@ -18,7 +18,10 @@ use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\ImportanceAnalysisController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\TaskDescriptionController;
+use App\Http\Controllers\Api\TaskBreakdownController;
 use App\Http\Controllers\Api\TaskScoringController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\SchedulingController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/analytics', [AnalyticsController::class, 'index']);
     Route::get('/calendar', [CalendarController::class, 'index']);
+    Route::get('/schedule/recommendations', [SchedulingController::class, 'index']);
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
 
     Route::get('/weather/search', [WeatherController::class, 'search']);
     Route::get('/weather/current', [WeatherController::class, 'current']);
@@ -42,6 +49,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze']);
     Route::post('/tasks/generate-description', [TaskDescriptionController::class, 'generate']);
+    Route::post('/tasks/breakdown', [TaskBreakdownController::class, 'generate']);
     Route::post('/tasks/scoring-preview', [TaskScoringController::class, 'preview']);
     Route::get('/tasks/calendar-context', [TaskScoringController::class, 'calendarContext']);
     Route::get('/tasks/{task}', [TaskController::class, 'show']);

@@ -1,10 +1,10 @@
-import { FiCloud, FiCpu, FiInfo, FiZap } from 'react-icons/fi';
+import { FiCloud, FiCpu, FiZap } from 'react-icons/fi';
 
 export default function AiExplanationPanel({ explanation, weatherContext }) {
   if (!explanation) return null;
 
   const isAi = explanation.source === 'ai';
-  const sourceLabel = isAi ? 'AI-Generated Interpretation' : 'Rule-Based Engine';
+  const sourceLabel = isAi ? 'AI explanation' : 'Context explanation';
 
   return (
     <div className="card p-6 space-y-5 border-l-4 border-l-[#14B8A6] bg-[var(--app-card)] animate-fade-in shadow-sm">
@@ -15,12 +15,7 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
             {isAi ? <FiZap size={16} /> : <FiCpu size={16} />}
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[var(--app-text)] tracking-tight">
-              Why These Tasks Are Prioritized
-            </h3>
-            <p className="text-[11px] text-[var(--app-text-muted)]">
-              Natural-language contextual explanation of your deterministic scores
-            </p>
+            <h3 className="text-sm font-bold text-[var(--app-text)] tracking-tight">Why this order?</h3>
           </div>
         </div>
         <span className="badge badge-secondary text-[11px] font-medium tracking-wide">
@@ -35,12 +30,16 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
         </p>
       )}
 
-      {/* Top Task Justification */}
+      {/* Optional reasoning details */}
+      {(explanation.top_task_explanation || explanation.productivity_tips?.length > 0 || explanation.weather_advice || weatherContext) && (
+      <details>
+      <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">More details</summary>
+      <div className="mt-3 space-y-3">
       {explanation.top_task_explanation && (
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/50 p-4">
           <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--app-text)] uppercase tracking-wider mb-1.5">
             <span className="w-2 h-2 rounded-full bg-[#14B8A6]" />
-            Top Priority Recommendation
+            Recommended task
           </div>
           <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
             {explanation.top_task_explanation}
@@ -52,7 +51,7 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
       {explanation.productivity_tips?.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-wider text-[var(--app-text-muted)]">
-            Contextual Execution Strategy
+            Tips
           </p>
           <div className="grid gap-2">
             {explanation.productivity_tips.map((tip, idx) => (
@@ -60,7 +59,6 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
                 key={idx}
                 className="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--app-text-secondary)] bg-[var(--app-surface)] p-2.5 rounded-lg border border-[var(--app-border)]"
               >
-                <FiInfo className="text-[#2563EB] shrink-0 mt-0.5" size={14} />
                 <span className="leading-snug">{tip}</span>
               </div>
             ))}
@@ -74,7 +72,7 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
           <FiCloud className="text-[#14B8A6] shrink-0 mt-0.5" size={16} />
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-[var(--app-text)]">Environmental Advisory</span>
+              <span className="font-semibold text-[var(--app-text)]">Weather advice</span>
               {weatherContext?.location && (
                 <span className="text-[var(--app-text-muted)]">({weatherContext.location})</span>
               )}
@@ -88,11 +86,10 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
         </div>
       )}
 
-      {/* Formal Architecture Disclaimer */}
-      <div className="pt-2 border-t border-[var(--app-border)] flex items-center justify-between text-[11px] text-[var(--app-text-muted)]">
-        <span>Formula: (Importance × 0.4) + (Urgency × 0.3) + (Time × 0.2) + (Workload × 0.1)</span>
-        <span className="font-medium">AI provides explanation only</span>
       </div>
+      </details>
+      )}
+      <p className="pt-2 border-t border-[var(--app-border)] text-xs text-[var(--app-text-muted)]">AI explains the results; your fixed scoring factors set the scores.</p>
     </div>
   );
 }

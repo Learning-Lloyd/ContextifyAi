@@ -210,15 +210,11 @@ class DecisionLabController extends Controller
 
         $topTaskCounts = [];
         $dominantFactorCounts = [];
-        $topScores = [];
         foreach ($decisionAnalyses as $analysis) {
             $top = $analysis->ranked_tasks[0]['title'] ?? null;
             if ($top) {
                 $topTaskCounts[$top] = ($topTaskCounts[$top] ?? 0) + 1;
                 $topTask = $analysis->ranked_tasks[0];
-                if (isset($topTask['priority_score'])) {
-                    $topScores[] = (float) $topTask['priority_score'];
-                }
                 $breakdown = $topTask['breakdown'] ?? [];
                 $weightedFactors = collect(['importance', 'urgency', 'time_availability', 'current_workload'])
                     ->filter(fn (string $factor) => isset($breakdown[$factor]['weighted']))
@@ -244,7 +240,6 @@ class DecisionLabController extends Controller
             'id' => $a->id,
             'total_selected' => $a->total_selected,
             'top_task' => $a->ranked_tasks[0]['title'] ?? null,
-            'top_score' => $a->ranked_tasks[0]['priority_score'] ?? null,
             'conflicts' => count($a->conflicts ?? []),
             'created_at' => $a->created_at,
         ]);
@@ -260,7 +255,6 @@ class DecisionLabController extends Controller
                 'most_frequent_top_task' => array_key_first($topTaskCounts),
                 'most_influential_factor' => array_key_first($dominantFactorCounts),
                 'most_influential_factor_count' => $dominantFactorCounts ? reset($dominantFactorCounts) : 0,
-                'average_top_score' => $topScores ? round(array_sum($topScores) / count($topScores), 2) : null,
                 'confidence_distribution' => $confidenceCounts,
                 'recent_analyses' => $recentAnalyses,
                 'monthly_analyses' => $decisionAnalyses
@@ -281,7 +275,6 @@ class DecisionLabController extends Controller
                 'type' => 'analysis',
                 'title' => 'Multi-task analysis (' . $a->total_selected . ' tasks)',
                 'top_task' => $a->ranked_tasks[0]['title'] ?? null,
-                'top_score' => $a->ranked_tasks[0]['priority_score'] ?? null,
                 'total_selected' => $a->total_selected,
                 'conflicts' => count($a->conflicts ?? []),
                 'summary' => $a->summary,
@@ -299,7 +292,6 @@ class DecisionLabController extends Controller
                     ? ($decision->task_a['title'] ?? 'Task A')
                     : ($decision->recommended_task === 'task_b' ? ($decision->task_b['title'] ?? 'Task B') : 'Tie'),
                 'confidence' => $decision->confidence,
-                'score_difference' => $decision->score_difference,
                 'explanation' => $decision->explanation,
                 'created_at' => $decision->created_at,
             ]);

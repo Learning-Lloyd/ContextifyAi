@@ -81,9 +81,9 @@ export default function AdminUsers() {
       <div className="space-y-6 animate-fade-in max-w-7xl">
         <div className="flex justify-between items-center flex-wrap gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
-            <h1 className="page-title">User Account Directory</h1>
+            <h1 className="page-title">Users</h1>
             <p className="page-subtitle text-xs sm:text-sm">
-              Manage system permissions, account access states, and administrative roles
+              Manage accounts and roles.
             </p>
           </div>
 

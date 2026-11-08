@@ -11,14 +11,7 @@ class ExplanationService
     {
         $parts = [];
 
-        $score = $task['priority_score'] ?? PriorityCalculator::calculate(
-            (int) $task['importance'],
-            (int) $task['urgency'],
-            (int) $task['time_availability'],
-            (int) $task['current_workload']
-        );
-
-        $parts[] = "This task has a priority score of {$score} based on importance, urgency, time availability, and workload.";
+        $parts[] = 'This task is evaluated using importance, urgency, available time, and current workload.';
 
         if (! empty($task['due_date'])) {
             $group = DeadlineUrgencyService::deadlineGroup($task['due_date']);

@@ -18,9 +18,9 @@ import { useToast } from '../hooks/useToast';
 import { taskService } from '../services/taskService';
 
 const SORT_OPTIONS = [
-  { value: 'due_date', label: 'Deadline Proximity' },
-  { value: 'created_at', label: 'Created Date' },
-  { value: 'title', label: 'Alphabetical Title' },
+  { value: 'due_date', label: 'Deadline' },
+  { value: 'created_at', label: 'Created' },
+  { value: 'title', label: 'Title' },
 ];
 
 export default function Tasks() {
@@ -150,9 +150,8 @@ export default function Tasks() {
         {/* Page Header */}
         <div className="task-page-heading">
           <div>
-            <p className="eyebrow"><span className="eyebrow-dot" /> PRIORITY QUEUE</p>
-            <h1 className="page-title">Your tasks, <em>in context.</em></h1>
-            <p className="page-subtitle">Review deadlines and analysis status. Select tasks in Decision Lab to calculate their priority scores.</p>
+            <h1 className="page-title">Tasks</h1>
+            <p className="page-subtitle">Manage your tasks and deadlines.</p>
           </div>
           <button
             type="button"
@@ -180,15 +179,15 @@ export default function Tasks() {
                 type="text"
                 value={filters.search}
                 onChange={(e) => updateFilter('search', e.target.value)}
-                placeholder="Search title, notes, or category…"
+                placeholder="Search tasks…"
                 className="input pl-9 text-xs sm:text-sm"
               />
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto shrink-0">
               <select
                 value={filters.sort}
                 onChange={(e) => updateFilter('sort', e.target.value)}
-                className="input text-xs sm:text-sm w-44"
+                className="input text-sm w-full sm:w-44"
               >
                 {SORT_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -199,10 +198,10 @@ export default function Tasks() {
               <select
                 value={filters.direction}
                 onChange={(e) => updateFilter('direction', e.target.value)}
-                className="input text-xs sm:text-sm w-28"
+                className="input text-sm w-full sm:w-28"
               >
-                <option value="asc">Soonest / Oldest</option>
-                <option value="desc">Latest / Newest</option>
+                <option value="asc">Soonest first</option>
+                <option value="desc">Latest first</option>
               </select>
             </div>
           </div>
@@ -211,7 +210,7 @@ export default function Tasks() {
           <div className="flex flex-wrap gap-2.5 items-center pt-2 text-xs">
             <div className="flex items-center gap-1.5 text-[var(--app-text-muted)] mr-1">
               <FiFilter size={14} />
-              <span className="font-semibold uppercase tracking-wider text-[10px]">Filter:</span>
+              <span className="font-semibold">Filters</span>
             </div>
 
             <select
@@ -219,7 +218,7 @@ export default function Tasks() {
               onChange={(e) => updateFilter('status', e.target.value)}
               className="input w-auto text-xs py-1.5 px-2.5"
             >
-              <option value="">All Statuses</option>
+              <option value="">All statuses</option>
               <option value="pending">Pending</option>
               <option value="completed">Completed</option>
             </select>
@@ -229,7 +228,7 @@ export default function Tasks() {
               onChange={(e) => updateFilter('category', e.target.value)}
               className="input w-auto text-xs py-1.5 px-2.5"
             >
-              <option value="">All Categories</option>
+              <option value="">All categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -256,9 +255,9 @@ export default function Tasks() {
           <div className="queue-empty-state">
             <EmptyState
               title="No tasks match your criteria"
-              description="Try adjusting your search terms or clearing your filters to see active tasks."
+                description="Try another search or clear your filters."
               action={{
-                label: 'Create New Task',
+                label: 'Add task',
                 icon: FiPlus,
                 onClick: () => {
                   setEditingTask(null);

@@ -174,9 +174,9 @@ export default function AdminFeedback() {
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
-            <h1 className="page-title">User Feedback Management</h1>
+            <h1 className="page-title">Feedback</h1>
             <p className="page-subtitle text-xs sm:text-sm">
-              Review user ratings, triage bug reports, and respond to feature suggestions
+              Ratings, reports, and suggestions.
             </p>
           </div>
 

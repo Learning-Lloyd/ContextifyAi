@@ -97,31 +97,28 @@ export default function DecisionLab() {
         {/* Page Title & Main Actions */}
         <div className="decision-lab-header">
           <div>
-            <p className="eyebrow"><span className="eyebrow-dot" /> COMPARATIVE ANALYSIS</p>
             <h1 className="page-title">Decision Lab</h1>
-            <p className="page-subtitle text-xs sm:text-sm">
-              Multi-factor contextual task prioritization engine and comparative analysis
-            </p>
+            <p className="page-subtitle text-sm">Select tasks to compare their priorities.</p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             {activeTab === 'analyze' && (
               <>
                 <button
                   type="button"
                   onClick={handleAnalyze}
                   disabled={analyzing || selectedIds.length === 0}
-                  className="btn btn-primary text-xs sm:text-sm shadow-sm"
+                  className="btn btn-primary text-sm shadow-sm w-full sm:w-auto"
                 >
                   <FiZap size={15} />
-                  {analyzing ? 'Evaluating Factors...' : `Analyze ${selectedIds.length} Tasks`}
+                  {analyzing ? 'Analyzing…' : selectedIds.length ? `Analyze ${selectedIds.length} tasks` : 'Analyze tasks'}
                 </button>
                 {analysis && (
                   <button
                     type="button"
                     onClick={handleSave}
                     disabled={saving}
-                    className="btn btn-secondary text-xs sm:text-sm"
+                    className="btn btn-secondary text-sm w-full sm:w-auto"
                   >
                     <FiSave size={15} />
                     {saving ? 'Saving...' : 'Save Decision'}
@@ -146,7 +143,7 @@ export default function DecisionLab() {
             }`}
           >
             <FiCpu size={16} />
-            Prioritization Analysis
+            Analyze
           </button>
           <button
             type="button"
@@ -160,7 +157,7 @@ export default function DecisionLab() {
             }`}
           >
             <FiSliders size={16} />
-            What-If Scenario Simulator
+            What if?
           </button>
         </div>
 
@@ -173,10 +170,10 @@ export default function DecisionLab() {
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div>
                   <h2 className="text-base font-bold text-[var(--app-text)]">
-                    Select Candidate Tasks ({selectedIds.length} of {tasks.length} selected)
+                    Select tasks <span className="text-sm font-medium text-[var(--app-text-muted)]">{selectedIds.length} of {tasks.length} selected</span>
                   </h2>
                   <p className="text-xs text-[var(--app-text-muted)]">
-                    Choose which tasks you want to rank with multi-factor contextual analysis
+                    Compare the tasks you select.
                   </p>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
@@ -192,7 +189,7 @@ export default function DecisionLab() {
                     onClick={clearAll}
                     className="btn btn-ghost btn-sm text-xs"
                   >
-                    Clear Selection
+                    Clear
                   </button>
                 </div>
               </div>
@@ -200,13 +197,13 @@ export default function DecisionLab() {
               {tasks.length === 0 ? (
                 <EmptyState
                   title="No tasks available"
-                  description="Create some tasks on the Dashboard or Tasks page first before analyzing decisions."
+                  description="Add a task to get started."
                 />
               ) : (
                 <>
                 {unanalyzedTaskCount > 0 && (
                   <p className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[var(--app-text-secondary)]">
-                    {unanalyzedTaskCount} task{unanalyzedTaskCount === 1 ? ' needs' : 's need'} analysis. Select task{unanalyzedTaskCount === 1 ? '' : 's'} and run the analysis to calculate and reveal priority scores.
+                    {unanalyzedTaskCount} task{unanalyzedTaskCount === 1 ? '' : 's'} need analysis.
                   </p>
                 )}
                 <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 mt-3">
@@ -301,10 +298,10 @@ export default function DecisionLab() {
                 {/* Ranked List */}
                 {analysis.ranked_tasks?.length > 0 && (
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 pb-1">
+                        <div className="flex items-center gap-2 pb-1">
                       <FiCheckCircle className="text-[#2563EB]" size={18} />
                       <h2 className="text-base font-bold text-[var(--app-text)]">
-                        Ranked Priority Order ({analysis.total_selected} tasks evaluated)
+                          Priority order · {analysis.total_selected} tasks
                       </h2>
                     </div>
                     <div className="space-y-4">

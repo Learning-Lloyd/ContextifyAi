@@ -11,8 +11,8 @@ export default function WeatherWidget({ weather, compact = false }) {
             <FiMapPin size={16} />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-[var(--app-text)]">Weather Context</h4>
-            <p className="text-xs text-[var(--app-text-secondary)] mt-1">
+            <h4 className="text-sm font-semibold text-[var(--app-text)]">Weather</h4>
+            <p className="text-sm text-[var(--app-text-secondary)] mt-1">
               Set your city in{' '}
               <Link to="/profile" className="text-[#2563EB] hover:underline font-medium">
                 Profile
@@ -43,8 +43,8 @@ export default function WeatherWidget({ weather, compact = false }) {
       {/* Top Header */}
       <div className="flex items-start justify-between">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[var(--app-text-muted)]">
-            Weather Context
+          <span className="text-xs font-semibold text-[var(--app-text-muted)]">
+            Weather
           </span>
           <div className="flex items-center gap-1.5 mt-0.5">
             <FiMapPin size={13} className="text-[#2563EB]" />
@@ -75,30 +75,31 @@ export default function WeatherWidget({ weather, compact = false }) {
 
       {/* 5-day forecast mini-strip */}
       {weather.forecast?.length > 0 && (
-        <div className="pt-3 border-t border-[var(--app-border)]">
+        <details className="pt-3 border-t border-[var(--app-border)]">
+          <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">5-day forecast</summary>
           <div className="grid grid-cols-5 gap-1.5 text-center">
             {weather.forecast.slice(0, 5).map((day) => (
               <div
                 key={day.date}
                 className="p-1.5 rounded-lg hover:bg-[var(--app-hover)] transition-colors text-xs"
               >
-                <p className="text-[11px] text-[var(--app-text-muted)] font-medium">
+                <p className="text-xs text-[var(--app-text-muted)] font-medium">
                   {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
                 </p>
                 <p className="text-base my-1">{weatherIcon(day.weather_condition)}</p>
-                <p className="font-semibold text-[11px] text-[var(--app-text)]">
+                <p className="font-semibold text-xs text-[var(--app-text)]">
                   {day.temperature_max}°
                 </p>
               </div>
             ))}
           </div>
-        </div>
+        </details>
       )}
 
       {/* Advisory disclaimer */}
-      <div className="flex items-center gap-1.5 text-[11px] text-[var(--app-text-muted)] pt-1">
+      <div className="flex items-center gap-1.5 text-xs text-[var(--app-text-muted)] pt-1">
         <FiInfo size={12} className="text-[var(--app-text-muted)] shrink-0" />
-        <span>Advisory only — does not alter deterministic task priority scores.</span>
+        <span>Advisory only; it doesn’t change task priority.</span>
       </div>
     </div>
   );

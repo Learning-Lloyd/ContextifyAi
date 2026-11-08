@@ -1,30 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   FiArrowLeft,
   FiCalendar,
   FiCheck,
   FiClock,
-  FiCpu,
   FiEdit2,
-  FiInfo,
   FiMapPin,
-  FiZap,
 } from 'react-icons/fi';
 import Layout from '../components/Layout';
 import PriorityBadge from '../components/PriorityBadge';
-import ScoreRing from '../components/ScoreRing';
-import FactorBar from '../components/FactorBar';
 import TaskForm from '../components/TaskForm';
+import TaskBreakdownPanel from '../components/TaskBreakdownPanel';
 import { taskService } from '../services/taskService';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
-
-const FACTOR_META = {
-  importance: { label: 'Task Importance', weight: 0.4, color: '#2563EB' },
-  urgency: { label: 'Deadline Urgency', weight: 0.3, color: '#F59E0B' },
-  time_availability: { label: 'Time Availability', weight: 0.2, color: '#14B8A6' },
-  current_workload: { label: 'Current Workload', weight: 0.1, color: '#64748B' },
-};
 
 export default function TaskDetail() {
   const [task, setTask] = useState(null);
@@ -34,7 +23,7 @@ export default function TaskDetail() {
 
   const { id: taskId } = useParams();
 
-  const fetchTask = async () => {
+  const fetchTask = useCallback(async () => {
     try {
       const result = await taskService.getById(taskId);
       setTask(result.task);
@@ -43,11 +32,11 @@ export default function TaskDetail() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [taskId]);
 
   useEffect(() => {
     fetchTask();
-  }, [taskId]);
+  }, [fetchTask]);
 
   const handleUpdate = async (formData) => {
     setFormLoading(true);
@@ -94,7 +83,6 @@ export default function TaskDetail() {
     );
   }
 
-  const breakdown = task.breakdown || {};
   const countdown = task.countdown || getCountdownLabel(task.due_date, task.due_time);
 
   return (
@@ -126,14 +114,14 @@ export default function TaskDetail() {
               </div>
             </div>
             <span className="text-[10px] text-[var(--app-text-muted)] italic">
-              Advisory context
+              Weather advisory
             </span>
           </div>
         )}
 
         {/* Main Task Card */}
         <div className="card p-7 space-y-6 shadow-sm">
-          {/* Header Row with Badges, Actions, and Score Ring */}
+          {/* Task details */}
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2 flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -188,13 +176,6 @@ export default function TaskDetail() {
               </div>
             </div>
 
-            {/* Score Ring Hero */}
-            <div className="flex flex-col items-center shrink-0">
-              <ScoreRing score={task.priority_score} variant="lg" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--app-text-muted)] mt-1">
-                Priority Score
-              </span>
-            </div>
           </div>
 
           {/* Action Buttons */}
@@ -219,76 +200,20 @@ export default function TaskDetail() {
             </button>
           </div>
 
-          {/* AI Explanation Callout */}
-          {task.explanation && (
-            <div className="p-4 rounded-xl border border-teal-500/30 bg-teal-500/[0.03] space-y-1.5">
-              <div className="flex items-center gap-2 text-xs font-bold text-[#14B8A6] uppercase tracking-wider">
-                <FiZap size={14} />
-                <span>AI Contextual Explanation</span>
-              </div>
-              <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
-                {task.explanation}
-              </p>
-              <p className="text-[10px] text-[var(--app-text-muted)] italic pt-1">
-                This narrative is produced by the language model to interpret your deterministic score.
-              </p>
-            </div>
-          )}
-
-          {/* Priority Calculation Breakdown */}
-          <div className="pt-4 border-t border-[var(--app-border)] space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
-                  Contextual Factor Breakdown
-                </h2>
-                <p className="text-xs text-[var(--app-text-muted)]">
-                  Formula: (Importance × 0.40) + (Urgency × 0.30) + (Time × 0.20) + (Workload × 0.10)
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-3">
-              {Object.entries(FACTOR_META).map(([key, meta]) => {
-                const item = breakdown[key] || { value: task[key] ?? 5, weighted: '—' };
-                return (
-                  <div
-                    key={key}
-                    className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/30 space-y-1"
-                  >
-                    <FactorBar
-                      label={meta.label}
-                      factorKey={key}
-                      value={item.value}
-                      weight={meta.weight}
-                      showFormula={true}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Final Total Banner */}
-            <div className="p-4 rounded-xl bg-blue-500/[0.05] border border-[#2563EB]/25 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-[var(--app-text)] uppercase tracking-wider">
-                  Computed Deterministic Priority
-                </p>
-                <p className="text-[11px] text-[var(--app-text-muted)]">
-                  Exact mathematical sum of weighted factors
-                </p>
-              </div>
-              <span className="text-2xl font-extrabold text-[#2563EB] font-mono">
-                {task.priority_score}
-              </span>
-            </div>
+          <div className="pt-4 border-t border-[var(--app-border)] flex flex-wrap items-center justify-between gap-3">
+            <p className="text-xs text-[var(--app-text-secondary)]">
+              Select this task in Decision Lab to view its priority analysis.
+            </p>
+            <Link to="/decision-lab" className="btn btn-secondary btn-sm">Open Decision Lab</Link>
           </div>
+
+          <TaskBreakdownPanel task={task} />
 
           {/* Notes Section if Present */}
           {task.notes && (
             <div className="pt-4 border-t border-[var(--app-border)] space-y-1.5">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
-                Internal Notes
+                Notes
               </h3>
               <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] whitespace-pre-wrap bg-[var(--app-muted)]/40 p-3 rounded-lg border border-[var(--app-border)]">
                 {task.notes}

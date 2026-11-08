@@ -24,6 +24,11 @@ class User extends Authenticatable
         'city',
         'city_latitude',
         'city_longitude',
+        'task_reminders_enabled',
+        'overdue_reminders_enabled',
+        'deadline_reminder_minutes',
+        'daily_available_minutes',
+        'workday_start_time',
     ];
 
     protected $hidden = [
@@ -40,6 +45,10 @@ class User extends Authenticatable
             'last_login_at' => 'datetime',
             'city_latitude' => 'float',
             'city_longitude' => 'float',
+            'task_reminders_enabled' => 'boolean',
+            'overdue_reminders_enabled' => 'boolean',
+            'deadline_reminder_minutes' => 'integer',
+            'daily_available_minutes' => 'integer',
         ];
     }
 
@@ -71,6 +80,11 @@ class User extends Authenticatable
     public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class);
+    }
+
+    public function inAppNotifications(): HasMany
+    {
+        return $this->hasMany(UserNotification::class);
     }
 }
 

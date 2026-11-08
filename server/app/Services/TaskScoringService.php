@@ -58,25 +58,11 @@ class TaskScoringService
             'due_time' => $dueTime,
         ]);
 
-        $priorityScore = PriorityCalculator::calculate(
-            $factors['importance'],
-            $factors['urgency'],
-            $factors['time_availability'],
-            $factors['current_workload']
-        );
-
         return [
             'importance' => $factors['importance'],
             'urgency' => $factors['urgency'],
             'time_availability' => $factors['time_availability'],
             'current_workload' => $factors['current_workload'],
-            'priority_score' => $priorityScore,
-            'breakdown' => PriorityCalculator::breakdown(
-                $factors['importance'],
-                $factors['urgency'],
-                $factors['time_availability'],
-                $factors['current_workload']
-            ),
             'importance_analysis' => $factors['importance_analysis'],
             'calendar_context' => $factors['calendar_context'],
         ];

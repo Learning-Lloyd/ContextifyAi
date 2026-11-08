@@ -148,10 +148,8 @@ export default function Feedback() {
               <FiMessageSquare size={20} />
             </div>
             <div>
-              <h1 className="page-title">Feedback & Suggestions</h1>
-              <p className="page-subtitle text-xs sm:text-sm">
-                Share your experience, feature requests, or report issues to help continuously improve Contextify
-              </p>
+              <h1 className="page-title">Feedback</h1>
+              <p className="page-subtitle text-sm">Tell us what works or what needs fixing.</p>
             </div>
           </div>
         </div>
@@ -162,10 +160,10 @@ export default function Feedback() {
             <div className="card p-6 space-y-5 bg-[var(--app-card)]">
               <div className="border-b border-[var(--app-border)] pb-3">
                 <h2 className="text-base font-bold text-[var(--app-text)]">
-                  Submit Feedback
+                  Send feedback
                 </h2>
                 <p className="text-xs text-[var(--app-text-muted)]">
-                  Your feedback goes directly to the project administrators.
+                  Shared with the project team.
                 </p>
               </div>
 
@@ -173,7 +171,7 @@ export default function Feedback() {
                 {/* Category Selection */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)] block">
-                    Feedback Category
+                    Feedback type
                   </label>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {CATEGORIES.map((cat) => {
@@ -202,7 +200,7 @@ export default function Feedback() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)] block">
-                      Overall Rating
+                      Rating
                     </label>
                     <span className="text-xs font-mono font-bold text-[#2563EB]">
                       {hoverRating || rating} / 5 Stars
@@ -241,7 +239,7 @@ export default function Feedback() {
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)] block">
-                      Message / Details
+                      Message
                     </label>
                     <span
                       className={`text-[11px] font-mono ${
@@ -256,7 +254,7 @@ export default function Feedback() {
                     rows={5}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Describe your suggestion, the bug you encountered, or thoughts on the decision prioritization results..."
+                    placeholder="Share a suggestion or report a problem…"
                     className={`input w-full text-sm leading-relaxed ${
                       errors.message ? 'border-red-500 focus:ring-red-500' : ''
                     }`}

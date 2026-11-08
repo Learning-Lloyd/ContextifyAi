@@ -63,9 +63,9 @@ export default function AdminAnalytics() {
     <AdminLayout>
       <div className="space-y-8 animate-fade-in max-w-7xl">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Platform-Wide Analytics</h1>
+          <h1 className="page-title">Platform analytics</h1>
           <p className="page-subtitle text-xs sm:text-sm">
-            Cross-system aggregate telemetry on task velocity, adoption, priority spreads, and weather impacts
+            Task activity and system trends.
           </p>
         </div>
 

@@ -124,9 +124,12 @@ class TaskController extends Controller
         $this->authorizeTask($request, $task);
         $this->refreshWeatherIfStale($task);
 
-        return response()->json([
-            'task' => $this->formatTask($task->fresh(), true),
-        ]);
+        $freshTask = $task->fresh();
+        $taskData = $this->formatTask($freshTask, true);
+        $taskData['analyzed'] = app(TaskAnalysisStatusService::class)
+            ->forTasks($request->user(), collect([$freshTask]))[$freshTask->id] ?? false;
+
+        return response()->json(['task' => $taskData]);
     }
 
     public function update(Request $request, Task $task): JsonResponse
@@ -336,7 +339,6 @@ class TaskController extends Controller
             'urgency_manual' => $task->urgency_manual,
             'time_availability' => $task->time_availability,
             'current_workload' => $task->current_workload,
-            'priority_score' => $task->priority_score,
             'status' => $task->status,
             'is_archived' => $task->is_archived,
             'archived_at' => $task->archived_at,

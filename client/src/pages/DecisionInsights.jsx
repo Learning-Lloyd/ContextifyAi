@@ -11,7 +11,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { FiAward } from 'react-icons/fi';
 import Layout from '../components/Layout';
 import StatCard from '../components/StatCard';
 import LoadingSkeleton from '../components/LoadingSkeleton';
@@ -80,18 +79,16 @@ export default function DecisionInsights() {
       <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
         <div className="pb-2 border-b border-[var(--app-border)]">
           <h1 className="page-title">Decision Insights & Patterns</h1>
-          <p className="page-subtitle text-xs sm:text-sm">
-            Aggregated patterns, confidence ratios, and frequency trends across past decisions
-          </p>
+          <p className="page-subtitle text-sm">Patterns from your saved decisions.</p>
         </div>
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard title="Total Analyses" value={insights.total_analyses} type="total" accent />
-          <StatCard title="A/B Comparisons" value={insights.total_comparisons} type="average" />
-          <StatCard title="Avg Tasks / Run" value={insights.avg_tasks_per_analysis} type="pending" />
+          <StatCard title="Comparisons" value={insights.total_comparisons} type="average" />
+          <StatCard title="Tasks per analysis" value={insights.avg_tasks_per_analysis} type="pending" />
           <StatCard
-            title="Conflicts Flagged"
+            title="Deadline conflicts"
             value={insights.total_conflicts_detected}
             type={insights.total_conflicts_detected > 0 ? 'highest' : 'completed'}
           />
@@ -100,44 +97,20 @@ export default function DecisionInsights() {
         {insights.total_analyses === 0 && insights.total_comparisons === 0 ? (
           <EmptyState
             title="No decision history yet"
-            description="Run an analysis or compare tasks in Decision Lab. Insights will summarize your saved decisions here; no sample data is shown."
+            description="Analyze or compare tasks in Decision Lab to see your patterns here."
           />
         ) : (
           <>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="card p-5">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">Most influential factor</p>
-                <p className="text-xl font-bold text-[var(--app-text)] mt-2 capitalize">{insights.most_influential_factor?.replaceAll('_', ' ') || 'Not enough ranked history'}</p>
-                <p className="text-xs text-[var(--app-text-secondary)] mt-1">Led the weighted factor contributions in {insights.most_influential_factor_count || 0} saved recommendation(s).</p>
+                <p className="text-xs font-semibold text-[var(--app-text-muted)]">Most influential factor</p>
+                <p className="text-lg font-bold text-[var(--app-text)] mt-2 capitalize">{insights.most_influential_factor?.replaceAll('_', ' ') || 'Not enough history'}</p>
               </div>
               <div className="card p-5">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">Average recommended score</p>
-                <p className="text-xl font-bold text-[var(--app-text)] mt-2">{insights.average_top_score ?? '—'}<span className="text-sm font-medium text-[var(--app-text-muted)]"> / 10</span></p>
-                <p className="text-xs text-[var(--app-text-secondary)] mt-1">Calculated from saved multi-task analyses, excluding what-if previews.</p>
+                <p className="text-xs font-semibold text-[var(--app-text-muted)]">Most often ranked first</p>
+                <p className="text-lg font-bold text-[var(--app-text)] mt-2">{insights.most_frequent_top_task || 'Not enough history'}</p>
               </div>
             </div>
-
-        {/* Highlight Banner: Frequent Top Task */}
-        {insights.most_frequent_top_task && (
-          <div className="card p-5 bg-blue-500/[0.04] border-l-4 border-l-[#2563EB] flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center shrink-0">
-                <FiAward size={20} />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
-                  Most Frequently Top-Ranked Priority
-                </p>
-                <p className="text-base font-bold text-[var(--app-text)] mt-0.5">
-                  {insights.most_frequent_top_task}
-                </p>
-              </div>
-            </div>
-            <span className="badge badge-primary text-xs font-semibold shrink-0">
-              Top Priority
-            </span>
-          </div>
-        )}
 
         {/* Charts Grid */}
         <div className="grid lg:grid-cols-2 gap-6">
@@ -146,9 +119,6 @@ export default function DecisionInsights() {
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
                 Analyses by Month
               </h3>
-              <p className="text-xs text-[var(--app-text-muted)]">
-                Frequency of decision analyses conducted over time
-              </p>
             </div>
             <div className="pt-2">
               <ResponsiveContainer width="100%" height={220}>
@@ -166,11 +136,8 @@ export default function DecisionInsights() {
           <div className="card p-6 shadow-sm space-y-3">
             <div>
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
-                Comparison Confidence Distribution
+                Comparison confidence
               </h3>
-              <p className="text-xs text-[var(--app-text-muted)]">
-                Confidence levels calculated from score distance thresholds
-              </p>
             </div>
             {confidenceData.length > 0 ? (
               <div className="pt-2">
@@ -208,9 +175,9 @@ export default function DecisionInsights() {
           <div className="card p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--app-border)]">
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
-                Recent Analysis Logs
+                Recent analyses
               </h3>
-              <span className="text-xs text-[var(--app-text-muted)]">Last 5 records</span>
+              <span className="text-xs text-[var(--app-text-muted)]">Last 5</span>
             </div>
             <div className="space-y-2">
               {insights.recent_analyses.map((item) => (
@@ -225,12 +192,9 @@ export default function DecisionInsights() {
                     </p>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-sm font-bold text-[#2563EB] font-mono">
-                      Score {item.top_score ?? '—'}
-                    </span>
                     {item.conflicts > 0 && (
-                      <p className="text-[#F59E0B] font-semibold text-[11px]">
-                        {item.conflicts} conflict(s)
+                      <p className="text-[#F59E0B] font-semibold text-xs">
+                        {item.conflicts} deadline conflict{item.conflicts === 1 ? '' : 's'}
                       </p>
                     )}
                   </div>

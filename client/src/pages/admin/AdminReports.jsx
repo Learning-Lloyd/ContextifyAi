@@ -67,9 +67,9 @@ export default function AdminReports() {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in max-w-7xl">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Export & Audit Reports</h1>
+          <h1 className="page-title">Reports</h1>
           <p className="page-subtitle text-xs sm:text-sm">
-            Generate and download platform data in standard business formats
+            Export platform data.
           </p>
         </div>
 

@@ -46,9 +46,9 @@ export default function AdminTasks() {
       <div className="space-y-6 animate-fade-in max-w-7xl">
         <div className="flex justify-between items-center flex-wrap gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
-            <h1 className="page-title">Global Task Monitoring</h1>
+            <h1 className="page-title">Tasks</h1>
             <p className="page-subtitle text-xs sm:text-sm">
-              Cross-user inspection of task backlogs, deadlines, and computed priority scores
+              View task deadlines and priorities across users.
             </p>
           </div>
 

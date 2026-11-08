@@ -40,7 +40,7 @@ export default function CommandPalette({ open, onClose, isAdmin }) {
     ...filteredPages.map((page) => ({ ...page, kind: 'page' })),
     ...taskMatches.map((task) => ({
       label: task.title,
-      description: `Task · Priority ${Number(task.priority_score || 0).toFixed(2)}${task.due_date ? ` · Due ${task.due_date}` : ''}`,
+      description: `Task${task.due_date ? ` · Due ${task.due_date}` : ''}`,
       to: `/tasks/${task.id}`,
       kind: 'task',
     })),

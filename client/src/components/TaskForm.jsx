@@ -22,23 +22,13 @@ const defaultFactors = {
   urgency: 5,
   time_availability: 5,
   current_workload: 5,
-  priority_score: '5.00',
 };
 
-function calculateScore(importance, urgency, timeAvailability, currentWorkload) {
-  return (
-    importance * 0.4 +
-    urgency * 0.3 +
-    timeAvailability * 0.2 +
-    currentWorkload * 0.1
-  ).toFixed(2);
-}
-
 const sourceLabels = {
-  ai: 'AI determined',
-  heuristic: 'Keyword-based fallback',
-  default: 'Default fallback',
-  calendar: 'Based on calendar',
+  ai: 'AI',
+  heuristic: 'Keyword match',
+  default: 'Default',
+  calendar: 'Calendar',
 };
 
 function AutoFactorRow({ label, value, source, reason, loading }) {
@@ -96,12 +86,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         urgency: task.urgency || 5,
         time_availability: task.time_availability || 5,
         current_workload: task.current_workload || 5,
-        priority_score: task.priority_score?.toFixed?.(2) ?? calculateScore(
-          task.importance || 5,
-          task.urgency || 5,
-          task.time_availability || 5,
-          task.current_workload || 5
-        ),
       });
     } else {
       setForm(defaultValues);
@@ -130,12 +114,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         ...prev,
         importance: 5,
         urgency: form.due_date ? suggestUrgencyFromDueDate(form.due_date) : 5,
-        priority_score: calculateScore(
-          5,
-          form.due_date ? suggestUrgencyFromDueDate(form.due_date) : 5,
-          prev.time_availability,
-          prev.current_workload
-        ),
       }));
       return undefined;
     }
@@ -161,12 +139,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
           urgency: preview.urgency,
           time_availability: preview.time_availability,
           current_workload: preview.current_workload,
-          priority_score: preview.priority_score?.toFixed?.(2) ?? calculateScore(
-            preview.importance,
-            preview.urgency,
-            preview.time_availability,
-            preview.current_workload
-          ),
         });
         setImportanceAnalysis(preview.importance_analysis || null);
         setCalendarContext(preview.calendar_context || null);
@@ -178,12 +150,6 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         setFactors((prev) => ({
           ...prev,
           urgency: form.due_date ? suggestUrgencyFromDueDate(form.due_date) : prev.urgency,
-          priority_score: calculateScore(
-            prev.importance,
-            form.due_date ? suggestUrgencyFromDueDate(form.due_date) : prev.urgency,
-            prev.time_availability,
-            prev.current_workload
-          ),
         }));
       } finally {
         if (requestId === previewRequestIdRef.current) {
@@ -288,7 +254,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               value={form.title}
               onChange={handleChange}
               className="input"
-              placeholder="Enter task title"
+              placeholder="Task title"
             />
             {errors.title && <p className="form-error">{errors.title}</p>}
           </div>
@@ -296,8 +262,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
           <div>
             <div className="flex items-center justify-between gap-2 mb-1.5">
               <label className="label mb-0" htmlFor="task-description">Description <span className="text-[var(--app-text-muted)] font-normal">(optional)</span></label>
-              <button type="button" onClick={handleGenerateDescription} disabled={generatingDescription || !form.title.trim()} className="btn btn-ghost text-xs px-2 py-1 disabled:opacity-50">
-                <FiFileText size={13} /> {generatingDescription ? 'Writing…' : 'Help me write'}
+              <button type="button" onClick={handleGenerateDescription} disabled={generatingDescription || !form.title.trim()} className="btn btn-ghost text-sm px-2 py-1 disabled:opacity-50">
+                <FiFileText size={14} /> {generatingDescription ? 'Writing…' : 'Help me write'}
               </button>
             </div>
             <textarea
@@ -307,10 +273,10 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               onChange={handleChange}
               rows={3}
               className="input resize-none"
-              placeholder="Optional description"
+              placeholder="Add a short description (optional)"
             />
             {descriptionError && <p className="form-error mt-1">{descriptionError}</p>}
-            <p className="text-[11px] text-[var(--app-text-muted)] mt-1">AI suggestions only expand your task notes; the prioritization engine calculates the score separately.</p>
+            <p className="text-xs text-[var(--app-text-muted)] mt-1">AI drafts text for you to review.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -327,7 +293,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               />
             </div>
             <div>
-              <label className="label" htmlFor="task-estimated-time">Est. Time (minutes)</label>
+              <label className="label" htmlFor="task-estimated-time">Estimated time (min)</label>
               <input
                 id="task-estimated-time"
                 type="number"
@@ -386,23 +352,17 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             error={errors.location}
           />
 
-          <div className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
-            <div className="flex items-center gap-2 text-sm font-medium text-[#2563EB] mb-3">
-              <FiZap size={14} />
-              Automatic Scoring Factors
-              {analyzingFactors && (
-                <span className="text-xs font-normal text-[var(--app-text-muted)]">(updating...)</span>
-              )}
-            </div>
-
-            {analysisError && (
-              <p className="text-xs text-[#F59E0B] mb-3">{analysisError}</p>
-            )}
+          {analysisError && <p className="text-sm text-[#F59E0B]" role="status">{analysisError}</p>}
+          <details className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#2563EB]">
+              <FiZap size={14} /> Scoring factors {analyzingFactors ? '· Updating…' : ''}
+            </summary>
+            <div className="mt-3">
 
             <AutoFactorRow
               label="Importance"
               value={factors.importance}
-              source={importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'AI determined') : 'Enter a title to analyze'}
+              source={importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'AI') : 'Add a title'}
               reason={importanceAnalysis?.reason}
               loading={analyzingFactors && form.title.trim().length >= 3}
             />
@@ -410,15 +370,15 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             <AutoFactorRow
               label="Urgency"
               value={factors.urgency}
-              source="Automatically calculated from deadline"
-              reason={form.due_date ? 'Derived from how soon the due date arrives.' : 'Set a due date to calculate urgency.'}
+              source="From deadline"
+              reason={form.due_date ? 'Based on how soon it is due.' : 'Set a deadline to calculate.'}
               loading={false}
             />
 
             <AutoFactorRow
               label="Time Availability"
               value={factors.time_availability}
-              source={calendarContext ? sourceLabels[calendarContext.source] || 'Based on calendar' : 'Based on calendar'}
+              source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'}
               reason={calendarContext?.reason_time_availability}
               loading={analyzingFactors && form.title.trim().length >= 3}
             />
@@ -426,7 +386,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             <AutoFactorRow
               label="Current Workload"
               value={factors.current_workload}
-              source={calendarContext ? sourceLabels[calendarContext.source] || 'Based on calendar' : 'Based on calendar'}
+              source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'}
               reason={calendarContext?.reason_current_workload}
               loading={analyzingFactors && form.title.trim().length >= 3}
             />
@@ -445,10 +405,9 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               </p>
             )}
 
-            <p className="text-xs text-[var(--app-text-muted)] mt-3">
-              These factors are determined automatically and cannot be edited manually.
-            </p>
-          </div>
+            <p className="text-xs text-[var(--app-text-muted)] mt-3">Calculated automatically from task details and your calendar.</p>
+            </div>
+          </details>
 
           <button type="submit" disabled={loading} className="btn btn-primary w-full">
             {loading ? 'Saving...' : task ? 'Update Task' : 'Create Task'}

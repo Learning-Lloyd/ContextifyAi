@@ -26,7 +26,6 @@ class DashboardController extends Controller
         $totalTasks = $tasks->count();
         $completedTasks = $tasks->where('status', 'completed')->count();
         $pendingTasks = $tasks->where('status', 'pending')->count();
-        $averageScore = round($tasks->avg('priority_score') ?? 0, 2);
 
         $highestPriorityTask = $tasks
             ->where('status', 'pending')
@@ -77,14 +76,34 @@ class DashboardController extends Controller
                 ->map(fn (DecisionComparison $decision) => [
                     'id' => $decision->id,
                     'recommended_task' => $decision->recommended_task,
-                    'score_a' => $decision->score_a,
-                    'score_b' => $decision->score_b,
                     'confidence' => $decision->confidence,
                     'created_at' => $decision->created_at,
                 ]),
         ];
 
         $weather = $this->resolveDashboardWeather($request, $tasks);
+
+        $recentActivity = $user->auditLogs()
+            ->whereIn('action', ['task_create', 'task_update', 'task_delete', 'task_toggle_complete', 'task_archive', 'task_restore'])
+            ->latest()
+            ->take(6)
+            ->get(['id', 'action', 'metadata', 'created_at'])
+            ->map(function ($event) {
+                $taskTitle = $event->metadata['title'] ?? 'a task';
+                $label = match ($event->action) {
+                    'task_create' => "Created {$taskTitle}",
+                    'task_update' => "Updated {$taskTitle}",
+                    'task_delete' => "Deleted {$taskTitle}",
+                    'task_toggle_complete' => ($event->metadata['status'] ?? '') === 'completed'
+                        ? "Completed {$taskTitle}"
+                        : "Reopened {$taskTitle}",
+                    'task_archive' => "Archived {$taskTitle}",
+                    'task_restore' => "Restored {$taskTitle}",
+                    default => 'Updated a task',
+                };
+
+                return ['id' => $event->id, 'label' => $label, 'created_at' => $event->created_at];
+            });
 
         $allTasks = $tasks->map(function (Task $task) use ($analysisStatus) {
             $formatted = $this->formatTask($task);
@@ -103,10 +122,11 @@ class DashboardController extends Controller
                 'total_tasks' => $totalTasks,
                 'completed_tasks' => $completedTasks,
                 'pending_tasks' => $pendingTasks,
-                'average_priority_score' => $averageScore,
                 'tasks_due_today' => $tasksDueToday,
                 'overdue_tasks' => $overdueCount,
                 'current_workload' => $currentWorkload,
+                'completion_percent' => $totalTasks > 0 ? (int) round(($completedTasks / $totalTasks) * 100) : 0,
+                'unread_notifications' => $user->inAppNotifications()->whereNull('read_at')->count(),
             ],
             'widgets' => [
                 'upcoming_deadlines' => $upcomingDeadlines,
@@ -115,13 +135,13 @@ class DashboardController extends Controller
                 'highest_priority_tasks' => $highestPriorityTasks,
                 'current_workload' => $currentWorkload,
                 'decision_history_summary' => $decisionSummary,
+                'recent_activity' => $recentActivity,
                 'weather' => $weather,
             ],
             'grouped_tasks' => $grouped,
             'highest_priority_task' => $highestPriorityTask ? [
                 'id' => $highestPriorityTask->id,
                 'title' => $highestPriorityTask->title,
-                'priority_score' => $highestPriorityTask->priority_score,
                 'status' => $highestPriorityTask->status,
             ] : null,
             'tasks' => $allTasks,
@@ -204,7 +224,6 @@ class DashboardController extends Controller
             'urgency' => $task->urgency,
             'time_availability' => $task->time_availability,
             'current_workload' => $task->current_workload,
-            'priority_score' => $task->priority_score,
             'status' => $task->status,
             'is_archived' => $task->is_archived,
             'created_at' => $task->created_at,

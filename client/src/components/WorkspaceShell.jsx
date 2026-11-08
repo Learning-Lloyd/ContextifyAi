@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiAward, FiChevronDown, FiClock, FiCommand, FiCompass, FiLogOut, FiMessageSquare, FiMoon, FiPlus, FiSearch, FiShield, FiSun, FiTrendingUp, FiUser } from 'react-icons/fi';
+import { FiAward, FiChevronDown, FiClock, FiCommand, FiCompass, FiHelpCircle, FiLogOut, FiMessageSquare, FiMoon, FiPlus, FiSearch, FiShield, FiSun, FiTrendingUp, FiUser } from 'react-icons/fi';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import CommandPalette from './CommandPalette';
 import Logo from './Logo';
+import NotificationMenu from './NotificationMenu';
 
 const mainNav = [
   { to: '/dashboard', label: 'Today', end: true },
@@ -123,6 +124,7 @@ export default function WorkspaceShell({ children, admin = false }) {
             <span>Search or jump to…</span>
             <kbd><FiCommand size={11} /> K</kbd>
           </button>
+          {!admin && <NotificationMenu />}
           {!admin && <button type="button" className="create-task-trigger" onClick={() => navigate('/tasks?new=1')}><FiPlus size={16} /><span>New task</span></button>}
           <button type="button" className="workspace-icon-button theme-trigger" onClick={toggleTheme} aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'} title="Toggle theme">
             {theme === 'dark' ? <FiSun size={17} /> : <FiMoon size={17} />}
@@ -135,6 +137,7 @@ export default function WorkspaceShell({ children, admin = false }) {
             {profileOpen && <div className="profile-menu" role="menu">
               <div className="profile-menu-person"><strong>{user?.name}</strong><span>{user?.email}</span></div>
               <Link role="menuitem" to="/profile"><FiUser size={15} /> Profile & preferences</Link>
+              {!isAdmin && <Link role="menuitem" to="/help"><FiHelpCircle size={15} /> Help & getting started</Link>}
               {isAdmin && <Link role="menuitem" to="/admin"><FiShield size={15} /> Administration</Link>}
               <button type="button" role="menuitem" onClick={handleLogout}><FiLogOut size={15} /> Sign out</button>
             </div>}

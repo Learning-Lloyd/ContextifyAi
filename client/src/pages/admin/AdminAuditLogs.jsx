@@ -20,9 +20,9 @@ export default function AdminAuditLogs() {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in max-w-7xl">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Security & System Audit Trail</h1>
+          <h1 className="page-title">Audit logs</h1>
           <p className="page-subtitle text-xs sm:text-sm">
-            Immutable chronological record of user actions, administrative events, and security access points
+            User and admin activity.
           </p>
         </div>
 

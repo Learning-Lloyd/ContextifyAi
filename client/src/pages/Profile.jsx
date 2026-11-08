@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FiInfo, FiMail, FiMapPin, FiSave, FiShield, FiUser } from 'react-icons/fi';
+import { FiBell, FiInfo, FiMail, FiMapPin, FiSave, FiShield, FiUser } from 'react-icons/fi';
 import Layout from '../components/Layout';
 import LocationSearch from '../components/LocationSearch';
 import { useAuth } from '../context/AuthContext';
@@ -16,6 +16,11 @@ export default function Profile() {
     longitude: user?.city_longitude ?? null,
   });
   const [saving, setSaving] = useState(false);
+  const [taskRemindersEnabled, setTaskRemindersEnabled] = useState(user?.task_reminders_enabled ?? true);
+  const [overdueRemindersEnabled, setOverdueRemindersEnabled] = useState(user?.overdue_reminders_enabled ?? true);
+  const [deadlineReminderMinutes, setDeadlineReminderMinutes] = useState(user?.deadline_reminder_minutes ?? 1440);
+  const [dailyAvailableMinutes, setDailyAvailableMinutes] = useState(user?.daily_available_minutes ?? '');
+  const [workdayStartTime, setWorkdayStartTime] = useState(user?.workday_start_time?.slice(0, 5) || '');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +31,11 @@ export default function Profile() {
         city: cityData.location || null,
         city_latitude: cityData.latitude,
         city_longitude: cityData.longitude,
+        task_reminders_enabled: taskRemindersEnabled,
+        overdue_reminders_enabled: overdueRemindersEnabled,
+        deadline_reminder_minutes: Number(deadlineReminderMinutes),
+        daily_available_minutes: dailyAvailableMinutes ? Number(dailyAvailableMinutes) : null,
+        workday_start_time: workdayStartTime || null,
       });
       updateProfile(data.user);
       showToast('Profile updated successfully', 'success');
@@ -41,10 +51,8 @@ export default function Profile() {
       <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
         {/* Page Header */}
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Profile & Preferences</h1>
-          <p className="page-subtitle text-xs sm:text-sm">
-            Manage your personal identity, default environmental location, and account details
-          </p>
+          <h1 className="page-title">Profile</h1>
+          <p className="page-subtitle text-sm">Account and planning preferences.</p>
         </div>
 
         {/* User Identity Banner */}
@@ -66,7 +74,7 @@ export default function Profile() {
             </p>
             {user?.city && (
               <p className="text-xs text-[var(--app-text-secondary)] flex items-center gap-1.5 mt-1 font-medium">
-                <FiMapPin size={12} className="text-[#2563EB]" /> Home City: {user.city}
+              <FiMapPin size={12} className="text-[#2563EB]" /> {user.city}
               </p>
             )}
           </div>
@@ -76,7 +84,7 @@ export default function Profile() {
         <form onSubmit={handleSubmit} className="card p-6 space-y-5 shadow-sm">
           <div className="space-y-1.5">
             <label className="label" htmlFor="profile-name">
-              Full Name
+              Name
             </label>
             <div className="relative">
               <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]" size={16} />
@@ -93,19 +101,48 @@ export default function Profile() {
 
           <div className="space-y-2 pt-2 border-t border-[var(--app-border)]">
             <div>
-              <label className="label">Primary Geographic Location</label>
-              <p className="text-xs text-[var(--app-text-muted)] mb-2">
-                Your home city is retrieved for dashboard weather conditions and environmental context.
-              </p>
+              <label className="label">City</label>
+              <p className="text-sm text-[var(--app-text-muted)] mb-2">Used for local weather.</p>
             </div>
             <LocationSearch value={cityData} onChange={setCityData} />
           </div>
 
+          <div className="space-y-4 pt-4 border-t border-[var(--app-border)]">
+            <div className="flex items-center gap-2"><FiBell className="text-[#285E4D]" /><h2 className="font-bold text-sm text-[var(--app-text)]">Deadline reminders</h2></div>
+            <label className="flex items-start gap-3 text-sm text-[var(--app-text-secondary)]">
+              <input type="checkbox" checked={taskRemindersEnabled} onChange={(e) => setTaskRemindersEnabled(e.target.checked)} className="mt-0.5" />
+              <span><strong className="text-[var(--app-text)]">Upcoming deadline reminders</strong></span>
+            </label>
+            <label className="block space-y-1.5">
+              <span className="label">Remind me before the deadline</span>
+              <select value={deadlineReminderMinutes} onChange={(e) => setDeadlineReminderMinutes(e.target.value)} disabled={!taskRemindersEnabled} className="input">
+                <option value={60}>1 hour</option><option value={360}>6 hours</option><option value={720}>12 hours</option><option value={1440}>24 hours</option><option value={2880}>48 hours</option>
+              </select>
+            </label>
+            <label className="flex items-start gap-3 text-sm text-[var(--app-text-secondary)]">
+              <input type="checkbox" checked={overdueRemindersEnabled} onChange={(e) => setOverdueRemindersEnabled(e.target.checked)} disabled={!taskRemindersEnabled} className="mt-0.5" />
+              <span><strong className="text-[var(--app-text)]">Overdue reminders</strong></span>
+            </label>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-[var(--app-border)]">
+            <div><h2 className="font-bold text-sm text-[var(--app-text)]">Daily schedule</h2><p className="text-sm text-[var(--app-text-muted)] mt-1">Used for schedule suggestions. Does not change priority.</p></div>
+            <label className="block space-y-1.5">
+              <span className="label" htmlFor="daily-available-minutes">Available minutes per day</span>
+              <input id="daily-available-minutes" type="number" min="1" max="720" value={dailyAvailableMinutes} onChange={(e) => setDailyAvailableMinutes(e.target.value)} className="input" placeholder="e.g. 240" />
+              <span className="text-sm text-[var(--app-text-muted)]">Leave blank to skip.</span>
+            </label>
+            <label className="block space-y-1.5">
+              <span className="label" htmlFor="workday-start-time">Start time</span>
+              <input id="workday-start-time" type="time" value={workdayStartTime} onChange={(e) => setWorkdayStartTime(e.target.value)} className="input" />
+            </label>
+          </div>
+
           {/* Advisory Notice */}
-          <div className="p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 flex items-start gap-2.5 text-xs text-[var(--app-text-secondary)]">
+          <div className="p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 flex items-start gap-2.5 text-sm text-[var(--app-text-secondary)]">
             <FiInfo size={15} className="text-[#2563EB] shrink-0 mt-0.5" />
             <span>
-              Weather context provides external environmental awareness for scheduling decisions. Weather data does not modify deterministic task priority scores.
+              Weather is advisory only and does not change task priority.
             </span>
           </div>
 
@@ -116,7 +153,7 @@ export default function Profile() {
               className="btn btn-primary w-full shadow-sm text-sm"
             >
               <FiSave size={16} />
-              {saving ? 'Saving Profile Changes...' : 'Save Profile Changes'}
+              {saving ? 'Saving…' : 'Save changes'}
             </button>
           </div>
         </form>

@@ -36,9 +36,9 @@ export default function AdminDecisions() {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in max-w-7xl">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Decision Audit Logs</h1>
+          <h1 className="page-title">Decision logs</h1>
           <p className="page-subtitle text-xs sm:text-sm">
-            Inspect recorded multi-factor rankings, candidate inputs, and generated AI justifications
+            Saved rankings and explanations.
           </p>
         </div>
 

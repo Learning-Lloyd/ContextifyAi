@@ -56,6 +56,11 @@ export const taskService = {
     return response.data;
   },
 
+  async generateBreakdown(taskId) {
+    const response = await api.post('/tasks/breakdown', { task_id: taskId });
+    return response.data;
+  },
+
   async previewScoring({ title, description, due_date, due_time }) {
     const response = await api.post('/tasks/scoring-preview', {
       title,

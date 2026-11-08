@@ -7,7 +7,7 @@ import {
   FiInfo,
 } from 'react-icons/fi';
 import Layout from '../components/Layout';
-import PriorityBadge from '../components/PriorityBadge';
+import ScheduleSuggestions from '../components/ScheduleSuggestions';
 import { calendarService } from '../services/calendarService';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -74,13 +74,12 @@ export default function Calendar() {
   return (
     <Layout>
       <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
+        <ScheduleSuggestions />
         {/* Calendar Header with Month Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
-            <h1 className="page-title">Calendar & Workload Schedule</h1>
-            <p className="page-subtitle text-xs sm:text-sm">
-              Visualize deadline density and time availability across upcoming days
-            </p>
+            <h1 className="page-title">Calendar</h1>
+            <p className="page-subtitle text-sm">Deadlines and schedule suggestions.</p>
           </div>
 
           <div className="flex items-center gap-2">
@@ -115,13 +114,15 @@ export default function Calendar() {
           </div>
         </div>
 
+        <details className="rounded-xl border border-[var(--app-border)] px-4 py-3">
+          <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">How workload is estimated</summary>
+          <p className="mt-2 text-sm text-[var(--app-text-secondary)]">Tasks with nearby deadlines affect available time and workload.</p>
+        </details>
         {/* Informational Context Banner */}
-        <div className="p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 flex items-center justify-between text-xs text-[var(--app-text-secondary)]">
+        <div className="hidden sm:flex p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 items-center justify-between text-sm text-[var(--app-text-secondary)]">
           <div className="flex items-center gap-2">
             <FiInfo size={14} className="text-[#2563EB] shrink-0" />
-            <span>
-              Days with high task density automatically reduce your <strong>Time Availability</strong> score and increase <strong>Current Workload</strong>.
-            </span>
+            <span>Deadline density affects available time and workload.</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 text-[11px] font-medium text-[var(--app-text-muted)]">
             <span className="flex items-center gap-1">
@@ -136,8 +137,23 @@ export default function Calendar() {
           </div>
         </div>
 
-        {/* Monthly Grid Card */}
-        <div className="card p-4 sm:p-6 shadow-sm overflow-hidden">
+        {/* Mobile deadline list */}
+        <div className="sm:hidden card p-4 space-y-3">
+          {Array.from({ length: daysInMonth }, (_, index) => index + 1).map((day) => {
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const dayTasks = tasksByDate[dateStr] || [];
+            if (!dayTasks.length && dateStr !== todayStr) return null;
+            return (
+              <section key={dateStr} className="border-b border-[var(--app-border)] pb-3 last:border-0">
+                <h2 className="text-sm font-semibold text-[var(--app-text)]">{new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}{dateStr === todayStr ? ' · Today' : ''}</h2>
+                {dayTasks.length ? <ul className="mt-2 space-y-2">{dayTasks.map((task) => <li key={task.id}><Link to={`/tasks/${task.id}`} className="block rounded-lg border border-[var(--app-border)] p-3 text-sm font-medium text-[var(--app-text)]">{task.title}{task.status === 'completed' ? ' · Completed' : ''}</Link></li>)}</ul> : <p className="mt-1 text-sm text-[var(--app-text-muted)]">No deadlines today.</p>}
+              </section>
+            );
+          })}
+        </div>
+
+        {/* Desktop monthly grid */}
+        <div className="hidden sm:block card p-4 sm:p-6 shadow-sm overflow-hidden">
           {/* Weekday headers */}
           <div className="grid grid-cols-7 gap-1.5 mb-2">
             {WEEKDAYS.map((d) => (
@@ -203,7 +219,7 @@ export default function Calendar() {
                         key={task.id}
                         to={`/tasks/${task.id}`}
                         className="block text-[11px] truncate px-1.5 py-0.5 rounded border border-[var(--app-border)] bg-[var(--app-card)] hover:border-[#2563EB] transition-colors"
-                        title={`${task.title} (Score: ${task.priority_score})`}
+                        title={task.title}
                       >
                         <span
                           className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${
@@ -238,11 +254,8 @@ export default function Calendar() {
             <div className="flex items-center justify-between pb-2 border-b border-[var(--app-border)]">
               <div>
                 <h2 className="text-base font-bold text-[var(--app-text)]">
-                  All Scheduled Deadlines ({calendarData.tasks.length})
+                  Deadlines · {calendarData.tasks.length}
                 </h2>
-                <p className="text-xs text-[var(--app-text-muted)]">
-                  Chronologically ordered commitments factored into workload calculations
-                </p>
               </div>
             </div>
 
@@ -254,7 +267,6 @@ export default function Calendar() {
                   className="flex items-center justify-between p-3 rounded-xl border border-[var(--app-border)] hover:bg-[var(--app-hover)] transition-colors text-xs group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <PriorityBadge level={task.priority_level} score={task.priority_score} />
                     <span className="font-semibold text-sm text-[var(--app-text)] group-hover:text-[#2563EB] truncate">
                       {task.title}
                     </span>

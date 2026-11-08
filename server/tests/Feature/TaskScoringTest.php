@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -34,7 +35,8 @@ class TaskScoringTest extends TestCase
         $this->assertNotSame(1, $task['time_availability']);
         $this->assertNotSame(1, $task['current_workload']);
         $this->assertFalse($task['urgency_manual']);
-        $this->assertGreaterThan(0, $task['priority_score']);
+        $this->assertArrayNotHasKey('priority_score', $task);
+        $this->assertGreaterThan(0, Task::where('user_id', $user->id)->firstOrFail()->priority_score);
     }
 
     public function test_scoring_preview_endpoint_returns_automatic_factors(): void
@@ -55,7 +57,7 @@ class TaskScoringTest extends TestCase
         $this->assertArrayHasKey('urgency', $preview);
         $this->assertArrayHasKey('time_availability', $preview);
         $this->assertArrayHasKey('current_workload', $preview);
-        $this->assertArrayHasKey('priority_score', $preview);
+        $this->assertArrayNotHasKey('priority_score', $preview);
         $this->assertArrayHasKey('importance_analysis', $preview);
         $this->assertArrayHasKey('calendar_context', $preview);
         $this->assertGreaterThanOrEqual(1, $preview['importance']);

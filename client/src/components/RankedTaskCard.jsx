@@ -67,13 +67,17 @@ export default function RankedTaskCard({ task }) {
         </div>
       </div>
 
+      {(task.weather_context || task.reason_bullets?.length > 0 || task.overall_explanation) && (
+      <details className="border-t border-[var(--app-border)] pt-3">
+        <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">Why this rank?</summary>
+      <div className="mt-3 space-y-3">
       {/* Weather Context (if available) */}
       {task.weather_context && (
-        <div className="p-3.5 rounded-xl bg-[var(--app-muted)]/50 border border-[var(--app-border)] text-xs space-y-1.5">
+        <div className="p-3.5 rounded-xl bg-[var(--app-muted)]/50 border border-[var(--app-border)] text-sm space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="font-semibold text-[var(--app-text)] flex items-center gap-1.5">
               <span>{weatherIcon(task.weather_context.weather_condition)}</span>
-              Weather Context: {task.weather_context.location}
+              Weather · {task.weather_context.location}
             </span>
             <span className="text-[var(--app-text-muted)]">
               {task.weather_context.weather_condition}
@@ -83,19 +87,13 @@ export default function RankedTaskCard({ task }) {
           <p className="text-[var(--app-text-secondary)] leading-relaxed">
             {task.weather_context.explanation}
           </p>
-          <p className="text-[10px] text-[var(--app-text-muted)] italic">
-            {task.weather_context.disclaimer || 'Weather is advisory and does not affect the deterministic score.'}
-          </p>
         </div>
       )}
 
       {/* Reason Bullets */}
       {task.reason_bullets?.length > 0 && (
         <div className="space-y-1.5">
-          <p className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
-            Key Prioritization Factors
-          </p>
-          <ul className="space-y-1 text-xs sm:text-sm text-[var(--app-text-secondary)]">
+          <ul className="space-y-1 text-sm text-[var(--app-text-secondary)]">
             {task.reason_bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-start gap-2">
                 <span className="text-[#2563EB] font-bold">•</span>
@@ -108,31 +106,22 @@ export default function RankedTaskCard({ task }) {
 
       {/* Overall Explanation */}
       {task.overall_explanation && (
-        <div className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--app-text-muted)] mb-1">
-            AI Narrative Explanation
-          </p>
+        <div className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] text-sm text-[var(--app-text-secondary)] leading-relaxed">
           {task.overall_explanation}
         </div>
+      )}
+      </div>
+      </details>
       )}
 
       {/* Contrastive Why-Not Panel */}
       <WhyNotPanel whyNot={task.why_not} />
 
-      {/* Factor Breakdown with FactorBar components */}
+      {/* Optional score details */}
       {factors.length > 0 && (
-        <div className="space-y-3 pt-2 border-t border-[var(--app-border)]">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)]">
-              Deterministic Factor Breakdown
-            </p>
-            {breakdown.final_score != null && (
-              <span className="text-xs font-bold text-[#2563EB]">
-                Final Computed Score: {breakdown.final_score}
-              </span>
-            )}
-          </div>
-          <div className="grid sm:grid-cols-2 gap-3">
+        <details className="pt-2 border-t border-[var(--app-border)]">
+          <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">View score breakdown</summary>
+          <div className="mt-3 grid sm:grid-cols-2 gap-3">
             {factors
               .filter((f) => f.label)
               .map((factor) => {
@@ -160,13 +149,13 @@ export default function RankedTaskCard({ task }) {
                 );
               })}
           </div>
-        </div>
+        </details>
       )}
 
       {/* Recommended Action Pill */}
       {task.recommendation && (
         <div className="pt-2 border-t border-[var(--app-border)] flex items-center gap-2 text-xs font-semibold text-[#22C55E]">
-          <span>✓ Recommended Action:</span>
+          <span>Next step:</span>
           <span className="text-[var(--app-text-secondary)] font-normal">{task.recommendation}</span>
         </div>
       )}

@@ -25,7 +25,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className="admin-console animate-fade-in">
         <header className="admin-console-heading">
-          <div><p className="eyebrow"><span className="eyebrow-dot" /> PLATFORM OPERATIONS</p><h1 className="page-title">System pulse</h1><p className="page-subtitle">A working view of platform activity, service health, and review queues.</p></div>
+          <div><p className="eyebrow"><span className="eyebrow-dot" /> ADMIN</p><h1 className="page-title">System overview</h1><p className="page-subtitle">Platform activity and review items.</p></div>
           <Link to="/admin/analytics" className="text-action">Open analytics <FiArrowRight /></Link>
         </header>
         {loading ? <div className="admin-console-loading">Reading platform status…</div> : error || !data ? <div className="admin-console-loading">Platform status could not be loaded. Check the API connection and refresh.</div> : <>

@@ -33,9 +33,9 @@ export default function AdminNotifications() {
     <AdminLayout>
       <div className="space-y-6 animate-fade-in max-w-5xl">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Administrative Alerts & Notifications</h1>
+          <h1 className="page-title">System alerts</h1>
           <p className="page-subtitle text-xs sm:text-sm">
-            System notices, error dispatches, threshold alerts, and administrative status updates
+            System notices and status updates.
           </p>
         </div>
 

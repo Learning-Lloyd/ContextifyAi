@@ -33,18 +33,15 @@ export default function DecisionHistory() {
     <Layout>
       <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
         <div className="pb-2 border-b border-[var(--app-border)]">
-          <h1 className="page-title">Decision Timeline</h1>
-          <p className="page-subtitle text-xs sm:text-sm">
-            Audited history of all multi-task prioritizations and pairwise comparisons
-          </p>
+          <h1 className="page-title">Decision history</h1>
         </div>
 
         {timeline.length === 0 ? (
           <div className="card">
             <EmptyState
               icon={FiClock}
-              title="No Decision Records Found"
-              description="When you analyze candidate tasks or compare options in Decision Lab, your decisions are logged here."
+              title="No saved decisions yet"
+              description="Your analyses and comparisons will appear here."
             />
           </div>
         ) : (
@@ -77,37 +74,36 @@ export default function DecisionHistory() {
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--app-text-muted)]">
-                              {isAnalysis ? 'Multi-Task Analysis' : 'Pairwise Comparison'}
+                              {isAnalysis ? 'Task analysis' : 'Task comparison'}
                             </span>
                           </div>
                           <p className="font-bold text-sm sm:text-base text-[var(--app-text)] mt-0.5">
                             {entry.title}
                           </p>
-                          <p className="text-xs text-[var(--app-text-muted)] flex items-center gap-1.5 mt-1">
+                          <p className="text-sm text-[var(--app-text-muted)] flex items-center gap-1.5 mt-1">
                             <FiClock size={12} /> {new Date(entry.created_at).toLocaleString()}
                           </p>
                         </div>
                       </div>
 
                       {entry.confidence && (
-                        <DecisionConfidenceBadge confidence={entry.confidence} showGap />
+                        <DecisionConfidenceBadge confidence={entry.confidence} />
                       )}
                     </div>
 
                     {isAnalysis && (
                       <div className="pt-3 border-t border-[var(--app-border)] text-xs sm:text-sm space-y-2">
                         <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-[var(--app-muted)]/50">
-                          <span className="text-[var(--app-text-secondary)]">Top Prioritized Task:</span>
+                          <span className="text-[var(--app-text-secondary)]">Recommended task</span>
                           <span className="font-bold text-[#2563EB]">
                             {entry.top_task ?? '—'}
-                            {entry.top_score != null && ` (Score ${entry.top_score})`}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs text-[var(--app-text-muted)] px-1">
                           <span>{entry.total_selected} tasks evaluated</span>
                           {entry.conflicts > 0 && (
                             <span className="text-[#F59E0B] font-semibold">
-                              ⚠️ {entry.conflicts} deadline collision(s) detected
+                              ⚠️ {entry.conflicts} deadline conflict{entry.conflicts === 1 ? '' : 's'}
                             </span>
                           )}
                         </div>
@@ -117,14 +113,9 @@ export default function DecisionHistory() {
                     {!isAnalysis && (
                       <div className="pt-3 border-t border-[var(--app-border)] text-xs sm:text-sm space-y-2">
                         <div className="flex items-center justify-between p-2.5 rounded-lg bg-[var(--app-muted)]/50">
-                          <span className="text-[var(--app-text-secondary)]">Recommended Choice:</span>
+                          <span className="text-[var(--app-text-secondary)]">Recommended task</span>
                           <span className="font-bold text-[#2563EB]">{entry.recommended}</span>
                         </div>
-                        {entry.score_difference != null && (
-                          <p className="text-xs text-[var(--app-text-muted)] px-1">
-                            Score delta: <strong className="text-[var(--app-text)]">{entry.score_difference} points</strong>
-                          </p>
-                        )}
                         {entry.explanation && (
                           <p className="text-xs text-[var(--app-text-secondary)] leading-relaxed italic px-1">
                             &ldquo;{entry.explanation}&rdquo;
