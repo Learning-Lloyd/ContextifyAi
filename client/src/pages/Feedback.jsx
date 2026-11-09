@@ -37,17 +37,17 @@ const RATING_LABELS = {
 const STATUS_CONFIG = {
   pending: {
     label: 'Pending Review',
-    color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+    color: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiClock,
   },
   reviewed: {
     label: 'Reviewed',
-    color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+    color: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiMessageSquare,
   },
   resolved: {
     label: 'Resolved',
-    color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    color: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiCheckCircle,
   },
 };
@@ -144,7 +144,7 @@ export default function Feedback() {
         {/* Page Header */}
         <div className="pb-2 border-b border-[var(--app-border)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-zinc-500/10 text-[#111111] flex items-center justify-center">
               <FiMessageSquare size={20} />
             </div>
             <div>
@@ -184,11 +184,11 @@ export default function Feedback() {
                           onClick={() => setType(cat.key)}
                           className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-semibold text-left transition-all ${
                             isSelected
-                              ? 'border-[#2563EB] bg-blue-500/[0.08] text-[#2563EB] shadow-xs'
+                              ? 'border-[#111111] bg-zinc-500/[0.08] text-[#111111] shadow-xs'
                               : 'border-[var(--app-border)] bg-[var(--app-surface)] text-[var(--app-text-secondary)] hover:border-[var(--app-text-muted)]/40 hover:text-[var(--app-text)]'
                           }`}
                         >
-                          <Icon size={14} className={isSelected ? 'text-[#2563EB]' : 'text-[var(--app-text-muted)]'} />
+                          <Icon size={14} className={isSelected ? 'text-[#111111]' : 'text-[var(--app-text-muted)]'} />
                           <span className="truncate">{cat.label}</span>
                         </button>
                       );
@@ -202,7 +202,7 @@ export default function Feedback() {
                     <label className="text-xs font-bold uppercase tracking-wider text-[var(--app-text-muted)] block">
                       Rating
                     </label>
-                    <span className="text-xs font-mono font-bold text-[#2563EB]">
+                    <span className="text-xs font-mono font-bold text-[#111111]">
                       {hoverRating || rating} / 5 Stars
                     </span>
                   </div>
@@ -215,14 +215,14 @@ export default function Feedback() {
                         onClick={() => setRating(star)}
                         onMouseEnter={() => setHoverRating(star)}
                         onMouseLeave={() => setHoverRating(0)}
-                        className="p-1 text-slate-300 hover:text-amber-400 focus:outline-none transition-colors"
+                        className="p-1 text-slate-300 hover:text-zinc-400 focus:outline-none transition-colors"
                         aria-label={`Rate ${star} star`}
                       >
                         <FiStar
                           size={24}
                           className={`${
                             star <= (hoverRating || rating)
-                              ? 'text-amber-400 fill-amber-400'
+                              ? 'text-zinc-400 fill-zinc-400'
                               : 'text-slate-300 dark:text-slate-700'
                           } transition-all`}
                         />
@@ -321,15 +321,15 @@ export default function Feedback() {
                         <div className="flex items-center gap-2 flex-wrap">
                           {/* Category Badge */}
                           <span className="px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-[var(--app-muted)] text-[var(--app-text)]">
-                            <CategoryIcon size={12} className="text-[#2563EB]" />
+                            <CategoryIcon size={12} className="text-[#111111]" />
                             <span>{categoryItem?.label || item.type}</span>
                           </span>
 
                           {/* Star Rating Display */}
                           {item.rating && (
-                            <div className="flex items-center gap-0.5 text-amber-400">
+                            <div className="flex items-center gap-0.5 text-zinc-400">
                               {[...Array(item.rating)].map((_, i) => (
-                                <FiStar key={i} size={13} className="fill-amber-400" />
+                                <FiStar key={i} size={13} className="fill-zinc-400" />
                               ))}
                             </div>
                           )}
@@ -360,8 +360,8 @@ export default function Feedback() {
 
                       {/* Administrator Response Callout */}
                       {item.admin_response && (
-                        <div className="mt-3 p-4 rounded-xl border border-blue-500/20 bg-blue-500/[0.04] space-y-1.5">
-                          <div className="flex items-center gap-2 text-xs font-bold text-[#2563EB]">
+                        <div className="mt-3 p-4 rounded-xl border border-zinc-500/20 bg-zinc-500/[0.04] space-y-1.5">
+                          <div className="flex items-center gap-2 text-xs font-bold text-[#111111]">
                             <FiCornerDownRight size={14} />
                             <span>Admin Response</span>
                             {item.responder && (

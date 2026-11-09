@@ -4,6 +4,101 @@ namespace App\Services;
 
 class ExplanationService
 {
+    /** Build a natural-language rationale from the actual ranking and task context. */
+    public function forTaskCard(
+        array $task,
+        int $rank = 1,
+        int $total = 1,
+        ?string $timezone = null,
+        array $rankedTasks = []
+    ): string
+    {
+        $breakdown = $task['breakdown'] ?? [];
+        $labels = [
+            'importance' => 'Importance',
+            'urgency' => 'Deadline urgency',
+            'time_availability' => 'Available time',
+            'current_workload' => 'Current workload',
+        ];
+        $contributions = collect($labels)
+            ->filter(fn ($label, $key) => isset($breakdown[$key]['weighted']))
+            ->map(fn ($label, $key) => ['label' => $label, 'value' => (float) $breakdown[$key]['weighted']])
+            ->sortByDesc('value')
+            ->values();
+
+        $ordinal = match ($rank) {
+            1 => 'first',
+            2 => 'second',
+            3 => 'third',
+            default => "#{$rank}",
+        };
+
+        if ($rank === 1) {
+            $otherCount = $total - 1;
+            $rankingSentence = $total > 1
+                ? "Complete this task first; it ranks above {$otherCount} other task" . ($otherCount === 1 ? '' : 's') . ' in this analysis.'
+                : 'This is the top priority in the current analysis.';
+        } elseif ($rank === $total) {
+            $rankingSentence = "This task ranks last of {$total} analyzed tasks, so schedule it after the higher-ranked work.";
+        } else {
+            $previousTitle = $rankedTasks[$rank - 2]['title'] ?? null;
+            $rankingSentence = $previousTitle
+                ? "This is your {$ordinal} priority, after {$previousTitle} in the current ranking."
+                : "This task ranks {$ordinal} of {$total} analyzed tasks.";
+        }
+
+        $parts = [$rankingSentence];
+        $countdown = DeadlineUrgencyService::countdownLabel(
+            $task['due_date'] ?? null,
+            $task['due_time'] ?? null,
+            $timezone
+        );
+        if ($countdown) {
+            $parts[] = "{$countdown}.";
+        } else {
+            $parts[] = 'No deadline is set, so this ranking is based on the current task factors.';
+        }
+
+        $weatherNote = $this->taskWeatherAdvisory($task);
+        if ($weatherNote) {
+            $parts[] = $weatherNote;
+        } elseif ($contributions->isNotEmpty()) {
+            $leading = $contributions->first();
+            $next = $contributions->get(1);
+            $parts[] = $next && abs($leading['value'] - $next['value']) < 0.001
+                ? "{$leading['label']} and {$next['label']} influenced its result most."
+                : ($next
+                    ? "{$leading['label']} and {$next['label']} had the strongest influence on its result."
+                    : "{$leading['label']} had the strongest influence on its result.");
+        }
+
+        return implode(' ', array_slice($parts, 0, 3));
+    }
+
+    private function taskWeatherAdvisory(array $task): ?string
+    {
+        $forecast = $task['scheduled_weather'] ?? null;
+        if (! is_array($forecast) || empty($forecast['weather_condition'])) {
+            return null;
+        }
+
+        $activity = strtolower(implode(' ', array_filter([
+            $task['title'] ?? null,
+            $task['description'] ?? null,
+            $task['category'] ?? null,
+        ])));
+        if (! preg_match('/outdoor|outside|walk|hike|run|picnic|garden|yard|travel|commute|field|camp|errand|sports|bike|cycling|beach/i', $activity)) {
+            return null;
+        }
+
+        $condition = strtolower((string) $forecast['weather_condition']);
+        if (str_contains($condition, 'rain') || str_contains($condition, 'storm') || str_contains($condition, 'thunder')) {
+            return 'Rain or storms are forecast near its deadline; consider planning an alternative.';
+        }
+
+        return null;
+    }
+
     /**
      * Generate contextual explanation. Weather is advisory only and never changes score.
      */

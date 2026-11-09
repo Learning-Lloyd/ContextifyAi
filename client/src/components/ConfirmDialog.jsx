@@ -10,13 +10,13 @@ const VARIANTS = {
   },
   warning: {
     icon: FiAlertTriangle,
-    iconColor: '#F59E0B',
+    iconColor: '#666666',
     iconBg: 'rgba(245, 158, 11, 0.1)',
     confirmBtn: 'btn btn-primary',
   },
   info: {
     icon: FiInfo,
-    iconColor: '#2563EB',
+    iconColor: '#111111',
     iconBg: 'rgba(37, 99, 235, 0.1)',
     confirmBtn: 'btn btn-primary',
   },

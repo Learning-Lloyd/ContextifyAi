@@ -40,14 +40,14 @@ function AutoFactorRow({ label, value, source, reason, loading }) {
           <p className="text-xs text-[var(--app-text-muted)] mt-0.5">Calculating...</p>
         ) : (
           <>
-            <p className="text-xs text-[#2563EB] mt-0.5">{source}</p>
+            <p className="text-xs text-[#111111] mt-0.5">{source}</p>
             {reason && (
               <p className="text-xs text-[var(--app-text-secondary)] mt-1">{reason}</p>
             )}
           </>
         )}
       </div>
-      <span className="text-sm font-semibold text-[#2563EB] shrink-0">
+      <span className="text-sm font-semibold text-[#111111] shrink-0">
         {loading ? '—' : `${value}/10`}
       </span>
     </div>
@@ -352,9 +352,9 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             error={errors.location}
           />
 
-          {analysisError && <p className="text-sm text-[#F59E0B]" role="status">{analysisError}</p>}
+          {analysisError && <p className="text-sm text-[#444444]" role="status">{analysisError}</p>}
           <details className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
-            <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#2563EB]">
+            <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#111111]">
               <FiZap size={14} /> Scoring factors {analyzingFactors ? '· Updating…' : ''}
             </summary>
             <div className="mt-3">

@@ -119,20 +119,20 @@ export default function Calendar() {
           <p className="mt-2 text-sm text-[var(--app-text-secondary)]">Tasks with nearby deadlines affect available time and workload.</p>
         </details>
         {/* Informational Context Banner */}
-        <div className="hidden sm:flex p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 items-center justify-between text-sm text-[var(--app-text-secondary)]">
+        <div className="hidden sm:flex p-3.5 rounded-xl bg-zinc-500/[0.04] border border-[#111111]/20 items-center justify-between text-sm text-[var(--app-text-secondary)]">
           <div className="flex items-center gap-2">
-            <FiInfo size={14} className="text-[#2563EB] shrink-0" />
+            <FiInfo size={14} className="text-[#111111] shrink-0" />
             <span>Deadline density affects available time and workload.</span>
           </div>
           <div className="hidden sm:flex items-center gap-3 text-[11px] font-medium text-[var(--app-text-muted)]">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#2563EB]" /> High priority
+              <span className="w-2 h-2 rounded-full bg-[#EF4444]" /> High priority
             </span>
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Medium
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-[#94A3B8]" /> Low
+              <span className="w-2 h-2 rounded-full bg-[#22C55E]" /> Low
             </span>
           </div>
         </div>
@@ -188,9 +188,9 @@ export default function Calendar() {
                   key={dateStr}
                   className={`min-h-[100px] p-2 rounded-xl border flex flex-col justify-between transition-all ${
                     isToday
-                      ? 'border-[#2563EB] bg-blue-500/[0.04] ring-1 ring-[#2563EB]/40 shadow-sm'
+                      ? 'border-[#111111] bg-zinc-500/[0.04] ring-1 ring-[#111111]/40 shadow-sm'
                       : hasHighWorkload
-                      ? 'border-amber-500/30 bg-amber-500/[0.02]'
+                      ? 'border-zinc-500/30 bg-zinc-500/[0.02]'
                       : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-text-muted)]/40'
                   }`}
                 >
@@ -199,7 +199,7 @@ export default function Calendar() {
                     <span
                       className={`text-xs font-bold leading-none ${
                         isToday
-                          ? 'w-5 h-5 rounded-full bg-[#2563EB] text-white flex items-center justify-center'
+                          ? 'w-5 h-5 rounded-full bg-[#111111] text-white flex items-center justify-center'
                           : 'text-[var(--app-text-secondary)]'
                       }`}
                     >
@@ -218,23 +218,23 @@ export default function Calendar() {
                       <Link
                         key={task.id}
                         to={`/tasks/${task.id}`}
-                        className="block text-[11px] truncate px-1.5 py-0.5 rounded border border-[var(--app-border)] bg-[var(--app-card)] hover:border-[#2563EB] transition-colors"
+                        className="block text-[11px] truncate px-1.5 py-0.5 rounded border border-[var(--app-border)] bg-[var(--app-card)] hover:border-[#111111] transition-colors"
                         title={task.title}
                       >
                         <span
                           className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${
                             task.priority_level === 'high'
-                              ? 'bg-[#2563EB]'
+                              ? 'bg-[#EF4444]'
                               : task.priority_level === 'medium'
                               ? 'bg-[#F59E0B]'
-                              : 'bg-[#94A3B8]'
+                              : 'bg-[#22C55E]'
                           }`}
                         />
                         <span className="font-medium text-[var(--app-text)]">{task.title}</span>
                       </Link>
                     ))}
                     {dayTasks.length > 2 && (
-                      <p className="text-[10px] font-semibold text-[#2563EB] pl-1">
+                      <p className="text-[10px] font-semibold text-[#111111] pl-1">
                         +{dayTasks.length - 2} more...
                       </p>
                     )}
@@ -267,13 +267,13 @@ export default function Calendar() {
                   className="flex items-center justify-between p-3 rounded-xl border border-[var(--app-border)] hover:bg-[var(--app-hover)] transition-colors text-xs group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="font-semibold text-sm text-[var(--app-text)] group-hover:text-[#2563EB] truncate">
+                    <span className="font-semibold text-sm text-[var(--app-text)] group-hover:text-[#111111] truncate">
                       {task.title}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-[var(--app-text-muted)] shrink-0">
                     <span className="inline-flex items-center gap-1 font-medium text-[var(--app-text-secondary)]">
-                      <FiCalendar size={12} className="text-[#2563EB]" />
+                      <FiCalendar size={12} className="text-[#111111]" />
                       {task.due_date}
                       {task.due_time && ` at ${task.due_time}`}
                     </span>

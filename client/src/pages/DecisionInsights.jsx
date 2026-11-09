@@ -17,14 +17,14 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import EmptyState from '../components/EmptyState';
 import { decisionService } from '../services/decisionService';
 
-const COLORS = ['#2563EB', '#14B8A6', '#F59E0B'];
+const COLORS = ['#333333', '#777777', '#AAAAAA'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="card p-2.5 shadow-xl text-xs border border-[var(--app-border)]">
         <p className="font-bold text-[var(--app-text)]">{label || payload[0].name}</p>
-        <p className="text-[#2563EB] font-mono font-semibold">{payload[0].value}</p>
+        <p className="text-[#111111] font-mono font-semibold">{payload[0].value}</p>
       </div>
     );
   }
@@ -127,7 +127,7 @@ export default function DecisionInsights() {
                   <XAxis dataKey="month" stroke="var(--app-text-muted)" fontSize={11} tickLine={false} />
                   <YAxis stroke="var(--app-text-muted)" fontSize={11} allowDecimals={false} tickLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="count" fill="#2563EB" radius={[6, 6, 0, 0]} barSize={32} />
+                  <Bar dataKey="count" fill="#111111" radius={[6, 6, 0, 0]} barSize={32} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -193,7 +193,7 @@ export default function DecisionInsights() {
                   </div>
                   <div className="text-right shrink-0">
                     {item.conflicts > 0 && (
-                      <p className="text-[#F59E0B] font-semibold text-xs">
+                      <p className="text-[#666666] font-semibold text-xs">
                         {item.conflicts} deadline conflict{item.conflicts === 1 ? '' : 's'}
                       </p>
                     )}

@@ -11,6 +11,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (timezone) config.headers['X-Client-Timezone'] = timezone;
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

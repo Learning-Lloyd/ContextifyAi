@@ -6,9 +6,9 @@ const WEIGHT_LABELS = {
 };
 
 const FACTOR_COLORS = {
-  importance: '#2563EB',
-  urgency: '#F59E0B',
-  time_availability: '#14B8A6',
+  importance: '#111111',
+  urgency: '#666666',
+  time_availability: '#666666',
   current_workload: '#64748B',
 };
 
@@ -17,7 +17,7 @@ export default function FactorBar({ label, factorKey, value, weight, showFormula
   const numWeight = Number(weight) || 0;
   const weighted = (numValue * numWeight).toFixed(2);
   const fillPercent = (numValue / 10) * 100;
-  const color = FACTOR_COLORS[factorKey] || '#2563EB';
+  const color = FACTOR_COLORS[factorKey] || '#111111';
   const weightLabel = WEIGHT_LABELS[numWeight] || `${(numWeight * 100).toFixed(0)}%`;
 
   return (

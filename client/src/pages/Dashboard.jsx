@@ -8,6 +8,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import { useToast } from '../hooks/useToast';
 import { dashboardService } from '../services/dashboardService';
 import { taskService } from '../services/taskService';
+import { getCountdownLabel } from '../utils/taskUtils';
 
 const factors = [
   { key: 'importance', label: 'Importance', weight: '40%' },
@@ -136,10 +137,10 @@ export default function Dashboard() {
         <section className="card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4" aria-label="Task progress">
           <div className="min-w-0 flex-1">
             <div className="flex justify-between gap-3 text-sm"><strong className="text-[var(--app-text)]">Daily Progress</strong><span className="text-[var(--app-text-muted)]">{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining</span></div>
-            <div className="h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="block h-full rounded-full bg-[#285E4D] transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
+            <div className="h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="block h-full rounded-full bg-[#111111] transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
           </div>
-          <span className="text-sm font-bold text-[#285E4D]">{stats.completion_percent || 0}%</span>
-          {stats.unread_notifications > 0 && <Link to="/notifications" className="text-xs font-semibold text-[#285E4D]">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
+          <span className="text-sm font-bold text-[#111111]">{stats.completion_percent || 0}%</span>
+          {stats.unread_notifications > 0 && <Link to="/notifications" className="text-xs font-semibold text-[#111111]">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
         </section>
 
         {needsAnalysis ? (
@@ -158,8 +159,18 @@ export default function Dashboard() {
               <div className="focus-label"><FiZap size={14} /> CONTEXTIFY RECOMMENDS <span>01 / {String(queue.length).padStart(2, '0')}</span></div>
               <Link to={`/tasks/${focusTask.id}`} className="focus-title-link"><h2 id="focus-heading">{focusTask.title}</h2></Link>
               {focusTask.description && <p className="focus-description">{focusTask.description}</p>}
+              {focusTask.analyzed && focusTask.analysis_explanation && (
+                <div className="task-analysis-explanation focus-analysis-explanation">
+                  <div className="flex items-center justify-between gap-2">
+                    <strong>Why this is your priority</strong>
+                    {focusTask.analysis_explanation_source && <span className="task-explanation-source">{focusTask.analysis_explanation_source === 'ai' ? 'AI explanation' : 'Based on scoring results'}</span>}
+                  </div>
+                  <p>{focusTask.analysis_explanation}</p>
+                </div>
+              )}
               <div className="focus-metadata">
                 <span><FiCalendar /> {dateLabel(focusTask.due_date)}{focusTask.due_time ? ` · ${focusTask.due_time.slice(0, 5)}` : ''}</span>
+                {getCountdownLabel(focusTask.due_date, focusTask.due_time) && <span className="task-countdown">{getCountdownLabel(focusTask.due_date, focusTask.due_time)}</span>}
                 {focusTask.estimated_time_minutes && <span><FiClock /> {focusTask.estimated_time_minutes} min</span>}
                 {focusTask.category && <span className="category-label">{focusTask.category}</span>}
               </div>

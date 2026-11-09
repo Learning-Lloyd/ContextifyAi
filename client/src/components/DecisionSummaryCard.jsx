@@ -19,23 +19,23 @@ export default function DecisionSummaryCard({ summary, confidence }) {
         <div className="card-kpi p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
             <span className="card-kpi-label text-xs">Tasks analyzed</span>
-            <FiList size={14} className="text-[#2563EB]" />
+            <FiList size={14} className="text-[#111111]" />
           </div>
           <p className="text-2xl font-bold text-[var(--app-text)]">{summary.tasks_analyzed}</p>
         </div>
 
         {/* Top Priority Task */}
-        <div className="card-kpi p-3.5 col-span-2 flex flex-col justify-between border-l-2 border-l-[#2563EB]">
+        <div className="card-kpi p-3.5 col-span-2 flex flex-col justify-between border-l-2 border-l-[#111111]">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
-            <span className="card-kpi-label text-xs text-[#2563EB]">Recommended task</span>
-            <FiAward size={14} className="text-[#2563EB]" />
+            <span className="card-kpi-label text-xs text-[#111111]">Recommended task</span>
+            <FiAward size={14} className="text-[#111111]" />
           </div>
           <div className="flex items-baseline justify-between gap-2">
             <p className="text-sm font-bold text-[var(--app-text)] truncate">
               {summary.highest_priority?.title ?? '—'}
             </p>
             {summary.highest_priority?.score != null && (
-              <span className="text-xs font-bold text-[#2563EB] font-mono shrink-0">
+              <span className="text-xs font-bold text-[#111111] font-mono shrink-0">
                 Score {summary.highest_priority.score}
               </span>
             )}
@@ -64,7 +64,7 @@ export default function DecisionSummaryCard({ summary, confidence }) {
         <div className="card-kpi p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between text-[var(--app-text-muted)] mb-1">
             <span className="card-kpi-label text-[10px]">Weather</span>
-            <FiCloud size={14} className="text-[#14B8A6]" />
+            <FiCloud size={14} className="text-[#666666]" />
           </div>
           <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--app-text)] truncate">
             <span>{weatherIcon(summary.weather)}</span>
@@ -76,8 +76,8 @@ export default function DecisionSummaryCard({ summary, confidence }) {
 
       {/* Recommendation & Narrative */}
       {summary.recommendation_summary && (
-        <div className="p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 flex items-start gap-2.5 text-xs sm:text-sm">
-          <FiCheckCircle className="text-[#2563EB] shrink-0 mt-0.5" size={16} />
+        <div className="p-3.5 rounded-xl bg-zinc-500/[0.04] border border-[#111111]/20 flex items-start gap-2.5 text-xs sm:text-sm">
+          <FiCheckCircle className="text-[#111111] shrink-0 mt-0.5" size={16} />
           <p className="text-[var(--app-text)] font-medium leading-relaxed">
             {summary.recommendation_summary}
           </p>

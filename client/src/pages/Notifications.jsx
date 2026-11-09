@@ -48,7 +48,7 @@ export default function Notifications() {
         ) : (
           <div className="space-y-3">
             {notifications.map((item) => (
-              <article key={item.id} className={`card p-5 flex flex-col sm:flex-row items-start justify-between gap-3 ${item.read_at ? 'opacity-75' : 'border-l-4 border-l-[#285E4D]'}`}>
+              <article key={item.id} className={`card p-5 flex flex-col sm:flex-row items-start justify-between gap-3 ${item.read_at ? 'opacity-75' : 'border-l-4 border-l-[#111111]'}`}>
                 <div className="min-w-0"><h2 className="font-bold text-base text-[var(--app-text)]">{item.title}</h2><p className="text-sm text-[var(--app-text-secondary)] mt-1">{item.message}</p><time className="text-xs text-[var(--app-text-muted)] mt-2 block">{new Date(item.created_at).toLocaleString()}</time></div>
                 {!item.read_at && <button type="button" className="btn btn-secondary btn-sm text-sm shrink-0" onClick={() => markRead(item.id)}><FiCheck /> Mark read</button>}
               </article>

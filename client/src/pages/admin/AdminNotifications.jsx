@@ -57,7 +57,7 @@ export default function AdminNotifications() {
                 className={`card p-5 transition-all shadow-sm ${
                   n.is_read
                     ? 'opacity-70 bg-[var(--app-muted)]/30'
-                    : 'border-l-4 border-l-[#2563EB] bg-[var(--app-card)]'
+                    : 'border-l-4 border-l-[#111111] bg-[var(--app-card)]'
                 }`}
               >
                 <div className="flex items-start justify-between gap-4">
@@ -65,7 +65,7 @@ export default function AdminNotifications() {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-sm text-[var(--app-text)]">{n.title}</span>
                       {!n.is_read && (
-                        <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-[#111111] animate-pulse" />
                       )}
                     </div>
                     <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">

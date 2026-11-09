@@ -79,11 +79,18 @@ class TaskController extends Controller
         }
 
         $taskModels = $query->get();
-        $analysisStatus = app(TaskAnalysisStatusService::class)->forTasks($request->user(), $taskModels);
+        $analysisService = app(TaskAnalysisStatusService::class);
+        $analysisStatus = $analysisService->forTasks($request->user(), $taskModels);
+        $analysisDetails = $analysisService->analysisDetailsForTasks($request->user(), $taskModels, $this->clientTimezone($request));
         $tasks = $taskModels->map(function (Task $task) use ($analysisStatus) {
             return array_merge($this->formatTask($task), [
                 'analyzed' => $analysisStatus[$task->id] ?? false,
             ]);
+        });
+        $tasks = $tasks->map(function (array $task) use ($analysisDetails) {
+            $task['analysis_explanation'] = $analysisDetails[$task['id']]['explanation'] ?? null;
+            $task['analysis_explanation_source'] = $analysisDetails[$task['id']]['source'] ?? null;
+            return $task;
         });
 
         $categories = $request->user()->tasks()
@@ -128,6 +135,10 @@ class TaskController extends Controller
         $taskData = $this->formatTask($freshTask, true);
         $taskData['analyzed'] = app(TaskAnalysisStatusService::class)
             ->forTasks($request->user(), collect([$freshTask]))[$freshTask->id] ?? false;
+        $analysisDetails = app(TaskAnalysisStatusService::class)
+            ->analysisDetailsForTasks($request->user(), collect([$freshTask]), $this->clientTimezone($request));
+        $taskData['analysis_explanation'] = $analysisDetails[$freshTask->id]['explanation'] ?? null;
+        $taskData['analysis_explanation_source'] = $analysisDetails[$freshTask->id]['source'] ?? null;
 
         return response()->json(['task' => $taskData]);
     }
@@ -287,6 +298,15 @@ class TaskController extends Controller
         if ($task->user_id !== $request->user()->id) {
             abort(403, 'Unauthorized');
         }
+    }
+
+    private function clientTimezone(Request $request): ?string
+    {
+        $timezone = $request->header('X-Client-Timezone');
+
+        return is_string($timezone) && in_array($timezone, \DateTimeZone::listIdentifiers(), true)
+            ? $timezone
+            : null;
     }
 
     private function refreshWeatherIfStale(Task $task): void

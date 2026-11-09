@@ -5,9 +5,9 @@ const SIZES = {
 };
 
 function getScoreColor(score) {
-  if (score >= 8) return { ring: '#2563EB', bg: 'rgba(37, 99, 235, 0.1)' };
+  if (score >= 8) return { ring: '#EF4444', bg: 'rgba(239, 68, 68, 0.1)' };
   if (score >= 5) return { ring: '#F59E0B', bg: 'rgba(245, 158, 11, 0.1)' };
-  return { ring: '#94A3B8', bg: 'rgba(148, 163, 184, 0.1)' };
+  return { ring: '#22C55E', bg: 'rgba(34, 197, 94, 0.1)' };
 }
 
 export default function ScoreRing({ score, variant = 'md', className = '' }) {

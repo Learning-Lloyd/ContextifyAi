@@ -13,14 +13,14 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import EmptyState from '../components/EmptyState';
 import { analyticsService } from '../services/analyticsService';
 
-const CHART_PALETTE = ['#2563EB', '#14B8A6'];
+const CHART_PALETTE = ['#111111', '#666666'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="card p-3 shadow-xl text-xs border border-[var(--app-border)] space-y-1">
         <p className="font-bold text-[var(--app-text)]">{label || payload[0].name}</p>
-        <p className="text-[#2563EB] font-mono font-semibold">
+        <p className="text-[#111111] font-mono font-semibold">
           Tasks: {payload[0].value}
         </p>
       </div>

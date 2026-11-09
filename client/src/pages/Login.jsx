@@ -57,34 +57,34 @@ export default function Login() {
       {/* Main Container */}
       <div className="w-full max-w-4xl grid md:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl border border-[var(--app-border)] bg-[var(--app-card)] animate-fade-in">
         {/* Left Brand Panel (Desktop) */}
-        <div className="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#1D4ED8] text-white">
+        <div className="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#333333] via-[#111111] to-[#555555] text-white">
           <div>
             <Logo size="lg" variant="dark" />
             <div className="mt-12 space-y-4">
               <h2 className="text-2xl font-extrabold tracking-tight leading-snug">
                 Personalized Decision Support for Daily Priorities
               </h2>
-              <p className="text-blue-100 text-sm leading-relaxed">
+              <p className="text-zinc-100 text-sm leading-relaxed">
                 Experience explainable, multi-factor contextual ranking designed to resolve task ambiguity and workload overload.
               </p>
             </div>
           </div>
 
-          <div className="space-y-3 text-xs text-blue-100">
+          <div className="space-y-3 text-xs text-zinc-100">
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>Deterministic mathematical scoring formula</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>Automated calendar & deadline context derivation</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>Explainable AI natural-language justifications</span>
@@ -118,9 +118,9 @@ export default function Login() {
               <label className="label text-xs font-semibold" htmlFor="email">
                 Email Address
               </label>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiMail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -129,7 +129,7 @@ export default function Login() {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="name@organization.com"
                   required
                 />
@@ -142,11 +142,11 @@ export default function Login() {
                 <label className="label text-xs font-semibold" htmlFor="password">
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-xs text-[#2563EB] hover:underline">Forgot password?</Link>
+                <Link to="/forgot-password" className="text-xs text-[#111111] hover:underline">Forgot password?</Link>
               </div>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiLock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -155,7 +155,7 @@ export default function Login() {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="••••••••"
                   required
                 />
@@ -173,7 +173,7 @@ export default function Login() {
 
             <div className="pt-4 border-t border-[var(--app-border)] text-center text-xs text-[var(--app-text-secondary)]">
               Don&apos;t have an account?{' '}
-              <Link to="/register" className="text-[#2563EB] hover:underline font-bold">
+              <Link to="/register" className="text-[#111111] hover:underline font-bold">
                 Create Account
               </Link>
             </div>

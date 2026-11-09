@@ -14,7 +14,7 @@ export default function WeatherWidget({ weather, compact = false }) {
             <h4 className="text-sm font-semibold text-[var(--app-text)]">Weather</h4>
             <p className="text-sm text-[var(--app-text-secondary)] mt-1">
               Set your city in{' '}
-              <Link to="/profile" className="text-[#2563EB] hover:underline font-medium">
+              <Link to="/profile" className="text-[#111111] hover:underline font-medium">
                 Profile
               </Link>{' '}
               to receive location-based weather advisories.
@@ -47,7 +47,7 @@ export default function WeatherWidget({ weather, compact = false }) {
             Weather
           </span>
           <div className="flex items-center gap-1.5 mt-0.5">
-            <FiMapPin size={13} className="text-[#2563EB]" />
+            <FiMapPin size={13} className="text-[#111111]" />
             <h4 className="text-base font-bold text-[var(--app-text)]">
               {weather.location || 'Current City'}
             </h4>
@@ -67,7 +67,7 @@ export default function WeatherWidget({ weather, compact = false }) {
           {weather.weather_condition}
         </span>
         {weather.rain_probability != null && (
-          <span className="ml-auto text-xs font-semibold text-[#2563EB] bg-blue-500/10 px-2 py-0.5 rounded-full">
+          <span className="ml-auto text-xs font-semibold text-[#111111] bg-zinc-500/10 px-2 py-0.5 rounded-full">
             💧 {weather.rain_probability}% rain
           </span>
         )}

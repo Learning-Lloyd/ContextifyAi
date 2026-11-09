@@ -56,7 +56,7 @@ export default function DecisionHistory() {
                   {/* Timeline Dot */}
                   <div
                     className={`absolute -left-4 sm:-left-4.5 top-5 w-3.5 h-3.5 rounded-full bg-[var(--app-card)] border-2 transition-all ${
-                      isAnalysis ? 'border-[#2563EB] group-hover:bg-[#2563EB]' : 'border-[#14B8A6] group-hover:bg-[#14B8A6]'
+                      isAnalysis ? 'border-[#111111] group-hover:bg-[#111111]' : 'border-[#666666] group-hover:bg-[#666666]'
                     }`}
                   />
 
@@ -95,14 +95,14 @@ export default function DecisionHistory() {
                       <div className="pt-3 border-t border-[var(--app-border)] text-xs sm:text-sm space-y-2">
                         <div className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-[var(--app-muted)]/50">
                           <span className="text-[var(--app-text-secondary)]">Recommended task</span>
-                          <span className="font-bold text-[#2563EB]">
+                          <span className="font-bold text-[#111111]">
                             {entry.top_task ?? '—'}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs text-[var(--app-text-muted)] px-1">
                           <span>{entry.total_selected} tasks evaluated</span>
                           {entry.conflicts > 0 && (
-                            <span className="text-[#F59E0B] font-semibold">
+                            <span className="text-[#666666] font-semibold">
                               ⚠️ {entry.conflicts} deadline conflict{entry.conflicts === 1 ? '' : 's'}
                             </span>
                           )}
@@ -114,7 +114,7 @@ export default function DecisionHistory() {
                       <div className="pt-3 border-t border-[var(--app-border)] text-xs sm:text-sm space-y-2">
                         <div className="flex items-center justify-between p-2.5 rounded-lg bg-[var(--app-muted)]/50">
                           <span className="text-[var(--app-text-secondary)]">Recommended task</span>
-                          <span className="font-bold text-[#2563EB]">{entry.recommended}</span>
+                          <span className="font-bold text-[#111111]">{entry.recommended}</span>
                         </div>
                         {entry.explanation && (
                           <p className="text-xs text-[var(--app-text-secondary)] leading-relaxed italic px-1">

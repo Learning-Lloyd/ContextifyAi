@@ -112,7 +112,7 @@ export default function AdminTasks() {
                     <p className="font-bold text-sm text-[var(--app-text)] truncate">{t.title}</p>
                     <div className="flex items-center gap-3 text-xs text-[var(--app-text-muted)] mt-1">
                       <span className="flex items-center gap-1">
-                        <FiUser size={12} className="text-[#2563EB]" /> {t.user?.name || 'Unknown User'}
+                        <FiUser size={12} className="text-[#111111]" /> {t.user?.name || 'Unknown User'}
                       </span>
                       {t.due_date && <span>· Due: {t.due_date}</span>}
                     </div>

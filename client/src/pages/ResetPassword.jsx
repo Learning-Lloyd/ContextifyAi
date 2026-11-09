@@ -32,7 +32,7 @@ export default function ResetPassword() {
       <section className="w-full max-w-md p-8 rounded-2xl border border-[var(--app-border)] bg-[var(--app-card)] shadow-xl">
         <h1 className="text-2xl font-bold text-[var(--app-text)]">Choose a new password</h1>
         <p className="mt-2 mb-6 text-sm text-[var(--app-text-secondary)]">Resetting password for {email || 'your account'}.</p>
-        {message ? <><p role="status" className="mb-4 text-sm text-emerald-600">{message}</p><Link className="text-sm text-[#2563EB] hover:underline" to="/login">Sign in</Link></> : <>
+        {message ? <><p role="status" className="mb-4 text-sm text-zinc-600">{message}</p><Link className="text-sm text-[#111111] hover:underline" to="/login">Sign in</Link></> : <>
           {error && <p role="alert" className="mb-4 text-sm text-red-500">{error}</p>}
           <form onSubmit={submit} className="space-y-4">
             <label className="block space-y-1 text-sm text-[var(--app-text)]">New password

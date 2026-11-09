@@ -7,11 +7,11 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
   const sourceLabel = isAi ? 'AI explanation' : 'Context explanation';
 
   return (
-    <div className="card p-6 space-y-5 border-l-4 border-l-[#14B8A6] bg-[var(--app-card)] animate-fade-in shadow-sm">
+    <div className="card p-6 space-y-5 border-l-4 border-l-[#666666] bg-[var(--app-card)] animate-fade-in shadow-sm">
       {/* Header with clear separation banner */}
       <div className="flex items-center justify-between gap-3 flex-wrap border-b border-[var(--app-border)] pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-teal-500/10 text-[#14B8A6] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-zinc-500/10 text-[#666666] flex items-center justify-center">
             {isAi ? <FiZap size={16} /> : <FiCpu size={16} />}
           </div>
           <div>
@@ -38,7 +38,7 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
       {explanation.top_task_explanation && (
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/50 p-4">
           <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--app-text)] uppercase tracking-wider mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#14B8A6]" />
+            <span className="w-2 h-2 rounded-full bg-[#666666]" />
             Recommended task
           </div>
           <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
@@ -68,8 +68,8 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
 
       {/* Weather Advice Advisory */}
       {(explanation.weather_advice || weatherContext) && (
-        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-teal-500/5 border border-teal-500/20 text-xs">
-          <FiCloud className="text-[#14B8A6] shrink-0 mt-0.5" size={16} />
+        <div className="flex items-start gap-3 p-3.5 rounded-xl bg-zinc-500/5 border border-zinc-500/20 text-xs">
+          <FiCloud className="text-[#666666] shrink-0 mt-0.5" size={16} />
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-[var(--app-text)]">Weather advice</span>

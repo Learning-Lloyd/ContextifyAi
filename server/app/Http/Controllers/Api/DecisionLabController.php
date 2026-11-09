@@ -68,8 +68,15 @@ class DecisionLabController extends Controller
             }
 
             $payload = $tasks->map(fn (Task $task) => $this->taskToArray($task))->all();
+            $payload = $this->attachScheduledForecasts($payload, $request);
             $weatherContext = $this->resolveUserWeatherContext($request);
-            $analysis = $this->decisionService->prioritizeMultiple($payload, $weatherContext);
+            $pendingTaskCount = $request->user()->tasks()->active()->where('status', 'pending')->count();
+            $analysis = $this->decisionService->prioritizeMultiple(
+                $payload,
+                $weatherContext,
+                $this->clientTimezone($request),
+                $pendingTaskCount
+            );
 
             $saved = $request->user()->decisionAnalyses()->create([
                 'task_ids' => $validated['task_ids'],
@@ -210,9 +217,14 @@ class DecisionLabController extends Controller
 
         $topTaskCounts = [];
         $dominantFactorCounts = [];
+        $topScores = collect();
         foreach ($decisionAnalyses as $analysis) {
             $top = $analysis->ranked_tasks[0]['title'] ?? null;
             if ($top) {
+                $score = $analysis->ranked_tasks[0]['priority_score'] ?? null;
+                if (is_numeric($score)) {
+                    $topScores->push((float) $score);
+                }
                 $topTaskCounts[$top] = ($topTaskCounts[$top] ?? 0) + 1;
                 $topTask = $analysis->ranked_tasks[0];
                 $breakdown = $topTask['breakdown'] ?? [];
@@ -255,6 +267,7 @@ class DecisionLabController extends Controller
                 'most_frequent_top_task' => array_key_first($topTaskCounts),
                 'most_influential_factor' => array_key_first($dominantFactorCounts),
                 'most_influential_factor_count' => $dominantFactorCounts ? reset($dominantFactorCounts) : 0,
+                'average_top_score' => $topScores->isNotEmpty() ? round($topScores->avg(), 1) : null,
                 'confidence_distribution' => $confidenceCounts,
                 'recent_analyses' => $recentAnalyses,
                 'monthly_analyses' => $decisionAnalyses
@@ -378,8 +391,11 @@ class DecisionLabController extends Controller
             'weather_condition' => $task->weather_condition,
             'temperature' => $task->temperature,
             'rain_probability' => $task->rain_probability,
+            'weather_last_updated' => $task->weather_last_updated?->toIso8601String(),
             'due_date' => $task->due_date?->format('Y-m-d'),
             'due_time' => $task->due_time,
+            'category' => $task->category,
+            'estimated_time_minutes' => $task->estimated_time_minutes,
             'importance' => $task->importance,
             'urgency' => $task->urgency,
             'time_availability' => $task->time_availability,
@@ -425,5 +441,52 @@ class DecisionLabController extends Controller
             'temperature' => $weather['temperature'],
             'rain_probability' => $weather['rain_probability'],
         ];
+    }
+
+    private function attachScheduledForecasts(array $tasks, Request $request): array
+    {
+        $user = $request->user();
+
+        return array_map(function (array $task) use ($user) {
+            $latitude = $task['latitude'] ?? $user->city_latitude;
+            $longitude = $task['longitude'] ?? $user->city_longitude;
+            if (empty($task['due_date']) || $latitude === null || $longitude === null) {
+                return $task;
+            }
+
+            $forecast = $this->weatherService->getForecast((float) $latitude, (float) $longitude);
+            $dayForecast = collect($forecast)->first(fn (array $day) => ($day['date'] ?? null) === $task['due_date']);
+            if (! $dayForecast) {
+                return $task;
+            }
+
+            $hourForecast = null;
+            if (! empty($task['due_time'])) {
+                $dueTime = substr((string) $task['due_time'], 0, 5);
+                $hourForecast = collect($dayForecast['hourly'] ?? [])->sortBy(function (array $hour) use ($dueTime) {
+                    return abs(strtotime($hour['time'] ?? '00:00') - strtotime($dueTime));
+                })->first();
+            }
+
+            $task['scheduled_weather'] = [
+                'date' => $dayForecast['date'],
+                'time' => $hourForecast['time'] ?? null,
+                'location' => $task['location'] ?? $user->city,
+                'weather_condition' => $hourForecast['weather_condition'] ?? $dayForecast['weather_condition'] ?? null,
+                'rain_probability' => $hourForecast['rain_probability'] ?? $dayForecast['rain_probability'] ?? null,
+                'forecast_updated_at' => $dayForecast['forecast_updated_at'] ?? null,
+            ];
+
+            return $task;
+        }, $tasks);
+    }
+
+    private function clientTimezone(Request $request): ?string
+    {
+        $timezone = $request->header('X-Client-Timezone');
+
+        return is_string($timezone) && in_array($timezone, \DateTimeZone::listIdentifiers(), true)
+            ? $timezone
+            : null;
     }
 }

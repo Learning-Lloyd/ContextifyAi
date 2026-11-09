@@ -23,9 +23,9 @@ import { taskService } from '../services/taskService';
 
 // Fixed weights strictly defined by the manuscript
 const FACTORS = [
-  { key: 'importance', label: 'Importance', weight: '40%', weightNum: 0.40, color: '#2563EB' },
-  { key: 'urgency', label: 'Urgency', weight: '30%', weightNum: 0.30, color: '#F59E0B' },
-  { key: 'time_availability', label: 'Time Availability', weight: '20%', weightNum: 0.20, color: '#14B8A6' },
+  { key: 'importance', label: 'Importance', weight: '40%', weightNum: 0.40, color: '#111111' },
+  { key: 'urgency', label: 'Urgency', weight: '30%', weightNum: 0.30, color: '#666666' },
+  { key: 'time_availability', label: 'Time Availability', weight: '20%', weightNum: 0.20, color: '#666666' },
   { key: 'current_workload', label: 'Current Workload', weight: '10%', weightNum: 0.10, color: '#64748B' },
 ];
 
@@ -270,7 +270,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
       <div className="simulation-workflow-header">
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-zinc-500/10 text-[#111111] flex items-center justify-center">
               <FiSliders size={20} />
             </div>
             <div>
@@ -293,7 +293,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
               3. Adjust
             </span>
             <FiArrowRight size={11} />
-            <span className="bg-blue-500/10 text-[#2563EB] px-2.5 py-1 rounded-full">
+            <span className="bg-zinc-500/10 text-[#111111] px-2.5 py-1 rounded-full">
               4. Apply
             </span>
           </div>
@@ -373,8 +373,8 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                   className={`simulation-candidate-row ${
                     isSelected
                       ? isModified
-                        ? 'border-[#2563EB] bg-blue-500/[0.04] shadow-sm'
-                        : 'border-[#2563EB]/40 bg-blue-500/[0.02]'
+                        ? 'border-[#111111] bg-zinc-500/[0.04] shadow-sm'
+                        : 'border-[#111111]/40 bg-zinc-500/[0.02]'
                       : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-text-muted)]/40'
                   }`}
                 >
@@ -385,7 +385,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleTask(task.id)}
-                        className="w-4 h-4 mt-0.5 rounded text-[#2563EB] focus:ring-blue-500 cursor-pointer"
+                        className="w-4 h-4 mt-0.5 rounded text-[#111111] focus:ring-zinc-500 cursor-pointer"
                       />
                       <div className="min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -394,7 +394,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           </span>
                           <PriorityBadge level={task.priority_level} />
                           {isModified && (
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/10 text-[#D97706] dark:text-[#FBBF24]">
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-zinc-500/10 text-[#555555] dark:text-[#AAAAAA]">
                               Edited
                             </span>
                           )}
@@ -434,16 +434,16 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         <>
                           <FiArrowRight size={12} className="text-[var(--app-text-muted)]" />
                           <div className="text-right">
-                            <span className="text-[10px] uppercase font-bold text-[#2563EB] block">
+                            <span className="text-[10px] uppercase font-bold text-[#111111] block">
                               Simulated
                             </span>
                             <div className="flex items-center gap-1.5 justify-end">
                               {liveRankItem && (
-                                <span className="text-[11px] font-bold text-[#2563EB] bg-blue-500/10 px-1.5 py-0.5 rounded">
+                                <span className="text-[11px] font-bold text-[#111111] bg-zinc-500/10 px-1.5 py-0.5 rounded">
                                   #{liveRankItem.simRank}
                                 </span>
                               )}
-                              <span className="text-sm font-extrabold text-[#2563EB] font-mono">
+                              <span className="text-sm font-extrabold text-[#111111] font-mono">
                                 {simScore.toFixed(2)}
                               </span>
                             </div>
@@ -453,7 +453,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           <span
                             className={`text-xs font-bold px-2 py-0.5 rounded flex items-center gap-0.5 ${
                               scoreDiff > 0
-                                ? 'bg-green-500/10 text-[#22C55E]'
+                                ? 'bg-zinc-500/10 text-[#555555]'
                                 : scoreDiff < 0
                                 ? 'bg-red-500/10 text-[#EF4444]'
                                 : 'bg-[var(--app-muted)] text-[var(--app-text-muted)]'
@@ -480,7 +480,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           <button
                             type="button"
                             onClick={() => resetTaskFactors(task.id)}
-                            className="text-xs text-[var(--app-text-muted)] hover:text-[#2563EB] flex items-center gap-1 font-medium transition-colors"
+                            className="text-xs text-[var(--app-text-muted)] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors"
                           >
                             <FiRotateCcw size={11} /> Reset Task
                           </button>
@@ -502,7 +502,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                                 </span>
                                 <div className="flex items-center gap-1.5">
                                   {factorDiff !== 0 && (
-                                    <span className={`text-[10px] font-bold ${factorDiff > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+                                    <span className={`text-[10px] font-bold ${factorDiff > 0 ? 'text-[#555555]' : 'text-[#EF4444]'}`}>
                                       {factorDiff > 0 ? `+${factorDiff}` : factorDiff}
                                     </span>
                                   )}
@@ -567,7 +567,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                 type="button"
                 onClick={() => setShowApplyConfirm(true)}
                 disabled={!hasAnyOverrides || applying}
-                className="btn btn-secondary text-xs sm:text-sm border-[#2563EB]/40 text-[#2563EB] hover:bg-blue-500/10"
+                className="btn btn-secondary text-xs sm:text-sm border-[#111111]/40 text-[#111111] hover:bg-zinc-500/10"
               >
                 <FiCheckCircle size={15} /> Apply Scenario to Tasks
               </button>
@@ -591,7 +591,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
           <div className="flex items-center justify-between gap-3 flex-wrap pb-2 border-b border-[var(--app-border)]">
             <div>
               <h3 className="text-base font-bold text-[var(--app-text)] flex items-center gap-2">
-                <FiCheckSquare className="text-[#2563EB]" size={18} />
+                <FiCheckSquare className="text-[#111111]" size={18} />
                 Ranking comparison
               </h3>
               <p className="text-xs text-[var(--app-text-muted)]">
@@ -600,7 +600,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
             </div>
 
             {hasAnyOverrides && (
-              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-500/10 text-[#2563EB]">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-500/10 text-[#111111]">
                 Simulation Active
               </span>
             )}
@@ -639,7 +639,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
 
             {/* Column 2: Simulated Ranking */}
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs font-bold text-[#2563EB] uppercase tracking-wider pb-1">
+              <div className="flex items-center justify-between text-xs font-bold text-[#111111] uppercase tracking-wider pb-1">
                 <span>New order</span>
                 <span>New score and change</span>
               </div>
@@ -654,7 +654,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                       key={`sim-${task.id}`}
                       className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
                         isRank1
-                          ? 'border-[#2563EB] bg-blue-500/[0.05] shadow-sm'
+                          ? 'border-[#111111] bg-zinc-500/[0.05] shadow-sm'
                           : 'border-[var(--app-border)] bg-[var(--app-card)]'
                       }`}
                     >
@@ -662,8 +662,8 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         <span
                           className={`w-6 h-6 rounded-lg font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
                             isRank1
-                              ? 'bg-[#2563EB] text-white'
-                              : 'bg-blue-500/10 text-[#2563EB]'
+                              ? 'bg-[#111111] text-white'
+                              : 'bg-zinc-500/10 text-[#111111]'
                           }`}
                         >
                           #{task.simRank}
@@ -673,7 +673,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                             {task.title}
                           </span>
                           {isRank1 && (
-                            <span className="text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">
+                            <span className="text-[10px] font-bold text-[#111111] uppercase tracking-wider">
                               ★ Top Recommended Task
                             </span>
                           )}
@@ -686,7 +686,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           <span
                             className={`text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-0.5 ${
                               task.rankDiff > 0
-                                ? 'bg-green-500/10 text-[#22C55E]'
+                                ? 'bg-zinc-500/10 text-[#555555]'
                                 : 'bg-red-500/10 text-[#EF4444]'
                             }`}
                           >
@@ -706,7 +706,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           </span>
                         )}
 
-                        <span className="font-mono font-extrabold text-sm text-[#2563EB]">
+                        <span className="font-mono font-extrabold text-sm text-[#111111]">
                           {task.simScore.toFixed(2)}
                         </span>
                       </div>
@@ -743,13 +743,13 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         Original: {task.origScore.toFixed(2)} (Rank #{task.origRank})
                       </span>
                       <FiArrowRight size={11} className="text-[var(--app-text-muted)]" />
-                      <span className="font-bold text-[#2563EB]">
+                      <span className="font-bold text-[#111111]">
                         Simulated: {task.simScore.toFixed(2)} (Rank #{task.simRank})
                       </span>
                       <span
                         className={`font-bold px-1.5 py-0.5 rounded ${
                           task.scoreDiff > 0
-                            ? 'bg-green-500/10 text-[#22C55E]'
+                            ? 'bg-zinc-500/10 text-[#555555]'
                             : task.scoreDiff < 0
                             ? 'bg-red-500/10 text-[#EF4444]'
                             : 'bg-[var(--app-muted)] text-[var(--app-text-muted)]'
@@ -776,7 +776,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                           <div className="flex items-center justify-between font-mono">
                             <span className="text-[var(--app-text-secondary)]">{origVal} → {simVal}</span>
                             {diff !== 0 && (
-                              <span className={`font-bold text-[11px] ${diff > 0 ? 'text-[#22C55E]' : 'text-[#EF4444]'}`}>
+                              <span className={`font-bold text-[11px] ${diff > 0 ? 'text-[#555555]' : 'text-[#EF4444]'}`}>
                                 {contributionDiff > 0 ? `+${contributionDiff}` : contributionDiff}
                               </span>
                             )}
@@ -808,13 +808,13 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
 
           {/* AI Explanation Callout (Visually & logically separated from scoring) */}
           {simulation.ai_explanation && (
-            <div className="card p-5 border-l-4 border-l-[#14B8A6] bg-[#14B8A6]/[0.03] space-y-2">
+            <div className="card p-5 border-l-4 border-l-[#666666] bg-[#666666]/[0.03] space-y-2">
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                <div className="flex items-center gap-2 text-[#0D9488] dark:text-[#2DD4BF] font-bold text-sm">
+                <div className="flex items-center gap-2 text-[#555555] dark:text-[#777777] font-bold text-sm">
                   <FiZap size={16} />
                   <span>Explainable AI Narrative Justification</span>
                 </div>
-                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#14B8A6]/10 text-[#0D9488] dark:text-[#2DD4BF]">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-[#666666]/10 text-[#555555] dark:text-[#777777]">
                   Advisory Only · Does Not Alter Scores
                 </span>
               </div>
@@ -835,8 +835,8 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                     <span
                       className={`w-8 h-8 rounded-xl font-bold font-mono text-sm flex items-center justify-center shrink-0 ${
                         task.rank === 1
-                          ? 'bg-[#2563EB] text-white shadow-sm'
-                          : 'bg-blue-500/10 text-[#2563EB]'
+                          ? 'bg-[#111111] text-white shadow-sm'
+                          : 'bg-zinc-500/10 text-[#111111]'
                       }`}
                     >
                       #{task.rank}
@@ -846,7 +846,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                         {task.title}
                       </h4>
                       {task.rank === 1 && (
-                        <span className="text-xs font-semibold text-[#2563EB]">
+                        <span className="text-xs font-semibold text-[#111111]">
                           ★ Recommended First Priority
                         </span>
                       )}
@@ -857,7 +857,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
                     <span className="text-[10px] uppercase font-bold text-[var(--app-text-muted)] block">
                       Simulated Score
                     </span>
-                    <span className="text-lg font-extrabold text-[#2563EB] font-mono">
+                    <span className="text-lg font-extrabold text-[#111111] font-mono">
                       {task.priority_score}
                     </span>
                   </div>
@@ -904,7 +904,7 @@ export default function WhatIfSimulator({ tasks = [], onTasksUpdated }) {
           />
           <div className="relative w-full max-w-md card p-6 space-y-4 z-10 shadow-2xl animate-fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-zinc-500/10 text-[#111111] flex items-center justify-center">
                 <FiSave size={20} />
               </div>
               <div>

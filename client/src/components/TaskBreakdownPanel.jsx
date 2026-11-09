@@ -84,7 +84,7 @@ export default function TaskBreakdownPanel({ task }) {
         </div>
       )}
       {error && <p className="form-error">{error}</p>}
-      {notice && <p className="text-xs text-emerald-600">{notice}</p>}
+      {notice && <p className="text-xs text-zinc-600">{notice}</p>}
     </section>
   );
 }

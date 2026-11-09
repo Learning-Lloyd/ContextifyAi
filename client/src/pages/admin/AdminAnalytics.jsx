@@ -16,14 +16,15 @@ import AdminLayout from '../../components/AdminLayout';
 import LoadingSkeleton from '../../components/LoadingSkeleton';
 import { adminService } from '../../services/adminService';
 
-const COLORS = ['#2563EB', '#14B8A6', '#F59E0B', '#22C55E', '#EF4444', '#64748B'];
+const COLORS = ['#555555', '#777777', '#999999', '#666666', '#444444', '#AAAAAA'];
+const PRIORITY_COLORS = ['#EF4444', '#F59E0B', '#22C55E'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="card p-2.5 shadow-xl text-xs border border-[var(--app-border)]">
         <p className="font-bold text-[var(--app-text)]">{label || payload[0].name}</p>
-        <p className="text-[#2563EB] font-mono font-semibold">{payload[0].value}</p>
+        <p className="text-[#111111] font-mono font-semibold">{payload[0].value}</p>
       </div>
     );
   }
@@ -97,7 +98,7 @@ export default function AdminAnalytics() {
                     label={({ name, value }) => `${name}: ${value}`}
                   >
                     {data.priority_distribution.map((_, i) => (
-                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                      <Cell key={i} fill={PRIORITY_COLORS[i % PRIORITY_COLORS.length]} />
                     ))}
                   </Pie>
                   <Tooltip content={<CustomTooltip />} />
@@ -153,7 +154,7 @@ export default function AdminAnalytics() {
                   <XAxis dataKey="weather_condition" stroke="var(--app-text-muted)" fontSize={11} tickLine={false} />
                   <YAxis stroke="var(--app-text-muted)" fontSize={11} allowDecimals={false} tickLine={false} />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="count" fill="#14B8A6" radius={[6, 6, 0, 0]} barSize={28} />
+                  <Bar dataKey="count" fill="#666666" radius={[6, 6, 0, 0]} barSize={28} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -163,7 +164,7 @@ export default function AdminAnalytics() {
         {/* Most Active Users */}
         <div className="card p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-[var(--app-border)]">
-            <FiAward className="text-[#2563EB]" size={18} />
+            <FiAward className="text-[#111111]" size={18} />
             <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
               Most Active Platform Users
             </h3>
@@ -175,7 +176,7 @@ export default function AdminAnalytics() {
                 className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] flex items-center justify-between text-xs"
               >
                 <div className="flex items-center gap-2.5 truncate">
-                  <div className="w-8 h-8 rounded-lg bg-[#2563EB]/10 text-[#2563EB] font-bold flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-[#111111]/10 text-[#111111] font-bold flex items-center justify-center shrink-0">
                     {u.name?.charAt(0).toUpperCase()}
                   </div>
                   <div className="truncate">
@@ -183,7 +184,7 @@ export default function AdminAnalytics() {
                     <p className="text-[10px] text-[var(--app-text-muted)] truncate">{u.email}</p>
                   </div>
                 </div>
-                <span className="font-bold text-[#2563EB] bg-blue-500/10 px-2 py-0.5 rounded-full shrink-0">
+                <span className="font-bold text-[#111111] bg-zinc-500/10 px-2 py-0.5 rounded-full shrink-0">
                   {u.decision_analyses_count} analyses
                 </span>
               </div>
@@ -208,7 +209,7 @@ function ChartCard({ title, data, xKey, yKey }) {
             <XAxis dataKey={xKey} stroke="var(--app-text-muted)" fontSize={11} tickLine={false} />
             <YAxis stroke="var(--app-text-muted)" fontSize={11} allowDecimals={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey={yKey} fill="#2563EB" radius={[6, 6, 0, 0]} barSize={28} />
+            <Bar dataKey={yKey} fill="#111111" radius={[6, 6, 0, 0]} barSize={28} />
           </BarChart>
         </ResponsiveContainer>
       </div>

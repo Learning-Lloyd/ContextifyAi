@@ -68,20 +68,20 @@ export default function AdminDecisions() {
                     onClick={() => viewDetail(d.id)}
                     className={`w-full text-left p-4 rounded-xl border transition-all ${
                       isSelected
-                        ? 'border-[#2563EB] bg-blue-500/[0.04] shadow-sm'
+                        ? 'border-[#111111] bg-zinc-500/[0.04] shadow-sm'
                         : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-text-muted)]/40'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-[#2563EB]/10 text-[#2563EB] flex items-center justify-center font-bold text-xs">
+                        <div className="w-7 h-7 rounded-lg bg-[#111111]/10 text-[#111111] flex items-center justify-center font-bold text-xs">
                           {d.user?.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         <span className="font-bold text-sm text-[var(--app-text)] truncate">
                           {d.user?.name || 'Unknown User'}
                         </span>
                       </div>
-                      <span className="text-xs font-semibold text-[#2563EB] bg-blue-500/10 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-semibold text-[#111111] bg-zinc-500/10 px-2 py-0.5 rounded-full">
                         {d.total_selected} tasks
                       </span>
                     </div>
@@ -125,10 +125,10 @@ export default function AdminDecisions() {
                           className="flex items-center justify-between p-2.5 rounded-lg border border-[var(--app-border)] bg-[var(--app-muted)]/30 text-xs"
                         >
                           <div className="flex items-center gap-2 truncate">
-                            <span className="font-bold text-[#2563EB]">#{t.rank}</span>
+                            <span className="font-bold text-[#111111]">#{t.rank}</span>
                             <span className="font-medium text-[var(--app-text)] truncate">{t.title}</span>
                           </div>
-                          <span className="font-mono font-bold text-[#2563EB] shrink-0">
+                          <span className="font-mono font-bold text-[#111111] shrink-0">
                             Score {t.priority_score}
                           </span>
                         </div>

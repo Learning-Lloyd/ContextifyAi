@@ -18,7 +18,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--app-bg)' }}>
-        <div className="w-8 h-8 rounded-full border-2 border-blue-600 border-t-transparent animate-spin" />
+        <div className="w-8 h-8 rounded-full border-2 border-zinc-600 border-t-transparent animate-spin" />
       </div>
     );
   }
@@ -32,19 +32,19 @@ export default function Home() {
       name: 'Task Importance',
       weight: '40%',
       desc: 'Criticality and academic/professional impact evaluated via AI or rule-based heuristics.',
-      color: 'border-l-[#2563EB]',
+      color: 'border-l-[#111111]',
     },
     {
       name: 'Deadline Urgency',
       weight: '30%',
       desc: 'Mathematical countdown from task due dates, dynamically penalizing procrastination.',
-      color: 'border-l-[#F59E0B]',
+      color: 'border-l-[#777777]',
     },
     {
       name: 'Time Availability',
       weight: '20%',
       desc: 'Calendar schedule analysis determining available hours in your upcoming 7-day window.',
-      color: 'border-l-[#14B8A6]',
+      color: 'border-l-[#666666]',
     },
     {
       name: 'Current Workload',
@@ -101,13 +101,13 @@ export default function Home() {
       <main className="home-editorial">
         <section className="home-hero">
         <div className="home-hero-copy animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-blue-500/20 bg-blue-500/10 text-[#2563EB] text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-zinc-500/20 bg-zinc-500/10 text-[#111111] text-xs font-bold uppercase tracking-wider">
             <span>Decision Support System</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--app-text)] leading-[1.15]">
             Multi-Factor Contextual <br />
-              <span className="text-[#2563EB]">Daily Task Prioritization</span>
+              <span className="text-[#111111]">Daily Task Prioritization</span>
           </h1>
 
           <p className="text-base sm:text-lg text-[var(--app-text-secondary)] leading-relaxed max-w-2xl mx-auto">

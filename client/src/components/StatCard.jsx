@@ -49,7 +49,7 @@ export default function StatCard({
               <span
                 className={`text-xs font-semibold inline-flex items-center gap-0.5 ${
                   trend.direction === 'up'
-                    ? 'text-[#22C55E]'
+                    ? 'text-[#555555]'
                     : trend.direction === 'down'
                     ? 'text-[#EF4444]'
                     : 'text-[var(--app-text-muted)]'

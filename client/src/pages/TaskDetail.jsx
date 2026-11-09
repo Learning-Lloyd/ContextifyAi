@@ -83,7 +83,7 @@ export default function TaskDetail() {
     );
   }
 
-  const countdown = task.countdown || getCountdownLabel(task.due_date, task.due_time);
+  const countdown = getCountdownLabel(task.due_date, task.due_time);
 
   return (
     <Layout>
@@ -92,7 +92,7 @@ export default function TaskDetail() {
         <div>
           <Link
             to="/tasks"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--app-text-secondary)] hover:text-[#2563EB] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--app-text-secondary)] hover:text-[#111111] transition-colors"
           >
             <FiArrowLeft size={14} /> Back to Tasks
           </Link>
@@ -100,12 +100,12 @@ export default function TaskDetail() {
 
         {/* Environmental Weather Snapshot if Available */}
         {task.weather_condition && (
-          <div className="card p-4 bg-[var(--app-card)] flex items-center justify-between border-l-4 border-l-[#14B8A6]">
+          <div className="card p-4 bg-[var(--app-card)] flex items-center justify-between border-l-4 border-l-[#666666]">
             <div className="flex items-center gap-3">
               <span className="text-2xl">{weatherIcon(task.weather_condition)}</span>
               <div>
                 <p className="text-xs font-semibold text-[var(--app-text)] flex items-center gap-1">
-                  <FiMapPin size={12} className="text-[#2563EB]" /> {task.location}
+                  <FiMapPin size={12} className="text-[#111111]" /> {task.location}
                 </p>
                 <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
                   {task.temperature}°C · {task.weather_condition}
@@ -136,7 +136,7 @@ export default function TaskDetail() {
                 {countdown && (
                   <span
                     className={`badge ${
-                      countdown === 'Overdue' ? 'badge-danger' : 'badge-primary'
+                      countdown?.startsWith('Overdue') ? 'badge-danger' : 'badge-primary'
                     } text-xs font-medium`}
                   >
                     {countdown}
@@ -161,7 +161,7 @@ export default function TaskDetail() {
               <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--app-text-muted)] pt-2">
                 {task.due_date && (
                   <span className="inline-flex items-center gap-1.5 font-medium text-[var(--app-text)]">
-                    <FiCalendar size={13} className="text-[#2563EB]" />
+                    <FiCalendar size={13} className="text-[#111111]" />
                     {task.due_date}
                     {task.due_time && (
                       <span className="inline-flex items-center gap-0.5 text-[var(--app-text-muted)]">
@@ -184,7 +184,7 @@ export default function TaskDetail() {
               type="button"
               onClick={handleToggle}
               className={`btn btn-sm ${
-                task.status === 'completed' ? 'btn-secondary text-[#F59E0B]' : 'btn-primary'
+                task.status === 'completed' ? 'btn-secondary text-[#555555]' : 'btn-primary'
               }`}
             >
               <FiCheck size={15} />

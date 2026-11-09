@@ -34,7 +34,7 @@ export default function ScheduleSuggestions() {
         {schedule.days.filter((day) => day.items.length > 0).map((day) => (
           <div key={day.date} className="rounded-lg border border-[var(--app-border)] p-3">
             <div className="flex items-center justify-between text-sm font-bold text-[var(--app-text)]"><span>{new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span><span className="text-[var(--app-text-muted)]">{day.scheduled_minutes}/{day.available_minutes} min</span></div>
-            <ul className="mt-2 space-y-2">{day.items.map((item) => <li key={item.task_id} className="flex items-start gap-2 text-sm"><FiClock className="mt-0.5 text-[#285E4D] shrink-0" /><span><Link to={`/tasks/${item.task_id}`} className="font-semibold text-[var(--app-text)] hover:underline">{item.title}</Link><small className="block text-xs text-[var(--app-text-muted)] mt-0.5">{item.start_time}–{item.end_time} · {item.duration_minutes} min</small></span></li>)}</ul>
+            <ul className="mt-2 space-y-2">{day.items.map((item) => <li key={item.task_id} className="flex items-start gap-2 text-sm"><FiClock className="mt-0.5 text-[#111111] shrink-0" /><span><Link to={`/tasks/${item.task_id}`} className="font-semibold text-[var(--app-text)] hover:underline">{item.title}</Link><small className="block text-xs text-[var(--app-text-muted)] mt-0.5">{item.start_time}–{item.end_time} · {item.duration_minutes} min</small></span></li>)}</ul>
           </div>
         ))}
       </div>

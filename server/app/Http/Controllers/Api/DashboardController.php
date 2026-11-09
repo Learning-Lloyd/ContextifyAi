@@ -21,7 +21,10 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         $tasks = $user->tasks()->active()->orderByDesc('priority_score')->get();
-        $analysisStatus = app(TaskAnalysisStatusService::class)->forTasks($user, $tasks);
+        $analysisService = app(TaskAnalysisStatusService::class);
+        $analysisStatus = $analysisService->forTasks($user, $tasks);
+        $timezone = $this->clientTimezone($request);
+        $analysisDetails = $analysisService->analysisDetailsForTasks($user, $tasks, $timezone);
 
         $totalTasks = $tasks->count();
         $completedTasks = $tasks->where('status', 'completed')->count();
@@ -40,9 +43,11 @@ class DashboardController extends Controller
         ];
 
         foreach ($tasks as $task) {
-            $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'));
+            $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'), $timezone);
             $formatted = $this->formatTask($task);
             $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
+            $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
+            $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
             if (isset($grouped[$group])) {
                 $grouped[$group][] = $formatted;
             }
@@ -57,14 +62,26 @@ class DashboardController extends Controller
             ->filter(fn (Task $task) => $task->due_date)
             ->sortBy('due_date')
             ->take(5)
-            ->map(fn (Task $task) => $this->formatTask($task))
+            ->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
+                $formatted = $this->formatTask($task);
+                $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
+                $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
+                $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
+                return $formatted;
+            })
             ->values();
 
         $highestPriorityTasks = $tasks
             ->where('status', 'pending')
             ->sortByDesc('priority_score')
             ->take(5)
-            ->map(fn (Task $task) => $this->formatTask($task))
+            ->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
+                $formatted = $this->formatTask($task);
+                $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
+                $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
+                $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
+                return $formatted;
+            })
             ->values();
 
         $decisionSummary = [
@@ -105,9 +122,11 @@ class DashboardController extends Controller
                 return ['id' => $event->id, 'label' => $label, 'created_at' => $event->created_at];
             });
 
-        $allTasks = $tasks->map(function (Task $task) use ($analysisStatus) {
+        $allTasks = $tasks->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
             $formatted = $this->formatTask($task);
             $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
+            $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
+            $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
 
             return $formatted;
         });
@@ -200,6 +219,15 @@ class DashboardController extends Controller
             'rain_probability' => $current['rain_probability'],
             'forecast' => $this->weatherService->getForecast((float) $lat, (float) $lon),
         ];
+    }
+
+    private function clientTimezone(Request $request): ?string
+    {
+        $timezone = $request->header('X-Client-Timezone');
+
+        return is_string($timezone) && in_array($timezone, \DateTimeZone::listIdentifiers(), true)
+            ? $timezone
+            : null;
     }
 
     private function formatTask(Task $task): array

@@ -130,6 +130,7 @@ class WeatherService
                     'latitude' => $latitude,
                     'longitude' => $longitude,
                     'daily' => 'weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max',
+                    'hourly' => 'weather_code,precipitation_probability',
                     'forecast_days' => 5,
                     'timezone' => 'auto',
                 ]);
@@ -140,14 +141,30 @@ class WeatherService
 
                 $daily = $response->json('daily', []);
                 $dates = $daily['time'] ?? [];
+                $hourly = $response->json('hourly', []);
+                $hourlyTimes = $hourly['time'] ?? [];
 
-                return collect($dates)->map(function ($date, $index) use ($daily) {
+                return collect($dates)->map(function ($date, $index) use ($daily, $hourly, $hourlyTimes) {
+                    $hoursForDate = collect($hourlyTimes)
+                        ->filter(fn ($time) => str_starts_with((string) $time, $date . 'T'))
+                        ->map(function ($time, $hourIndex) use ($hourly) {
+                            return [
+                                'time' => substr((string) $time, 11, 5),
+                                'weather_condition' => $this->mapWeatherCode(isset($hourly['weather_code'][$hourIndex]) ? (int) $hourly['weather_code'][$hourIndex] : null),
+                                'rain_probability' => $hourly['precipitation_probability'][$hourIndex] ?? null,
+                            ];
+                        })
+                        ->values()
+                        ->all();
+
                     return [
                         'date' => $date,
                         'temperature_max' => $daily['temperature_2m_max'][$index] ?? null,
                         'temperature_min' => $daily['temperature_2m_min'][$index] ?? null,
                         'weather_condition' => $this->mapWeatherCode($daily['weather_code'][$index] ?? null),
                         'rain_probability' => $daily['precipitation_probability_max'][$index] ?? null,
+                        'hourly' => $hoursForDate,
+                        'forecast_updated_at' => now()->toIso8601String(),
                     ];
                 })->values()->all();
             } catch (\Throwable $exception) {

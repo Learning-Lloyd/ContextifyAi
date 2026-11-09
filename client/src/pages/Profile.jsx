@@ -57,7 +57,7 @@ export default function Profile() {
 
         {/* User Identity Banner */}
         <div className="card p-6 flex items-center gap-4 bg-[var(--app-card)] shadow-sm">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-extrabold text-white bg-[#2563EB] shadow-md shrink-0">
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-xl font-extrabold text-white bg-[#111111] shadow-md shrink-0">
             {user?.name?.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
@@ -74,7 +74,7 @@ export default function Profile() {
             </p>
             {user?.city && (
               <p className="text-xs text-[var(--app-text-secondary)] flex items-center gap-1.5 mt-1 font-medium">
-              <FiMapPin size={12} className="text-[#2563EB]" /> {user.city}
+              <FiMapPin size={12} className="text-[#111111]" /> {user.city}
               </p>
             )}
           </div>
@@ -86,14 +86,14 @@ export default function Profile() {
             <label className="label" htmlFor="profile-name">
               Name
             </label>
-            <div className="relative">
-              <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]" size={16} />
+            <div className="leading-icon-field">
+              <FiUser className="input-leading-icon" size={16} aria-hidden="true" />
               <input
                 id="profile-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="input pl-9"
+                className="input input-with-leading-icon"
                 required
               />
             </div>
@@ -108,7 +108,7 @@ export default function Profile() {
           </div>
 
           <div className="space-y-4 pt-4 border-t border-[var(--app-border)]">
-            <div className="flex items-center gap-2"><FiBell className="text-[#285E4D]" /><h2 className="font-bold text-sm text-[var(--app-text)]">Deadline reminders</h2></div>
+            <div className="flex items-center gap-2"><FiBell className="text-[#111111]" /><h2 className="font-bold text-sm text-[var(--app-text)]">Deadline reminders</h2></div>
             <label className="flex items-start gap-3 text-sm text-[var(--app-text-secondary)]">
               <input type="checkbox" checked={taskRemindersEnabled} onChange={(e) => setTaskRemindersEnabled(e.target.checked)} className="mt-0.5" />
               <span><strong className="text-[var(--app-text)]">Upcoming deadline reminders</strong></span>
@@ -139,8 +139,8 @@ export default function Profile() {
           </div>
 
           {/* Advisory Notice */}
-          <div className="p-3.5 rounded-xl bg-blue-500/[0.04] border border-[#2563EB]/20 flex items-start gap-2.5 text-sm text-[var(--app-text-secondary)]">
-            <FiInfo size={15} className="text-[#2563EB] shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-zinc-500/[0.04] border border-[#111111]/20 flex items-start gap-2.5 text-sm text-[var(--app-text-secondary)]">
+            <FiInfo size={15} className="text-[#111111] shrink-0 mt-0.5" />
             <span>
               Weather is advisory only and does not change task priority.
             </span>

@@ -62,34 +62,34 @@ export default function Register() {
       {/* Main Container */}
       <div className="w-full max-w-4xl grid md:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl border border-[var(--app-border)] bg-[var(--app-card)] animate-fade-in">
         {/* Left Brand Panel */}
-        <div className="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#1E3A8A] via-[#2563EB] to-[#1D4ED8] text-white">
+        <div className="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#333333] via-[#111111] to-[#555555] text-white">
           <div>
             <Logo size="lg" variant="dark" />
             <div className="mt-12 space-y-4">
               <h2 className="text-2xl font-extrabold tracking-tight leading-snug">
                 Join the Intelligent Prioritization Platform
               </h2>
-              <p className="text-blue-100 text-sm leading-relaxed">
+              <p className="text-zinc-100 text-sm leading-relaxed">
                 Take the guesswork out of what to do next. Let mathematical multi-factor contextual analysis schedule and organize your tasks.
               </p>
             </div>
           </div>
 
-          <div className="space-y-3 text-xs text-blue-100">
+          <div className="space-y-3 text-xs text-zinc-100">
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>4-Factor Contextual Engine (Imp, Urg, Time, Workload)</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>Interactive What-If Simulation Sandbox</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-blue-400/20 flex items-center justify-center text-white">
+              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
               </span>
               <span>Automatic weather and deadline risk awareness</span>
@@ -123,9 +123,9 @@ export default function Register() {
               <label className="label text-xs font-semibold" htmlFor="name">
                 Full Name
               </label>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiUser
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -134,7 +134,7 @@ export default function Register() {
                   name="name"
                   value={form.name}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="Your Name"
                   required
                 />
@@ -146,9 +146,9 @@ export default function Register() {
               <label className="label text-xs font-semibold" htmlFor="email">
                 Email Address
               </label>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiMail
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -157,7 +157,7 @@ export default function Register() {
                   name="email"
                   value={form.email}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="name@organization.com"
                   required
                 />
@@ -169,9 +169,9 @@ export default function Register() {
               <label className="label text-xs font-semibold" htmlFor="password">
                 Password
               </label>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiLock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -181,7 +181,7 @@ export default function Register() {
                   name="password"
                   value={form.password}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="Min. 8 characters"
                   required
                 />
@@ -193,9 +193,9 @@ export default function Register() {
               <label className="label text-xs font-semibold" htmlFor="password_confirmation">
                 Confirm Password
               </label>
-              <div className="relative">
+              <div className="leading-icon-field">
                 <FiLock
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                  className="input-leading-icon"
                   size={15}
                 />
                 <input
@@ -204,7 +204,7 @@ export default function Register() {
                   name="password_confirmation"
                   value={form.password_confirmation}
                   onChange={handleChange}
-                  className="input pl-9 text-xs sm:text-sm"
+                  className="input input-with-leading-icon text-xs sm:text-sm"
                   placeholder="Repeat your password"
                   required
                 />
@@ -221,7 +221,7 @@ export default function Register() {
 
             <div className="pt-3 border-t border-[var(--app-border)] text-center text-xs text-[var(--app-text-secondary)]">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#2563EB] hover:underline font-bold">
+              <Link to="/login" className="text-[#111111] hover:underline font-bold">
                 Sign In
               </Link>
             </div>

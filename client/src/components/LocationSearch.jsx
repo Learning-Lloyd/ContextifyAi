@@ -45,14 +45,14 @@ export default function LocationSearch({ value, onChange, error }) {
   return (
     <div className="relative">
       <label className="label">Location</label>
-      <div className="relative">
-        <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]" size={16} />
+      <div className="leading-icon-field">
+        <FiSearch className="input-leading-icon" size={16} aria-hidden="true" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search city..."
-          className="input pl-9"
+          className="input input-with-leading-icon"
         />
       </div>
       {loading && <p className="text-xs text-[var(--app-text-muted)] mt-1">Searching cities...</p>}
@@ -65,14 +65,14 @@ export default function LocationSearch({ value, onChange, error }) {
               onClick={() => handleSelect(city)}
               className="w-full text-left px-4 py-2.5 hover:bg-[var(--app-hover)] flex items-center gap-2 text-sm transition-colors"
             >
-              <FiMapPin className="text-[#2563EB]" size={14} />
+              <FiMapPin className="text-[#111111]" size={14} />
               <span>{city.label}</span>
             </button>
           ))}
         </div>
       )}
       {value?.location && (
-        <p className="text-xs text-[#2563EB] mt-2 flex items-center gap-1">
+        <p className="text-xs text-[#111111] mt-2 flex items-center gap-1">
           <FiMapPin size={12} /> Selected: {value.location}
         </p>
       )}

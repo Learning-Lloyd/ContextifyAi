@@ -5,6 +5,11 @@ import ScoreRing from './ScoreRing';
 import FactorBar from './FactorBar';
 import { weatherIcon } from '../utils/taskUtils';
 
+function ordinal(value) {
+  if (value % 100 >= 11 && value % 100 <= 13) return `${value}th`;
+  return `${value}${({ 1: 'st', 2: 'nd', 3: 'rd' })[value % 10] || 'th'}`;
+}
+
 export default function RankedTaskCard({ task }) {
   const breakdown = task.factor_breakdown || {};
   const factors = breakdown.factors || [];
@@ -15,7 +20,7 @@ export default function RankedTaskCard({ task }) {
     <div
       className={`card p-6 space-y-5 animate-fade-in transition-all ${
         isTopRank
-          ? 'border-2 border-[#2563EB]/40 shadow-md bg-gradient-to-br from-[var(--app-card)] to-[var(--app-muted)]/30'
+          ? 'border-2 border-[#111111]/40 shadow-md bg-gradient-to-br from-[var(--app-card)] to-[var(--app-muted)]/30'
           : ''
       }`}
     >
@@ -25,11 +30,11 @@ export default function RankedTaskCard({ task }) {
           <div
             className={`w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-base shrink-0 shadow-sm ${
               isTopRank
-                ? 'bg-[#2563EB] text-white'
+                ? 'bg-[#111111] text-white'
                 : 'bg-[var(--app-muted)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
             }`}
           >
-            #{task.rank}
+            {ordinal(task.rank)}
           </div>
 
           <div className="min-w-0">
@@ -37,6 +42,7 @@ export default function RankedTaskCard({ task }) {
               <h3 className="text-base sm:text-lg font-bold text-[var(--app-text)] leading-snug">
                 {task.title}
               </h3>
+              <span className="rank-position-label">{task.rank === 1 ? 'First priority' : `${ordinal(task.rank)} in ranking`}</span>
               <PriorityBadge level={task.priority_level} score={task.priority_score} />
               {task.rank_confidence && <DecisionConfidenceBadge confidence={task.rank_confidence} />}
             </div>
@@ -49,7 +55,7 @@ export default function RankedTaskCard({ task }) {
                 </span>
               )}
               {task.countdown && (
-                <span className="font-semibold text-[#2563EB] bg-blue-500/10 px-2 py-0.5 rounded-full text-[11px]">
+                <span className="font-semibold text-[#111111] bg-zinc-500/10 px-2 py-0.5 rounded-full text-[11px]">
                   {task.countdown}
                 </span>
               )}
@@ -66,6 +72,16 @@ export default function RankedTaskCard({ task }) {
           </span>
         </div>
       </div>
+
+      {task.task_card_explanation && (
+        <div className="task-analysis-explanation">
+          <div className="flex items-center justify-between gap-2">
+            <strong>Why this is your priority</strong>
+            {task.explanation_source && <span className="task-explanation-source">{task.explanation_source === 'ai' ? 'AI explanation' : 'Based on scoring results'}</span>}
+          </div>
+          <p>{task.task_card_explanation}</p>
+        </div>
+      )}
 
       {(task.weather_context || task.reason_bullets?.length > 0 || task.overall_explanation) && (
       <details className="border-t border-[var(--app-border)] pt-3">
@@ -96,7 +112,7 @@ export default function RankedTaskCard({ task }) {
           <ul className="space-y-1 text-sm text-[var(--app-text-secondary)]">
             {task.reason_bullets.map((bullet, idx) => (
               <li key={idx} className="flex items-start gap-2">
-                <span className="text-[#2563EB] font-bold">•</span>
+                <span className="text-[#111111] font-bold">•</span>
                 <span>{bullet}</span>
               </li>
             ))}
@@ -154,7 +170,7 @@ export default function RankedTaskCard({ task }) {
 
       {/* Recommended Action Pill */}
       {task.recommendation && (
-        <div className="pt-2 border-t border-[var(--app-border)] flex items-center gap-2 text-xs font-semibold text-[#22C55E]">
+        <div className="pt-2 border-t border-[var(--app-border)] flex items-center gap-2 text-xs font-semibold text-[#555555]">
           <span>Next step:</span>
           <span className="text-[var(--app-text-secondary)] font-normal">{task.recommendation}</span>
         </div>

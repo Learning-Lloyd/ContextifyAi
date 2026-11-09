@@ -12,19 +12,20 @@ class AiExplanationService
      * Generate natural-language explanation from already-computed ranking results.
      * AI must never alter scores, weights, or ranking order.
      */
-    public function explainRanking(array $rankedTasks, ?array $weatherContext = null): array
+    public function explainRanking(array $rankedTasks, ?array $weatherContext = null, ?string $timezone = null): array
     {
         if (count($rankedTasks) === 0) {
             return [
                 'summary' => 'No tasks were selected for analysis.',
                 'top_task_explanation' => null,
+                'task_explanations' => [],
                 'productivity_tips' => [],
                 'weather_advice' => null,
                 'source' => 'default',
             ];
         }
 
-        $payload = $this->buildPayload($rankedTasks, $weatherContext);
+        $payload = $this->buildPayload($rankedTasks, $weatherContext, $timezone);
         $aiResult = $this->explainWithAi($payload);
 
         if ($aiResult !== null) {
@@ -34,14 +35,19 @@ class AiExplanationService
         return $this->explainWithHeuristic($rankedTasks, $weatherContext);
     }
 
-    private function buildPayload(array $rankedTasks, ?array $weatherContext): array
+    private function buildPayload(array $rankedTasks, ?array $weatherContext, ?string $timezone): array
     {
-        $tasks = collect($rankedTasks)->map(function (array $task) {
+        $tasks = collect($rankedTasks)->map(function (array $task) use ($timezone, $rankedTasks) {
             $breakdown = $task['breakdown'] ?? [];
 
             return [
                 'rank' => $task['rank'] ?? null,
+                'id' => $task['id'] ?? null,
                 'title' => $task['title'] ?? 'Untitled',
+                'description' => $task['description'] ?? null,
+                'category' => $task['category'] ?? null,
+                'location' => $task['location'] ?? null,
+                'estimated_time_minutes' => $task['estimated_time_minutes'] ?? null,
                 'priority_score' => $task['priority_score'] ?? null,
                 'priority_level' => $task['priority_level'] ?? null,
                 'importance' => $task['importance'] ?? null,
@@ -55,6 +61,21 @@ class AiExplanationService
                     'current_workload' => $breakdown['current_workload']['weighted'] ?? null,
                 ],
                 'due_date' => $task['due_date'] ?? null,
+                'due_time' => $task['due_time'] ?? null,
+                'time_remaining' => $task['time_remaining'] ?? DeadlineUrgencyService::countdownLabel(
+                    $task['due_date'] ?? null,
+                    $task['due_time'] ?? null,
+                    $timezone
+                ),
+                'analyzed_task_count' => $task['analyzed_task_count'] ?? count($rankedTasks),
+                'pending_task_count' => $task['pending_task_count'] ?? null,
+                'scheduled_weather' => $task['scheduled_weather'] ?? null,
+                'ranked_before' => $task['rank'] > 1
+                    ? ($rankedTasks[($task['rank'] ?? 1) - 2]['title'] ?? null)
+                    : null,
+                'ranked_after' => ($task['rank'] ?? 1) < count($rankedTasks)
+                    ? ($rankedTasks[$task['rank'] ?? 1]['title'] ?? null)
+                    : null,
             ];
         })->values()->all();
 
@@ -74,14 +95,18 @@ Return ONLY valid JSON:
 {
   "summary": "<2-3 sentences on overall ranking>",
   "top_task_explanation": "<why rank #1 ranked first, referencing factor contributions>",
+  "task_explanations": [{"id": 123, "explanation": "<one or two concise, natural sentences explaining this task's actual rank and deadline>"}],
   "productivity_tips": ["<tip1>", "<tip2>"],
   "weather_advice": "<optional weather-based scheduling advice or null>"
 }
 
 Rules:
-- Use ONLY the provided scores, ranks, and factor contributions
-- Explain how importance, urgency, time availability, and workload affected outcomes
-- Weather advice is advisory only and must not imply score changes
+- Use ONLY the provided task details, final ranks, time remaining, factor contributions, and scheduled weather.
+- Explain each task's actual position in the returned ranking. Compare it only with the task titles provided in ranked_before/ranked_after.
+- Never say the top-ranked task has the closest deadline unless the provided deadlines prove that.
+- Do not invent task details, comparisons, deadlines, forecasts, or weather impact. Mention weather only when scheduled_weather is provided and relevant to an outdoor activity.
+- Keep each task explanation to one to three short, plain-language sentences. Explain that its rank follows the final deterministic results; do not calculate or change the score.
+- Weather is context only and must not imply that it changes priority.
 - Be concise and practical
 PROMPT;
 
@@ -95,9 +120,18 @@ PROMPT;
             return null;
         }
 
+        $allowedTaskIds = collect($payload['tasks'] ?? [])->pluck('id')->filter()->map(fn ($id) => (int) $id)->all();
+
         return [
             'summary' => $summary,
             'top_task_explanation' => trim((string) ($parsed['top_task_explanation'] ?? '')) ?: null,
+            'task_explanations' => collect((array) ($parsed['task_explanations'] ?? []))
+                ->filter(fn ($item) => is_array($item)
+                    && isset($item['id'], $item['explanation'])
+                    && in_array((int) $item['id'], $allowedTaskIds, true))
+                ->mapWithKeys(fn ($item) => [(int) $item['id'] => trim((string) $item['explanation'])])
+                ->filter(fn ($explanation) => $explanation !== '')
+                ->all(),
             'productivity_tips' => array_values(array_filter((array) ($parsed['productivity_tips'] ?? []))),
             'weather_advice' => isset($parsed['weather_advice']) && $parsed['weather_advice']
                 ? trim((string) $parsed['weather_advice'])

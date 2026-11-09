@@ -35,15 +35,33 @@ export function getCountdownLabel(dueDate, dueTime) {
 
   const deadline = new Date(`${dueDate}T${dueTime || '23:59'}`);
   const now = new Date();
-  if (deadline < now) return 'Overdue';
-
   const diffMs = deadline - now;
-  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
-  if (days > 0) return `${days} day${days > 1 ? 's' : ''} left`;
-  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} left`;
-  return 'Due soon';
+  if (diffMs < 0) {
+    const overdue = Math.abs(diffMs);
+    if (overdue >= 86400000) {
+      const days = Math.floor(overdue / 86400000);
+      return `Overdue by ${days} day${days === 1 ? '' : 's'}`;
+    }
+    if (overdue >= 3600000) {
+      const hours = Math.floor(overdue / 3600000);
+      return `Overdue by ${hours} hour${hours === 1 ? '' : 's'}`;
+    }
+    const minutes = Math.max(1, Math.floor(overdue / 60000));
+    return `Overdue by ${minutes} minute${minutes === 1 ? '' : 's'}`;
+  }
+  if (diffMs >= 86400000) {
+    const days = Math.floor(diffMs / 86400000);
+    return days === 1 ? 'Due tomorrow' : days >= 7 ? `Due in ${Math.floor(days / 7)} week${days >= 14 ? 's' : ''}` : `Due in ${days} days`;
+  }
+  if (diffMs >= 3600000) {
+    const hours = Math.ceil(diffMs / 3600000);
+    return `Due in ${hours} hour${hours === 1 ? '' : 's'}`;
+  }
+  if (diffMs >= 60000) {
+    const minutes = Math.ceil(diffMs / 60000);
+    return `Due in ${minutes} minute${minutes === 1 ? '' : 's'}`;
+  }
+  return 'Due now';
 }
 
 export function getPriorityLevel(score) {

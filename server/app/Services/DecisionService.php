@@ -72,7 +72,12 @@ class DecisionService
     /**
      * Rank unlimited selected tasks by deterministic weighted score.
      */
-    public function prioritizeMultiple(array $tasks, ?array $weatherContext = null): array
+    public function prioritizeMultiple(
+        array $tasks,
+        ?array $weatherContext = null,
+        ?string $timezone = null,
+        ?int $workspacePendingTaskCount = null
+    ): array
     {
         $ranked = collect($tasks)
             ->map(function (array $task) {
@@ -126,7 +131,41 @@ class DecisionService
         $recommendation = $this->explanationService->buildActionRecommendation($ranked);
         $confidence = $this->computeAnalysisConfidence($ranked);
         $weatherContext = $weatherContext ?? $this->resolveWeatherContext($ranked);
-        $aiExplanation = $this->aiExplanationService->explainRanking($ranked, $weatherContext);
+        $pendingTaskCount = $workspacePendingTaskCount
+            ?? count(array_filter($ranked, fn (array $task) => ($task['status'] ?? 'pending') === 'pending'));
+        foreach ($ranked as $index => &$task) {
+            $task['pending_task_count'] = $pendingTaskCount;
+            $task['analyzed_task_count'] = count($ranked);
+            $task['time_remaining'] = DeadlineUrgencyService::countdownLabel(
+                $task['due_date'] ?? null,
+                $task['due_time'] ?? null,
+                $timezone
+            );
+        }
+        unset($task);
+        foreach ($ranked as $index => &$task) {
+            $task['task_card_explanation'] = $this->explanationService->forTaskCard(
+                $task,
+                $index + 1,
+                count($ranked),
+                $timezone,
+                $ranked
+            );
+        }
+        unset($task);
+
+        $aiExplanation = $this->aiExplanationService->explainRanking($ranked, $weatherContext, $timezone);
+
+        foreach ($ranked as &$task) {
+            $aiTaskExplanation = $aiExplanation['task_explanations'][$task['id'] ?? -1] ?? null;
+            if ($aiTaskExplanation) {
+                $task['task_card_explanation'] = $aiTaskExplanation;
+                $task['explanation_source'] = 'ai';
+            } else {
+                $task['explanation_source'] = 'rule_based';
+            }
+        }
+        unset($task);
 
         return [
             'ranked_tasks' => $ranked,
@@ -202,10 +241,16 @@ class DecisionService
             'id' => $task['id'] ?? null,
             'title' => $task['title'] ?? 'Untitled Task',
             'description' => $task['description'] ?? null,
+            'category' => $task['category'] ?? null,
+            'estimated_time_minutes' => $task['estimated_time_minutes'] ?? null,
             'location' => $task['location'] ?? null,
+            'latitude' => $task['latitude'] ?? null,
+            'longitude' => $task['longitude'] ?? null,
             'weather_condition' => $task['weather_condition'] ?? null,
             'temperature' => $task['temperature'] ?? null,
             'rain_probability' => $task['rain_probability'] ?? null,
+            'weather_last_updated' => $task['weather_last_updated'] ?? null,
+            'scheduled_weather' => $task['scheduled_weather'] ?? null,
             'due_date' => ! empty($task['due_date']) ? (string) $task['due_date'] : null,
             'due_time' => $task['due_time'] ?? null,
             'importance' => max(1, min(10, (int) ($task['importance'] ?? 1))),

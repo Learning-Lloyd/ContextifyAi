@@ -35,17 +35,17 @@ const CATEGORIES = [
 const STATUS_CONFIG = {
   pending: {
     label: 'Pending Review',
-    badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
+    badge: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiClock,
   },
   reviewed: {
     label: 'Reviewed',
-    badge: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20',
+    badge: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiMessageSquare,
   },
   resolved: {
     label: 'Resolved',
-    badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20',
+    badge: 'bg-zinc-500/10 text-zinc-600 dark:text-zinc-400 border-zinc-500/20',
     icon: FiCheckCircle,
   },
 };
@@ -195,31 +195,31 @@ export default function AdminFeedback() {
             icon={FiInbox}
             label="Total Feedback"
             value={stats.total}
-            color="#2563EB"
+            color="#111111"
           />
           <StatCard
             icon={FiClock}
             label="Pending Review"
             value={stats.pending}
-            color="#F59E0B"
+            color="#555555"
           />
           <StatCard
             icon={FiMessageSquare}
             label="Reviewed"
             value={stats.reviewed}
-            color="#3B82F6"
+            color="#555555"
           />
           <StatCard
             icon={FiCheckCircle}
             label="Resolved"
             value={stats.resolved}
-            color="#10B981"
+            color="#777777"
           />
           <StatCard
             icon={FiStar}
             label="Average Rating"
             value={`${stats.avg_rating || 0} / 5`}
-            color="#8B5CF6"
+            color="#999999"
           />
         </div>
 
@@ -235,7 +235,7 @@ export default function AdminFeedback() {
                   onClick={() => setStatusFilter(st)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize whitespace-nowrap transition-colors ${
                     statusFilter === st
-                      ? 'bg-[#2563EB] text-white shadow-xs'
+                      ? 'bg-[#111111] text-white shadow-xs'
                       : 'bg-[var(--app-surface)] text-[var(--app-text-secondary)] hover:text-[var(--app-text)] hover:bg-[var(--app-muted)]'
                   }`}
                 >
@@ -260,9 +260,9 @@ export default function AdminFeedback() {
               </select>
 
               <form onSubmit={handleSearchSubmit} className="flex items-center gap-1">
-                <div className="relative">
+                <div className="leading-icon-field">
                   <FiSearch
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+                    className="input-leading-icon"
                     size={14}
                   />
                   <input
@@ -270,7 +270,7 @@ export default function AdminFeedback() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search user or message..."
-                    className="input text-xs pl-8 h-9 w-48 sm:w-60"
+                    className="input input-with-leading-icon text-xs h-9 w-48 sm:w-60"
                   />
                 </div>
                 <button type="submit" className="btn btn-secondary btn-sm h-9 text-xs">
@@ -323,7 +323,7 @@ export default function AdminFeedback() {
                         {/* User */}
                         <td className="px-4 py-3.5 whitespace-nowrap">
                           <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-[#2563EB] font-bold text-xs flex items-center justify-center shrink-0">
+                            <div className="w-7 h-7 rounded-lg bg-zinc-500/10 text-[#111111] font-bold text-xs flex items-center justify-center shrink-0">
                               {item.user?.name?.charAt(0).toUpperCase() || 'U'}
                             </div>
                             <div>
@@ -347,9 +347,9 @@ export default function AdminFeedback() {
                         {/* Rating */}
                         <td className="px-4 py-3.5 whitespace-nowrap">
                           {item.rating ? (
-                            <div className="flex items-center gap-0.5 text-amber-400">
+                            <div className="flex items-center gap-0.5 text-zinc-400">
                               {[...Array(item.rating)].map((_, i) => (
-                                <FiStar key={i} size={11} className="fill-amber-400" />
+                                <FiStar key={i} size={11} className="fill-zinc-400" />
                               ))}
                               <span className="ml-1 text-[11px] text-[var(--app-text-muted)] font-mono">
                                 ({item.rating})
@@ -366,7 +366,7 @@ export default function AdminFeedback() {
                             {item.message}
                           </p>
                           {item.admin_response && (
-                            <div className="flex items-center gap-1 text-[10px] text-[#2563EB] font-semibold mt-0.5">
+                            <div className="flex items-center gap-1 text-[10px] text-[#111111] font-semibold mt-0.5">
                               <FiCornerDownRight size={10} />
                               <span>Responded</span>
                             </div>
@@ -432,7 +432,7 @@ export default function AdminFeedback() {
             <div className="relative w-full max-w-2xl card p-6 space-y-5 z-10 shadow-2xl animate-fade-in max-h-[90vh] overflow-y-auto">
               <div className="flex items-start justify-between gap-3 border-b border-[var(--app-border)] pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-[#2563EB] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-500/10 text-[#111111] flex items-center justify-center">
                     <FiMessageSquare size={20} />
                   </div>
                   <div>
@@ -484,10 +484,10 @@ export default function AdminFeedback() {
                   <span className="text-[10px] uppercase font-bold text-[var(--app-text-muted)] block">
                     Rating
                   </span>
-                  <div className="flex items-center gap-0.5 text-amber-400">
+                  <div className="flex items-center gap-0.5 text-zinc-400">
                     {activeFeedback.rating ? (
                       [...Array(activeFeedback.rating)].map((_, i) => (
-                        <FiStar key={i} size={11} className="fill-amber-400" />
+                        <FiStar key={i} size={11} className="fill-zinc-400" />
                       ))
                     ) : (
                       <span className="text-[var(--app-text-muted)] italic">None</span>

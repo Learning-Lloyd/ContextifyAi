@@ -17,7 +17,8 @@ import EmptyState from '../components/EmptyState';
 import { useToast } from '../hooks/useToast';
 import { decisionService } from '../services/decisionService';
 import { taskService } from '../services/taskService';
-import { weatherIcon } from '../utils/taskUtils';
+import PriorityBadge from '../components/PriorityBadge';
+import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
 
 export default function DecisionLab() {
   const [tasks, setTasks] = useState([]);
@@ -202,50 +203,53 @@ export default function DecisionLab() {
               ) : (
                 <>
                 {unanalyzedTaskCount > 0 && (
-                  <p className="mt-4 rounded-lg border border-amber-500/20 bg-amber-500/[0.05] px-3 py-2 text-xs text-[var(--app-text-secondary)]">
+                  <p className="mt-4 rounded-lg border border-zinc-500/20 bg-zinc-500/[0.05] px-3 py-2 text-xs text-[var(--app-text-secondary)]">
                     {unanalyzedTaskCount} task{unanalyzedTaskCount === 1 ? '' : 's'} need analysis.
                   </p>
                 )}
-                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 mt-3">
+                <div className="decision-selection-scroll mt-3">
+                  <table className="decision-selection-board" aria-label="Tasks available for analysis">
+                    <thead>
+                      <tr>
+                        <th scope="col">Select</th>
+                        <th scope="col">Task</th>
+                        <th scope="col">Deadline</th>
+                        <th scope="col">Time remaining</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Priority</th>
+                        <th scope="col">Context</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                   {tasks.map((task) => {
                     const isSelected = selectedIds.includes(task.id);
+                    const countdown = getCountdownLabel(task.due_date, task.due_time);
+                    const overdue = task.status !== 'completed' && countdown?.startsWith('Overdue');
+                    const context = [task.category, task.location].filter(Boolean).join(' · ');
                     return (
-                      <label
+                      <tr
                         key={task.id}
-                        className={`candidate-task-row ${
+                        className={`decision-selection-row ${
                           isSelected
                             ? 'is-selected'
                             : ''
                         }`}
                       >
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleTask(task.id)}
-                          className="w-4 h-4 rounded text-[#2563EB] focus:ring-blue-500 cursor-pointer"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-semibold text-sm text-[var(--app-text)] truncate">
-                              {task.title}
-                            </span>
-                            <span className={`rounded px-2 py-0.5 text-[10px] font-semibold ${task.analyzed ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300' : 'bg-amber-500/10 text-amber-700 dark:text-amber-300'}`}>
-                              {task.analyzed ? 'Analyzed' : 'Needs analysis'}
-                            </span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-[var(--app-text-muted)]">
-                            {task.due_date && <span>📅 Due: {task.due_date}</span>}
-                            {task.location && <span>📍 {task.location}</span>}
-                            {task.weather_condition && (
-                              <span>
-                                {weatherIcon(task.weather_condition)} {task.weather_condition}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </label>
+                        <td><input type="checkbox" checked={isSelected} onChange={() => toggleTask(task.id)} aria-label={`Select ${task.title} for analysis`} /></td>
+                        <td>
+                          <strong className="decision-selection-title">{task.title}</strong>
+                          {task.description && <span className="decision-selection-description">{task.description}</span>}
+                        </td>
+                        <td>{task.due_date ? new Date(`${task.due_date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'No deadline'}{task.due_time ? ` · ${task.due_time.slice(0, 5)}` : ''}</td>
+                        <td><span className={`task-countdown ${overdue ? 'is-overdue' : ''}`}>{countdown || '—'}</span></td>
+                        <td><span className={`task-status-tag ${task.status === 'completed' ? 'is-complete' : overdue ? 'is-overdue' : 'is-pending'}`}>{task.status === 'completed' ? 'Completed' : overdue ? 'Overdue' : 'Pending'}</span><span className="decision-selection-analysis-state">{task.analyzed ? 'Analyzed' : 'Needs analysis'}</span></td>
+                        <td>{task.analyzed ? <PriorityBadge level={task.priority_level} /> : '—'}</td>
+                        <td>{task.weather_condition ? <span>{weatherIcon(task.weather_condition)} {task.weather_condition}</span> : null}{context && <span className="decision-selection-context">{context}</span>}{!context && !task.weather_condition ? '—' : null}</td>
+                      </tr>
                     );
                   })}
+                    </tbody>
+                  </table>
                 </div>
                 </>
               )}
@@ -299,7 +303,7 @@ export default function DecisionLab() {
                 {analysis.ranked_tasks?.length > 0 && (
                   <div className="space-y-4">
                         <div className="flex items-center gap-2 pb-1">
-                      <FiCheckCircle className="text-[#2563EB]" size={18} />
+                      <FiCheckCircle className="text-[#111111]" size={18} />
                       <h2 className="text-base font-bold text-[var(--app-text)]">
                           Priority order · {analysis.total_selected} tasks
                       </h2>

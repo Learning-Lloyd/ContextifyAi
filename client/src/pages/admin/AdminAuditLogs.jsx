@@ -69,8 +69,8 @@ export default function AdminAuditLogs() {
                           <div
                             className={`w-6 h-6 rounded-md flex items-center justify-center font-bold text-[10px] ${
                               isSystem
-                                ? 'bg-amber-500/10 text-[#F59E0B]'
-                                : 'bg-[#2563EB]/10 text-[#2563EB]'
+                                ? 'bg-zinc-500/10 text-[#555555]'
+                                : 'bg-[#111111]/10 text-[#111111]'
                             }`}
                           >
                             {isSystem ? 'S' : log.user.name?.charAt(0).toUpperCase()}

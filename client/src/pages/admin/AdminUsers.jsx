@@ -87,16 +87,16 @@ export default function AdminUsers() {
             </p>
           </div>
 
-          <div className="relative w-64">
+          <div className="leading-icon-field w-64">
             <FiSearch
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--app-text-muted)]"
+              className="input-leading-icon"
               size={15}
             />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by name or email..."
-              className="input pl-9 text-xs sm:text-sm"
+              className="input input-with-leading-icon text-xs sm:text-sm"
               aria-label="Search users"
             />
           </div>
@@ -136,7 +136,7 @@ export default function AdminUsers() {
                   <tr key={u.id} className="hover:bg-[var(--app-hover)] transition-colors">
                     <td>
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-[#2563EB]/10 text-[#2563EB] flex items-center justify-center font-bold text-xs shrink-0">
+                        <div className="w-8 h-8 rounded-lg bg-[#111111]/10 text-[#111111] flex items-center justify-center font-bold text-xs shrink-0">
                           {u.name?.charAt(0).toUpperCase()}
                         </div>
                         <span className="font-bold text-[var(--app-text)]">{u.name}</span>
@@ -167,7 +167,7 @@ export default function AdminUsers() {
                         <button
                           type="button"
                           onClick={() => openEdit(u)}
-                          className="btn btn-ghost btn-sm text-xs text-[#2563EB]"
+                          className="btn btn-ghost btn-sm text-xs text-[#111111]"
                           title="Edit Role & Status"
                         >
                           <FiEdit2 size={13} /> Edit
@@ -175,7 +175,7 @@ export default function AdminUsers() {
                         <button
                           type="button"
                           onClick={() => setResetUser(u)}
-                          className="btn btn-ghost btn-sm text-xs text-[#14B8A6]"
+                          className="btn btn-ghost btn-sm text-xs text-[#666666]"
                           title="Reset Password"
                         >
                           <FiKey size={13} /> Key
@@ -184,7 +184,7 @@ export default function AdminUsers() {
                           type="button"
                           onClick={() => handleToggle(u.id)}
                           className={`btn btn-ghost btn-sm text-xs ${
-                            u.is_active ? 'text-[#F59E0B]' : 'text-[#22C55E]'
+                            u.is_active ? 'text-[#555555]' : 'text-[#555555]'
                           }`}
                           title={u.is_active ? 'Disable Account' : 'Enable Account'}
                         >
@@ -231,7 +231,7 @@ export default function AdminUsers() {
                     type="checkbox"
                     checked={form.is_active}
                     onChange={(e) => setForm({ ...form, is_active: e.target.checked })}
-                    className="w-4 h-4 rounded text-[#2563EB] accent-[#2563EB]"
+                    className="w-4 h-4 rounded text-[#111111] accent-[#111111]"
                   />
                   Account is enabled and active
                 </label>
