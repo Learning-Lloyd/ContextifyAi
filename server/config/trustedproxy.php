@@ -3,8 +3,11 @@
 $trustedProxyAddresses = trim((string) env('TRUSTED_PROXIES', ''));
 
 return [
-    // Set to the trusted reverse-proxy IPs/CIDRs in production; do not use * on a public server.
+    // Keep local requests on Laravel's default behavior unless deployment config opts in.
+    // EthioDeploy documents '*' for its platform proxy; prefer exact IPs/CIDRs if provided.
     'proxies' => $trustedProxyAddresses === ''
         ? null
-        : array_values(array_filter(array_map('trim', explode(',', $trustedProxyAddresses)))),
+        : ($trustedProxyAddresses === '*'
+            ? '*'
+            : array_values(array_filter(array_map('trim', explode(',', $trustedProxyAddresses))))),
 ];

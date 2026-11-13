@@ -1,0 +1,18 @@
+# Local environment files. Keep example templates available for setup.
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Generated local artifacts.
+/debug.log
+__pycache__/
+*.py[cod]
+
+# Dataset files without confirmed public reuse rights; keep local research outside Git.
+/datasets/original/Jira task dataset.xlsx
+/datasets/processed/jira_tasks.jsonl
+/datasets/models/jira_priority_research_model.json
+/datasets/documentation/jira_priority_experiment.json
+/datasets/documentation/jira_priority_experiment.md
+/datasets/documentation/jira_resolution_duration_experiment.json

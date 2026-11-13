@@ -3,7 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
+        "build": "node scripts/build-react.mjs",
+        "build:laravel-assets": "vite build",
         "dev": "vite"
     },
     "devDependencies": {
