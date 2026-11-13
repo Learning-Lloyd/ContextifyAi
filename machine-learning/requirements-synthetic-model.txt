@@ -1,0 +1,11 @@
+# Tested on 64-bit Windows, CPython 3.12.14. Pin scikit-learn because Joblib
+# model artifacts are not supported across arbitrary scikit-learn versions.
+fastapi==0.162.5
+joblib==1.6.0
+numpy==2.3.5
+openpyxl==3.1.5
+pandas==3.0.1
+scikit-learn==1.9.1
+scipy==1.18.1
+uvicorn[standard]==0.54.0
+threadpoolctl==3.8.0

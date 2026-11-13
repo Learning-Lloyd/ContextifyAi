@@ -8,7 +8,7 @@ class ImportanceAnalysisService
     {
     }
 
-    public function analyze(string $title, ?string $description = null): array
+    public function analyze(string $title, ?string $description = null, bool $allowAi = true): array
     {
         $title = trim($title);
         if ($title === '') {
@@ -20,7 +20,7 @@ class ImportanceAnalysisService
             ];
         }
 
-        $aiResult = $this->analyzeWithAi($title, $description);
+        $aiResult = $allowAi ? $this->analyzeWithAi($title, $description) : null;
         if ($aiResult !== null) {
             return $aiResult;
         }
@@ -47,20 +47,32 @@ Rules:
 - base importance on impact, consequences, and stakes described in the task
 PROMPT;
 
-        $user = "Task Title:\n{$title}\n\nTask Description:\n" . ($description ?: '(none)');
+        $privacy = new AiPrivacyFilter();
+        $user = "Task Title:\n{$privacy->redact($title)}\n\nTask Description:\n" . ($privacy->redact($description) ?: '(none)');
 
         $parsed = $this->aiClient->chatJson($system, $user);
         if ($parsed === null) {
             return null;
         }
 
-        $importance = max(1, min(10, (int) ($parsed['importance'] ?? 5)));
-        $confidence = max(0, min(100, (int) ($parsed['confidence'] ?? 70)));
+        $importance = $parsed['importance'] ?? null;
+        $confidence = $parsed['confidence'] ?? null;
         $reason = trim((string) ($parsed['reason'] ?? ''));
 
-        if ($reason === '') {
+        if (! is_numeric($importance)
+            || (int) $importance != $importance
+            || (int) $importance < 1
+            || (int) $importance > 10
+            || ! is_numeric($confidence)
+            || (int) $confidence != $confidence
+            || (int) $confidence < 0
+            || (int) $confidence > 100
+            || $reason === '') {
             return null;
         }
+
+        $importance = (int) $importance;
+        $confidence = (int) $confidence;
 
         return [
             'importance' => $importance,

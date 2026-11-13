@@ -29,6 +29,8 @@ class User extends Authenticatable
         'deadline_reminder_minutes',
         'daily_available_minutes',
         'workday_start_time',
+        'workspace_preferences',
+        'onboarding_completed_at',
     ];
 
     protected $hidden = [
@@ -49,6 +51,8 @@ class User extends Authenticatable
             'overdue_reminders_enabled' => 'boolean',
             'deadline_reminder_minutes' => 'integer',
             'daily_available_minutes' => 'integer',
+            'workspace_preferences' => 'array',
+            'onboarding_completed_at' => 'datetime',
         ];
     }
 
@@ -85,6 +89,11 @@ class User extends Authenticatable
     public function inAppNotifications(): HasMany
     {
         return $this->hasMany(UserNotification::class);
+    }
+
+    public function goals(): HasMany
+    {
+        return $this->hasMany(Goal::class);
     }
 }
 

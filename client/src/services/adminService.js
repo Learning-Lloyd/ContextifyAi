@@ -59,7 +59,7 @@ export const adminService = {
   },
   exportReport(type, format = 'csv') {
     const token = localStorage.getItem('token');
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+    const base = import.meta.env.VITE_API_URL || '/api';
     return fetch(`${base}/admin/reports/export?type=${type}&format=${format}`, {
       headers: { Authorization: `Bearer ${token}` },
     });

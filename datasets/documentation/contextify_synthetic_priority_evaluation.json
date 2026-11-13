@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "model_name": "contextify_task_priority_classifier",
+  "model_version": "1.1.0",
+  "provenance": "SYNTHETIC / AI-GENERATED SAMPLE DATA; not collected student responses",
+  "dataset_filename": "contextify_survey_dataset_234_respondents.xlsx",
+  "dataset_sha256": "436923281920066002f260d557841ec20e0daaeae0e124e2229194c8696baeb9",
+  "training_configuration": {
+    "split": "StratifiedGroupKFold, 7 folds; two held-out respondent folds (validation and test); remaining five folds train",
+    "random_seed": 42,
+    "train_records": 601,
+    "validation_records": 122,
+    "test_records": 121,
+    "excluded_source_records": 7,
+    "excluded_source_labels": {
+      "Critical": 7
+    },
+    "train_respondents": 151,
+    "validation_respondents": 30,
+    "test_respondents": 31,
+    "train_label_counts": {
+      "Medium": 241,
+      "High": 172,
+      "Low": 188
+    },
+    "validation_label_counts": {
+      "Medium": 49,
+      "Low": 38,
+      "High": 35
+    },
+    "test_label_counts": {
+      "Medium": 48,
+      "Low": 38,
+      "High": 35
+    },
+    "respondent_overlap": false
+  },
+  "target_column": "priority_label",
+  "classes": [
+    "Low",
+    "Medium",
+    "High"
+  ],
+  "feature_list": [
+    "importance",
+    "urgency",
+    "estimated_time_minutes",
+    "time_availability",
+    "current_workload",
+    "other_pending_assignments",
+    "category"
+  ],
+  "excluded_features": [
+    "participant_id (split group only)",
+    "source_slot",
+    "Task*_Rank",
+    "Q20_Reasoning",
+    "Q22_Change_If_Less_Time",
+    "Q23_How_Ranking_Changes",
+    "Task*_Priority_Level except target",
+    "Task*_Difficulty",
+    "Task*_Consequence",
+    "Persona",
+    "Q17_Circumstances"
+  ],
+  "candidate_validation_metrics": {
+    "majority_baseline": {
+      "accuracy": 0.4016393442622951,
+      "macro_precision": 0.13387978142076504,
+      "macro_recall": 0.3333333333333333,
+      "macro_f1": 0.19103313840155944,
+      "weighted_f1": 0.23017927331991178,
+      "per_class": {
+        "Low": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 38.0
+        },
+        "Medium": {
+          "precision": 0.4016393442622951,
+          "recall": 1.0,
+          "f1-score": 0.5730994152046783,
+          "support": 49.0
+        },
+        "High": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 35.0
+        },
+        "accuracy": 0.4016393442622951,
+        "macro avg": {
+          "precision": 0.13387978142076504,
+          "recall": 0.3333333333333333,
+          "f1-score": 0.19103313840155944,
+          "support": 122.0
+        },
+        "weighted avg": {
+          "precision": 0.16131416285944639,
+          "recall": 0.4016393442622951,
+          "f1-score": 0.23017927331991178,
+          "support": 122.0
+        }
+      },
+      "confusion_matrix_labels": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          0,
+          38,
+          0
+        ],
+        [
+          0,
+          49,
+          0
+        ],
+        [
+          0,
+          35,
+          0
+        ]
+      ]
+    },
+    "logistic_regression_structured_balanced": {
+      "accuracy": 0.6229508196721312,
+      "macro_precision": 0.6237516869095816,
+      "macro_recall": 0.6436448263515934,
+      "macro_f1": 0.627348609245161,
+      "weighted_f1": 0.6152127856127291,
+      "per_class": {
+        "Low": {
+          "precision": 0.6923076923076923,
+          "recall": 0.7105263157894737,
+          "f1-score": 0.7012987012987013,
+          "support": 38.0
+        },
+        "Medium": {
+          "precision": 0.5789473684210527,
+          "recall": 0.4489795918367347,
+          "f1-score": 0.5057471264367817,
+          "support": 49.0
+        },
+        "High": {
+          "precision": 0.6,
+          "recall": 0.7714285714285715,
+          "f1-score": 0.675,
+          "support": 35.0
+        },
+        "accuracy": 0.6229508196721312,
+        "macro avg": {
+          "precision": 0.6237516869095816,
+          "recall": 0.6436448263515934,
+          "f1-score": 0.627348609245161,
+          "support": 122.0
+        },
+        "weighted avg": {
+          "precision": 0.6202960111501957,
+          "recall": 0.6229508196721312,
+          "f1-score": 0.6152127856127291,
+          "support": 122.0
+        }
+      },
+      "confusion_matrix_labels": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          27,
+          10,
+          1
+        ],
+        [
+          10,
+          22,
+          17
+        ],
+        [
+          2,
+          6,
+          27
+        ]
+      ]
+    },
+    "logistic_regression_text_and_structured_balanced": {
+      "accuracy": 0.5983606557377049,
+      "macro_precision": 0.5961607949412827,
+      "macro_recall": 0.6224847833870389,
+      "macro_f1": 0.6019731943410275,
+      "weighted_f1": 0.5868245181450875,
+      "per_class": {
+        "Low": {
+          "precision": 0.6829268292682927,
+          "recall": 0.7368421052631579,
+          "f1-score": 0.7088607594936709,
+          "support": 38.0
+        },
+        "Medium": {
+          "precision": 0.5277777777777778,
+          "recall": 0.3877551020408163,
+          "f1-score": 0.4470588235294118,
+          "support": 49.0
+        },
+        "High": {
+          "precision": 0.5777777777777777,
+          "recall": 0.7428571428571429,
+          "f1-score": 0.65,
+          "support": 35.0
+        },
+        "accuracy": 0.5983606557377049,
+        "macro avg": {
+          "precision": 0.5961607949412827,
+          "recall": 0.6224847833870389,
+          "f1-score": 0.6019731943410275,
+          "support": 122.0
+        },
+        "weighted avg": {
+          "precision": 0.5904471544715447,
+          "recall": 0.5983606557377049,
+          "f1-score": 0.5868245181450875,
+          "support": 122.0
+        }
+      },
+      "confusion_matrix_labels": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          28,
+          10,
+          0
+        ],
+        [
+          11,
+          19,
+          19
+        ],
+        [
+          2,
+          7,
+          26
+        ]
+      ]
+    },
+    "random_forest_structured_balanced": {
+      "accuracy": 0.639344262295082,
+      "macro_precision": 0.6406052393857272,
+      "macro_recall": 0.65921947726459,
+      "macro_f1": 0.6416790766939687,
+      "weighted_f1": 0.6317979993408445,
+      "per_class": {
+        "Low": {
+          "precision": 0.6829268292682927,
+          "recall": 0.7368421052631579,
+          "f1-score": 0.7088607594936709,
+          "support": 38.0
+        },
+        "Medium": {
+          "precision": 0.6388888888888888,
+          "recall": 0.46938775510204084,
+          "f1-score": 0.5411764705882353,
+          "support": 49.0
+        },
+        "High": {
+          "precision": 0.6,
+          "recall": 0.7714285714285715,
+          "f1-score": 0.675,
+          "support": 35.0
+        },
+        "accuracy": 0.639344262295082,
+        "macro avg": {
+          "precision": 0.6406052393857272,
+          "recall": 0.65921947726459,
+          "f1-score": 0.6416790766939687,
+          "support": 122.0
+        },
+        "weighted avg": {
+          "precision": 0.6414489759651695,
+          "recall": 0.639344262295082,
+          "f1-score": 0.6317979993408445,
+          "support": 122.0
+        }
+      },
+      "confusion_matrix_labels": [
+        "Low",
+        "Medium",
+        "High"
+      ],
+      "confusion_matrix": [
+        [
+          28,
+          8,
+          2
+        ],
+        [
+          10,
+          23,
+          16
+        ],
+        [
+          3,
+          5,
+          27
+        ]
+      ]
+    }
+  },
+  "selected_candidate": "random_forest_structured_balanced",
+  "validation_selection_metric": "macro F1 across all three Contextify classes",
+  "test_metrics": {
+    "accuracy": 0.6611570247933884,
+    "macro_precision": 0.6601862220563227,
+    "macro_recall": 0.6733604845446951,
+    "macro_f1": 0.6594387526700177,
+    "weighted_f1": 0.6548594032880898,
+    "per_class": {
+      "Low": {
+        "precision": 0.6808510638297872,
+        "recall": 0.8421052631578947,
+        "f1-score": 0.7529411764705882,
+        "support": 38.0
+      },
+      "Medium": {
+        "precision": 0.6944444444444444,
+        "recall": 0.5208333333333334,
+        "f1-score": 0.5952380952380952,
+        "support": 48.0
+      },
+      "High": {
+        "precision": 0.6052631578947368,
+        "recall": 0.6571428571428571,
+        "f1-score": 0.6301369863013698,
+        "support": 35.0
+      },
+      "accuracy": 0.6611570247933884,
+      "macro avg": {
+        "precision": 0.6601862220563227,
+        "recall": 0.6733604845446951,
+        "f1-score": 0.6594387526700177,
+        "support": 121.0
+      },
+      "weighted avg": {
+        "precision": 0.6643792089684384,
+        "recall": 0.6611570247933884,
+        "f1-score": 0.6548594032880898,
+        "support": 121.0
+      }
+    },
+    "confusion_matrix_labels": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "confusion_matrix": [
+      [
+        32,
+        3,
+        3
+      ],
+      [
+        11,
+        25,
+        12
+      ],
+      [
+        4,
+        8,
+        23
+      ]
+    ]
+  },
+  "majority_baseline_test_metrics": {
+    "accuracy": 0.39669421487603307,
+    "macro_precision": 0.1322314049586777,
+    "macro_recall": 0.3333333333333333,
+    "macro_f1": 0.1893491124260355,
+    "weighted_f1": 0.22534109247395961,
+    "per_class": {
+      "Low": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 38.0
+      },
+      "Medium": {
+        "precision": 0.39669421487603307,
+        "recall": 1.0,
+        "f1-score": 0.5680473372781065,
+        "support": 48.0
+      },
+      "High": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 35.0
+      },
+      "accuracy": 0.39669421487603307,
+      "macro avg": {
+        "precision": 0.1322314049586777,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.1893491124260355,
+        "support": 121.0
+      },
+      "weighted avg": {
+        "precision": 0.1573663001161123,
+        "recall": 0.39669421487603307,
+        "f1-score": 0.22534109247395961,
+        "support": 121.0
+      }
+    },
+    "confusion_matrix_labels": [
+      "Low",
+      "Medium",
+      "High"
+    ],
+    "confusion_matrix": [
+      [
+        0,
+        38,
+        0
+      ],
+      [
+        0,
+        48,
+        0
+      ],
+      [
+        0,
+        35,
+        0
+      ]
+    ]
+  },
+  "probability_calibration": "Not evaluated; API returns no confidence/probability values.",
+  "algorithm": "RandomForestClassifier (class-weighted; structured features)",
+  "random_seed": 42,
+  "package_versions": {
+    "python": "3.12.14",
+    "scikit_learn": "1.9.1",
+    "pandas": "3.0.1",
+    "numpy": "2.3.5",
+    "joblib": "1.6.0",
+    "openpyxl": "3.1.5",
+    "fastapi": "0.162.5",
+    "uvicorn": "0.54.0"
+  },
+  "evaluated_at": "2026-11-13T06:17:27.066640+00:00",
+  "limitations": [
+    "Synthetic/AI-generated sample records; results do not establish performance on real students.",
+    "Seven source records labeled Critical were excluded because Critical is not a Contextify manuscript category; the model is trained and evaluated only on Low, Medium, and High.",
+    "Only 40 task-title/description templates repeat across respondents. The text candidate could see repeated templates across respondent-group folds; the selected model excludes text, but the generated dataset still offers limited evidence about new real tasks.",
+    "One validation/test split from a small synthetic dataset; no external validation or calibration.",
+    "Ordinal mappings from questionnaire buckets to Contextify-like factor scales are documented transformations, not validated equivalences.",
+    "Predicted category is experimental and must not replace or alter Contextify's deterministic weighted score or ranking."
+  ],
+  "artifact_path": "datasets\\models\\contextify_task_priority_synthetic_v1.1.0.joblib",
+  "artifact_sha256": "5137ad1bd252bd4552a6e86fd3b571757b049b365b090e8cc9bfdbbfe2943f06"
+}

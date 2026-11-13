@@ -20,6 +20,17 @@ function getFirstDayOfMonth(year, month) {
   return new Date(year, month, 1).getDay();
 }
 
+function taskState(task, today) {
+  if (task.status === 'completed') return { label: 'Completed', color: '#168A68', tone: 'complete' };
+  if (task.due_date && task.due_date < today) return { label: 'Overdue', color: '#D5425D', tone: 'overdue' };
+  return { label: 'Pending', color: '#D39A00', tone: 'pending' };
+}
+
+function priorityName(task) {
+  const level = String(task.priority_level || 'medium').toLowerCase();
+  return ['high', 'medium', 'low'].includes(level) ? level : 'medium';
+}
+
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [calendarData, setCalendarData] = useState({ tasks: [], calendar: [] });
@@ -73,10 +84,9 @@ export default function Calendar() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
-        <ScheduleSuggestions />
+      <div className="calendar-workspace max-w-6xl mx-auto animate-fade-in">
         {/* Calendar Header with Month Navigation */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
+        <div className="calendar-page-header flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-[var(--app-border)]">
           <div>
             <h1 className="page-title">Calendar</h1>
             <p className="page-subtitle text-sm">Deadlines and schedule suggestions.</p>
@@ -114,12 +124,14 @@ export default function Calendar() {
           </div>
         </div>
 
-        <details className="rounded-xl border border-[var(--app-border)] px-4 py-3">
+        <ScheduleSuggestions />
+
+        <details className="calendar-workload-note rounded-xl border border-[var(--app-border)] px-4 py-3">
           <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">How workload is estimated</summary>
           <p className="mt-2 text-sm text-[var(--app-text-secondary)]">Tasks with nearby deadlines affect available time and workload.</p>
         </details>
         {/* Informational Context Banner */}
-        <div className="hidden sm:flex p-3.5 rounded-xl bg-zinc-500/[0.04] border border-[#111111]/20 items-center justify-between text-sm text-[var(--app-text-secondary)]">
+        <div className="calendar-info-banner hidden sm:flex p-3.5 rounded-xl bg-zinc-500/[0.04] border border-[#111111]/20 items-center justify-between text-sm text-[var(--app-text-secondary)]">
           <div className="flex items-center gap-2">
             <FiInfo size={14} className="text-[#111111] shrink-0" />
             <span>Deadline density affects available time and workload.</span>
@@ -138,7 +150,7 @@ export default function Calendar() {
         </div>
 
         {/* Mobile deadline list */}
-        <div className="sm:hidden card p-4 space-y-3">
+        <div className="calendar-mobile-list sm:hidden card p-4 space-y-3">
           {Array.from({ length: daysInMonth }, (_, index) => index + 1).map((day) => {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             const dayTasks = tasksByDate[dateStr] || [];
@@ -146,16 +158,16 @@ export default function Calendar() {
             return (
               <section key={dateStr} className="border-b border-[var(--app-border)] pb-3 last:border-0">
                 <h2 className="text-sm font-semibold text-[var(--app-text)]">{new Date(`${dateStr}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}{dateStr === todayStr ? ' · Today' : ''}</h2>
-                {dayTasks.length ? <ul className="mt-2 space-y-2">{dayTasks.map((task) => <li key={task.id}><Link to={`/tasks/${task.id}`} className="block rounded-lg border border-[var(--app-border)] p-3 text-sm font-medium text-[var(--app-text)]">{task.title}{task.status === 'completed' ? ' · Completed' : ''}</Link></li>)}</ul> : <p className="mt-1 text-sm text-[var(--app-text-muted)]">No deadlines today.</p>}
+                {dayTasks.length ? <ul className="mt-2 space-y-2">{dayTasks.map((task) => { const state = taskState(task, todayStr); const priority = priorityName(task); return <li key={task.id}><Link to={`/tasks/${task.id}`} className={`calendar-task-chip calendar-task-chip--${state.tone}`} style={{ borderColor: state.color }}>{task.title}<span>{task.category || 'Uncategorized'} · {state.label} · <b className={`calendar-priority-label calendar-priority-label--${priority}`}>{priority} priority</b></span></Link></li>; })}</ul> : <p className="mt-1 text-sm text-[var(--app-text-muted)]">No deadlines today.</p>}
               </section>
             );
           })}
         </div>
 
         {/* Desktop monthly grid */}
-        <div className="hidden sm:block card p-4 sm:p-6 shadow-sm overflow-hidden">
+        <div className="calendar-grid-card hidden sm:block card p-4 sm:p-6 shadow-sm overflow-hidden">
           {/* Weekday headers */}
-          <div className="grid grid-cols-7 gap-1.5 mb-2">
+          <div className="calendar-weekdays grid grid-cols-7 gap-1.5 mb-2">
             {WEEKDAYS.map((d) => (
               <div
                 key={d}
@@ -167,13 +179,13 @@ export default function Calendar() {
           </div>
 
           {/* Day cells grid */}
-          <div className="grid grid-cols-7 gap-1.5">
+          <div className="calendar-days-grid grid grid-cols-7 gap-1.5">
             {cells.map((day, idx) => {
               if (!day) {
                 return (
                   <div
                     key={`empty-${idx}`}
-                    className="min-h-[100px] rounded-xl border border-transparent bg-transparent"
+                    className="calendar-day-cell is-empty min-h-[100px] rounded-xl border border-transparent bg-transparent"
                   />
                 );
               }
@@ -186,22 +198,12 @@ export default function Calendar() {
               return (
                 <div
                   key={dateStr}
-                  className={`min-h-[100px] p-2 rounded-xl border flex flex-col justify-between transition-all ${
-                    isToday
-                      ? 'border-[#111111] bg-zinc-500/[0.04] ring-1 ring-[#111111]/40 shadow-sm'
-                      : hasHighWorkload
-                      ? 'border-zinc-500/30 bg-zinc-500/[0.02]'
-                      : 'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-text-muted)]/40'
-                  }`}
+                  className={`calendar-day-cell min-h-[100px] p-2 rounded-xl border flex flex-col justify-between transition-all ${isToday ? 'is-today' : ''} ${hasHighWorkload ? 'has-high-workload' : ''}`}
                 >
                   {/* Day Header Row */}
                   <div className="flex items-center justify-between">
                     <span
-                      className={`text-xs font-bold leading-none ${
-                        isToday
-                          ? 'w-5 h-5 rounded-full bg-[#111111] text-white flex items-center justify-center'
-                          : 'text-[var(--app-text-secondary)]'
-                      }`}
+                      className={`calendar-day-number text-xs font-bold leading-none ${isToday ? 'is-today w-5 h-5 rounded-full flex items-center justify-center' : 'text-[var(--app-text-secondary)]'}`}
                     >
                       {day}
                     </span>
@@ -218,23 +220,16 @@ export default function Calendar() {
                       <Link
                         key={task.id}
                         to={`/tasks/${task.id}`}
-                        className="block text-[11px] truncate px-1.5 py-0.5 rounded border border-[var(--app-border)] bg-[var(--app-card)] hover:border-[#111111] transition-colors"
-                        title={task.title}
+                        className={`calendar-task-chip calendar-task-chip--${taskState(task, todayStr).tone}`}
+                        style={{ borderColor: taskState(task, todayStr).color }}
+                        title={`${task.title} · ${priorityName(task)} priority`}
                       >
-                        <span
-                          className={`inline-block w-1.5 h-1.5 rounded-full mr-1 ${
-                            task.priority_level === 'high'
-                              ? 'bg-[#EF4444]'
-                              : task.priority_level === 'medium'
-                              ? 'bg-[#F59E0B]'
-                              : 'bg-[#22C55E]'
-                          }`}
-                        />
-                        <span className="font-medium text-[var(--app-text)]">{task.title}</span>
+                        <span className="font-semibold">{task.title}</span>
+                        <span>{task.category || 'Uncategorized'} · {taskState(task, todayStr).label} · <b className={`calendar-priority-label calendar-priority-label--${priorityName(task)}`}>{priorityName(task)} priority</b></span>
                       </Link>
                     ))}
                     {dayTasks.length > 2 && (
-                      <p className="text-[10px] font-semibold text-[#111111] pl-1">
+                      <p className="calendar-more-count text-[10px] font-semibold pl-1">
                         +{dayTasks.length - 2} more...
                       </p>
                     )}
@@ -250,7 +245,7 @@ export default function Calendar() {
 
         {/* All Scheduled Tasks Master List */}
         {calendarData.tasks?.length > 0 && (
-          <div className="card p-6 space-y-4 shadow-sm">
+          <div className="calendar-deadlines-card card p-6 space-y-4 shadow-sm">
             <div className="flex items-center justify-between pb-2 border-b border-[var(--app-border)]">
               <div>
                 <h2 className="text-base font-bold text-[var(--app-text)]">

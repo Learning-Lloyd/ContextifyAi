@@ -1,0 +1,616 @@
+{
+  "schema_version": 1,
+  "provenance": "SYNTHETIC / AI-GENERATED SAMPLE DATA; not collected student responses",
+  "source_filename": "contextify_survey_dataset_234_respondents.xlsx",
+  "source_sha256": "436923281920066002f260d557841ec20e0daaeae0e124e2229194c8696baeb9",
+  "source_workbook_unchanged": true,
+  "sheets": {
+    "Responses": {
+      "rows_including_header": 235,
+      "columns": 68
+    },
+    "Codebook": {
+      "rows_including_header": 69,
+      "columns": 2
+    }
+  },
+  "source_column_audit": {
+    "Respondent_ID": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Persona": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q1_Consent": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q2_Current_Student": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q3_Main_Category": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q4_Unfinished_Tasks": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q5_Hours_Per_Day": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Title": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Description": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Category": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Importance": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Time_Remaining": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Est_Duration": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Difficulty": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Consequence": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Rank": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task1_Priority_Level": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Title": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Description": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Category": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Importance": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Time_Remaining": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Est_Duration": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Difficulty": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Consequence": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Rank": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task2_Priority_Level": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Title": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Description": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Category": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Importance": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Time_Remaining": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Est_Duration": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Difficulty": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Consequence": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Rank": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task3_Priority_Level": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Task4_Title": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Description": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Category": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Importance": {
+      "observed_types": {
+        "blank": 79,
+        "number": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Time_Remaining": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Est_Duration": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Difficulty": {
+      "observed_types": {
+        "blank": 79,
+        "number": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Consequence": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Rank": {
+      "observed_types": {
+        "blank": 79,
+        "number": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task4_Priority_Level": {
+      "observed_types": {
+        "blank": 79,
+        "text": 155
+      },
+      "blank_cells": 79,
+      "nonblank_cells": 155
+    },
+    "Task5_Title": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Description": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Category": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Importance": {
+      "observed_types": {
+        "blank": 156,
+        "number": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Time_Remaining": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Est_Duration": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Difficulty": {
+      "observed_types": {
+        "blank": 156,
+        "number": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Consequence": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Rank": {
+      "observed_types": {
+        "blank": 156,
+        "number": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Task5_Priority_Level": {
+      "observed_types": {
+        "blank": 156,
+        "text": 78
+      },
+      "blank_cells": 156,
+      "nonblank_cells": 78
+    },
+    "Q14_Other_Unfinished_Tasks": {
+      "observed_types": {
+        "number": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q15_Other_Task_Workload": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q16_Uninterrupted_Time_Today": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q17_Circumstances": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q20_Reasoning": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q21_Most_Important_Factor": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q22_Change_If_Less_Time": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q23_How_Ranking_Changes": {
+      "observed_types": {
+        "blank": 104,
+        "text": 130
+      },
+      "blank_cells": 104,
+      "nonblank_cells": 130
+    },
+    "Q24_System_Useful": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q25_Wants_Explanation": {
+      "observed_types": {
+        "text": 234
+      },
+      "blank_cells": 0,
+      "nonblank_cells": 234
+    },
+    "Q26_Additional_Info": {
+      "observed_types": {
+        "blank": 20,
+        "text": 214
+      },
+      "blank_cells": 20,
+      "nonblank_cells": 214
+    }
+  },
+  "respondent_rows": 234,
+  "respondents_with_consent": 234,
+  "excluded_missing_consent": 0,
+  "excluded_not_current_student": 22,
+  "task_slots_with_nonempty_title_and_label_among_current_students": 851,
+  "eligible_task_records": 851,
+  "eligible_respondents": 212,
+  "priority_counts": {
+    "Critical": 7,
+    "High": 242,
+    "Low": 264,
+    "Medium": 338
+  },
+  "unique_titles": 40,
+  "records_beyond_first_occurrence_of_same_title": 811,
+  "category_counts": {
+    "Academic assignment": 222,
+    "Examination or review": 152,
+    "Extracurricular activity": 86,
+    "Group project": 150,
+    "Other": 64,
+    "Personal responsibility": 177
+  },
+  "duplicate_task_titles_within_same_respondent": 0,
+  "exact_duplicate_feature_and_target_records": 0,
+  "feature_missing_counts": {
+    "title": 0,
+    "description": 0,
+    "category": 0,
+    "importance": 0,
+    "urgency": 0,
+    "estimated_time_minutes": 67,
+    "time_availability": 0,
+    "current_workload": 25,
+    "other_pending_assignments": 0,
+    "priority_label": 0,
+    "participant_id": 0,
+    "source_slot": 0
+  },
+  "rank_label_cross_tab": {
+    "1": {
+      "Critical": 7,
+      "High": 205
+    },
+    "2": {
+      "High": 31,
+      "Low": 37,
+      "Medium": 144
+    },
+    "3": {
+      "High": 5,
+      "Low": 86,
+      "Medium": 121
+    },
+    "4": {
+      "High": 1,
+      "Low": 86,
+      "Medium": 54
+    },
+    "5": {
+      "Low": 55,
+      "Medium": 19
+    }
+  },
+  "prepared_feature_columns": [
+    "title",
+    "description",
+    "category",
+    "importance",
+    "urgency",
+    "estimated_time_minutes",
+    "time_availability",
+    "current_workload",
+    "other_pending_assignments",
+    "priority_label"
+  ],
+  "excluded_from_features": [
+    "Task*_Rank",
+    "Task*_Priority_Level (target only)",
+    "Q20_Reasoning",
+    "Q22_Change_If_Less_Time",
+    "Q23_How_Ranking_Changes",
+    "Respondent_ID (group only)",
+    "Persona",
+    "Q17_Circumstances",
+    "Task*_Difficulty",
+    "Task*_Consequence"
+  ],
+  "transformations": {
+    "importance": "Source 1..5 converted to Contextify-like 2,4,6,8,10 by multiplying by 2.",
+    "urgency": "Mapped deadline buckets to 1..10 in increasing urgency; overdue=10, no deadline=1.",
+    "time_availability": "Mapped uninterrupted-time buckets monotonically to 1,2,4,6,8,10.",
+    "current_workload": "Mapped reported other-task-workload buckets monotonically to 1,3,5,7,9,10; Not sure remains missing for training-time imputation.",
+    "estimated_time_minutes": "Bucket midpoint estimates; Not sure remains missing for training-time imputation.",
+    "task_rank": "Excluded from inputs; retained only in this aggregate audit to inspect potential target association.",
+    "duplicates": "No rows removed. Repeated task titles are retained; 40 title templates repeat across respondent records."
+  },
+  "prepared_csv": "datasets\\processed\\contextify_synthetic_priority_training_v1.csv",
+  "prepared_csv_sha256": "52c616c0ba208ea40bdf18eb7d28f3f5056f47e57a6fcfb21a5df576d4dca774"
+}

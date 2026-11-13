@@ -30,7 +30,7 @@ export default function TaskCard({ task, onOpen, onToggle, onDelete, onEdit, onA
           <div className="task-analysis-explanation">
             <div className="flex items-center justify-between gap-2">
               <strong>Why this is your priority</strong>
-              {task.analysis_explanation_source && <span className="task-explanation-source">{task.analysis_explanation_source === 'ai' ? 'AI explanation' : 'Based on scoring results'}</span>}
+              {task.analysis_explanation_source && <span className="task-explanation-source">{task.analysis_explanation_source === 'ai' ? 'Gemini explanation' : 'Basic guidance'}</span>}
             </div>
             <p>{task.analysis_explanation}</p>
           </div>
@@ -44,7 +44,7 @@ export default function TaskCard({ task, onOpen, onToggle, onDelete, onEdit, onA
       <td>{task.analyzed ? <PriorityBadge level={task.priority_level} /> : <span className="task-board-muted">Analyze first</span>}</td>
       <td className="task-board-deadline">{prettyDate(task.due_date, task.due_time)}</td>
       <td><span className={`task-countdown ${overdue ? 'is-overdue' : ''}`}>{countdown || '—'}</span></td>
-      <td>{task.category || <span className="task-board-muted">—</span>}</td>
+      <td>{task.category ? <span className={`task-category-tag category-${String(task.category).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{task.category}</span> : <span className="task-board-muted">—</span>}</td>
       <td>{task.estimated_time_minutes ? `${task.estimated_time_minutes} min` : <span className="task-board-muted">—</span>}</td>
       <td>
         <div className="task-board-actions">

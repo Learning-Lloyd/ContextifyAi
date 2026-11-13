@@ -33,8 +33,8 @@
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
         <env name="AI_ENABLED" value="true"/>
-        <env name="OPENAI_API_KEY" value="test-api-key"/>
-        <env name="OPENAI_BASE_URL" value="https://api.openai.com/v1"/>
-        <env name="OPENAI_MODEL" value="gpt-4o-mini"/>
+        <env name="AI_PROVIDER" value="gemini"/>
+        <env name="GEMINI_API_KEY" value="test-api-key"/>
+        <env name="GEMINI_MODEL" value="gemini-3.5-flash-lite"/>
     </php>
 </phpunit>

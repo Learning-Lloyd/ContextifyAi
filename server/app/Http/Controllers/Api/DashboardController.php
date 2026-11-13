@@ -20,7 +20,12 @@ class DashboardController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        $tasks = $user->tasks()->active()->orderByDesc('priority_score')->get();
+        $tasks = $user->tasks()->active()
+            ->orderByDesc('priority_score')
+            ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('due_date')
+            ->orderBy('id')
+            ->get();
         $analysisService = app(TaskAnalysisStatusService::class);
         $analysisStatus = $analysisService->forTasks($user, $tasks);
         $timezone = $this->clientTimezone($request);
@@ -32,7 +37,6 @@ class DashboardController extends Controller
 
         $highestPriorityTask = $tasks
             ->where('status', 'pending')
-            ->sortByDesc('priority_score')
             ->first();
 
         $grouped = [
@@ -43,7 +47,7 @@ class DashboardController extends Controller
         ];
 
         foreach ($tasks as $task) {
-            $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'), $timezone);
+            $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'), $timezone, $task->due_time);
             $formatted = $this->formatTask($task);
             $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
             $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
@@ -73,7 +77,6 @@ class DashboardController extends Controller
 
         $highestPriorityTasks = $tasks
             ->where('status', 'pending')
-            ->sortByDesc('priority_score')
             ->take(5)
             ->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
                 $formatted = $this->formatTask($task);

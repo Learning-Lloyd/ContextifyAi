@@ -143,13 +143,16 @@ export default function TaskDetail() {
                   </span>
                 )}
                 {task.category && (
-                  <span className="badge badge-neutral text-xs">{task.category}</span>
+                  <span className={`task-category-tag category-${String(task.category).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{task.category}</span>
                 )}
               </div>
 
               <h1 className="text-2xl font-bold tracking-tight text-[var(--app-text)] leading-tight">
                 {task.title}
               </h1>
+              <p className="text-xs text-[var(--app-text-muted)]">
+                Importance: {task.importance}/10 · {({ user: 'set by you', ai: 'AI suggestion', heuristic: 'keyword suggestion', legacy: 'source unknown (older task)' }[task.importance_source] || 'suggested value')}
+              </p>
 
               {task.description && (
                 <p className="text-sm text-[var(--app-text-secondary)] leading-relaxed pt-1">

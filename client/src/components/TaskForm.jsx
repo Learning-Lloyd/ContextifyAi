@@ -25,7 +25,7 @@ const defaultFactors = {
 };
 
 const sourceLabels = {
-  ai: 'AI',
+  ai: 'AI suggestion',
   heuristic: 'Keyword match',
   default: 'Default',
   calendar: 'Calendar',
@@ -57,6 +57,7 @@ function AutoFactorRow({ label, value, source, reason, loading }) {
 export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loading = false }) {
   const [form, setForm] = useState(defaultValues);
   const [factors, setFactors] = useState(defaultFactors);
+  const [importanceOverride, setImportanceOverride] = useState(null);
   const [errors, setErrors] = useState({});
   const [importanceAnalysis, setImportanceAnalysis] = useState(null);
   const [calendarContext, setCalendarContext] = useState(null);
@@ -66,6 +67,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
   const [descriptionError, setDescriptionError] = useState(null);
   const previewTimerRef = useRef(null);
   const previewRequestIdRef = useRef(0);
+  const descriptionRequestInFlightRef = useRef(false);
 
   useEffect(() => {
     if (task) {
@@ -87,9 +89,11 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         time_availability: task.time_availability || 5,
         current_workload: task.current_workload || 5,
       });
+      setImportanceOverride(task.importance_source === 'user' ? Number(task.importance) : null);
     } else {
       setForm(defaultValues);
       setFactors(defaultFactors);
+      setImportanceOverride(null);
     }
     setErrors({});
     setImportanceAnalysis(null);
@@ -186,10 +190,12 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
   };
 
   const handleGenerateDescription = async () => {
+    if (descriptionRequestInFlightRef.current) return;
     if (!form.title.trim()) {
       setDescriptionError('Enter a task title first.');
       return;
     }
+    descriptionRequestInFlightRef.current = true;
     setGeneratingDescription(true);
     setDescriptionError(null);
     try {
@@ -198,6 +204,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     } catch (error) {
       setDescriptionError(error.response?.data?.message || 'Could not generate a description. Try again.');
     } finally {
+      descriptionRequestInFlightRef.current = false;
       setGeneratingDescription(false);
     }
   };
@@ -217,6 +224,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
       ...form,
       estimated_time_minutes: form.estimated_time_minutes ? Number(form.estimated_time_minutes) : null,
     };
+    if (importanceOverride !== null) payload.importance = Number(importanceOverride);
 
     try {
       await onSubmit(payload);
@@ -282,15 +290,17 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label" htmlFor="task-category">Category</label>
-              <input
+              <select
                 id="task-category"
-                type="text"
                 name="category"
                 value={form.category}
                 onChange={handleChange}
                 className="input"
-                placeholder="e.g. Academic"
-              />
+              >
+                <option value="">Choose a category</option>
+                {form.category && !['Academic', 'Personal', 'Work'].includes(form.category) && <option value={form.category}>{form.category} (existing)</option>}
+                {['Academic', 'Personal', 'Work'].map((category) => <option key={category} value={category}>{category}</option>)}
+              </select>
             </div>
             <div>
               <label className="label" htmlFor="task-estimated-time">Estimated time (min)</label>
@@ -307,18 +317,20 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             </div>
           </div>
 
-          <div>
-            <label className="label" htmlFor="task-notes">Notes</label>
-            <textarea
-              id="task-notes"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              rows={2}
-              className="input resize-none"
-              placeholder="Optional notes"
-            />
-          </div>
+          {task && (
+            <div>
+              <label className="label" htmlFor="task-notes">Notes</label>
+              <textarea
+                id="task-notes"
+                name="notes"
+                value={form.notes}
+                onChange={handleChange}
+                rows={2}
+                className="input resize-none"
+                placeholder="Optional notes"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -359,13 +371,44 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
             </summary>
             <div className="mt-3">
 
-            <AutoFactorRow
-              label="Importance"
-              value={factors.importance}
-              source={importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'AI') : 'Add a title'}
-              reason={importanceAnalysis?.reason}
-              loading={analyzingFactors && form.title.trim().length >= 3}
-            />
+            <div className="flex items-start justify-between gap-3 py-2 border-b border-[var(--app-border)]">
+              <div className="min-w-0 flex-1">
+                <label className="text-sm font-medium text-[var(--app-text)]" htmlFor="task-importance">Importance</label>
+                <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
+                  {importanceOverride !== null
+                    ? 'Your value will be used in the official score.'
+                    : `${importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'Suggested') : 'Suggested'} value; change it if needed.`}
+                </p>
+                {importanceAnalysis?.reason && importanceOverride === null && (
+                  <p className="text-xs text-[var(--app-text-secondary)] mt-1">{importanceAnalysis.reason}</p>
+                )}
+                <div className="mt-2 flex items-center gap-2">
+                  <input
+                    id="task-importance"
+                    type="number"
+                    min="1"
+                    max="10"
+                    step="1"
+                    value={importanceOverride ?? factors.importance}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      setImportanceOverride(value);
+                    }}
+                    className="input w-24"
+                    aria-describedby="task-importance-help"
+                  />
+                  <span className="text-sm text-[var(--app-text-muted)]">/10</span>
+                  {importanceOverride !== null && (
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => setImportanceOverride(null)}>
+                      Use Contextify suggestion
+                    </button>
+                  )}
+                  {analyzingFactors && <span className="text-xs text-[var(--app-text-muted)]">Updating suggestion…</span>}
+                </div>
+                <p id="task-importance-help" className="text-xs text-[var(--app-text-muted)] mt-1">Choose a whole number from 1 to 10. Leave the suggestion unchanged to let Gemini suggest the saved value when available; the keyword suggestion is used if Gemini cannot respond. A value you set is kept as yours.</p>
+                {errors.importance && <p className="form-error mt-1">{errors.importance}</p>}
+              </div>
+            </div>
 
             <AutoFactorRow
               label="Urgency"

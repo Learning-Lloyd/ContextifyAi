@@ -1,0 +1,852 @@
+title,description,category,importance,urgency,estimated_time_minutes,time_availability,current_workload,other_pending_assignments,priority_label,participant_id,source_slot
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,7,90,8,7,1,Medium,R001,1
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,8,9,90,8,7,1,High,R001,2
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,8,6,90,8,7,1,Medium,R001,3
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,6,6,45,6,3,4,Medium,R002,1
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,6,210,6,3,4,Low,R002,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,9,210,6,3,4,High,R002,3
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,2,7,90,6,3,4,Medium,R002,4
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,8,8,210,8,3,0,High,R003,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,4,210,8,3,0,Medium,R003,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,6,90,8,3,0,Medium,R003,3
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,9,45,8,3,0,Medium,R003,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,6,210,8,3,0,Medium,R003,5
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,8,15,10,5,0,High,R004,1
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,6,7,45,10,5,0,Low,R004,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,6,45,10,5,0,Medium,R004,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,4,7,90,10,5,0,Medium,R004,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,4,45,8,3,1,Low,R005,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,4,4,,8,3,1,Low,R005,2
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,9,45,8,3,1,High,R005,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,6,7,45,8,3,1,Medium,R005,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,9,90,6,1,1,High,R006,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,8,210,6,1,1,Medium,R006,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,10,6,390,6,1,1,Medium,R006,3
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,9,390,6,1,1,Medium,R006,4
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,10,600,4,9,0,High,R007,1
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,2,390,4,9,0,Medium,R007,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,7,90,4,9,0,Medium,R007,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,2,7,45,4,9,0,Medium,R007,4
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,8,90,4,9,0,Medium,R007,5
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,4,,8,5,2,Medium,R008,1
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,4,7,45,8,5,2,Medium,R008,2
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,2,6,390,8,5,2,Low,R008,3
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,2,9,45,8,5,2,High,R008,4
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,8,7,90,8,5,2,High,R008,5
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,8,90,8,3,10,High,R009,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,10,,8,3,10,High,R009,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,9,,8,3,10,Medium,R009,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,7,210,2,3,8,Medium,R010,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,4,6,45,2,3,8,Low,R010,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,10,1,210,2,3,8,Low,R010,3
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,9,15,2,3,8,High,R010,4
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,4,7,90,2,3,8,Medium,R010,5
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,6,210,6,1,0,Medium,R011,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,8,210,6,1,0,High,R011,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,4,600,6,1,0,Medium,R011,3
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,4,4,90,6,1,0,Low,R011,4
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,7,45,4,7,12,Medium,R012,1
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,10,4,,4,7,12,Low,R012,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,10,210,4,7,12,High,R012,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,2,15,4,7,12,Low,R012,4
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,4,7,390,1,7,4,Low,R014,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,8,15,1,7,4,High,R014,2
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,2,4,210,1,7,4,Low,R014,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,6,,4,9,0,High,R015,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,7,,4,9,0,Low,R015,2
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,7,45,4,9,0,Medium,R015,3
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,4,1,90,4,9,0,Low,R015,4
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,8,2,210,1,5,2,Low,R016,1
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,8,6,,1,5,2,High,R016,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,2,45,1,5,2,Low,R016,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,4,8,45,6,5,0,Low,R017,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,8,,6,5,0,Low,R017,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,10,45,6,5,0,High,R017,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,8,9,90,6,1,0,High,R018,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,8,8,15,6,1,0,Medium,R018,2
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,10,8,600,6,1,0,High,R018,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,7,45,6,1,0,Low,R018,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,2,210,6,1,0,Low,R018,5
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,7,90,2,5,4,Low,R019,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,9,,2,5,4,High,R019,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,8,4,45,2,5,4,Low,R019,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,8,7,,2,3,0,Low,R020,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,9,45,2,3,0,Medium,R020,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,2,9,15,2,3,0,High,R020,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,9,90,2,3,0,Medium,R020,4
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,,2,3,0,Low,R020,5
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,2,6,390,6,9,0,Medium,R021,1
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,10,10,45,6,9,0,High,R021,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,8,45,6,9,0,Medium,R021,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,6,9,600,4,7,15,Medium,R022,1
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,8,90,4,7,15,High,R022,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,45,4,7,15,High,R022,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,7,210,4,5,2,Medium,R023,1
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,8,45,4,5,2,High,R023,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,4,210,4,5,2,Medium,R023,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,6,390,4,3,1,Low,R024,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,8,45,4,3,1,Medium,R024,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,7,210,4,3,1,High,R024,3
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,2,6,90,4,3,1,Low,R024,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,7,90,10,,13,Medium,R025,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,9,15,10,,13,Medium,R025,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,6,45,10,,13,Low,R025,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,2,9,90,10,,13,Medium,R025,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,8,9,390,10,,13,High,R025,5
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,6,90,4,7,0,Medium,R026,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,1,45,4,7,0,Medium,R026,2
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,8,390,4,7,0,Medium,R026,3
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,9,45,4,7,0,High,R026,4
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,6,2,390,4,5,9,Low,R027,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,8,210,4,5,9,High,R027,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,10,1,15,4,5,9,Low,R027,3
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,10,9,210,4,5,8,Critical,R028,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,9,45,4,5,8,Medium,R028,2
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,10,90,4,5,8,High,R028,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,2,15,4,5,8,Low,R028,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,2,9,390,4,5,8,Medium,R028,5
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,2,90,4,10,0,Low,R029,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,8,210,4,10,0,High,R029,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,10,45,4,10,0,High,R029,3
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,8,6,90,4,9,0,Medium,R030,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,10,8,45,4,9,0,High,R030,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,2,390,4,9,0,Low,R030,3
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,4,8,45,4,9,0,Medium,R030,4
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,10,,10,3,0,High,R031,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,10,210,10,3,0,Critical,R031,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,10,90,10,3,0,Medium,R031,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,10,6,45,10,3,0,Medium,R031,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,9,15,10,3,0,High,R031,5
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,8,90,6,5,0,High,R032,1
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,4,8,,6,5,0,Medium,R032,2
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,2,45,6,5,0,Medium,R032,3
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,6,9,15,6,5,0,High,R032,4
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,2,90,6,5,0,Medium,R032,5
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,7,90,2,9,0,Medium,R033,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,7,15,2,9,0,Low,R033,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,7,15,2,9,0,High,R033,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,7,390,2,9,0,Medium,R033,4
+Group Report Write-up,Write the methodology section of the group research report.,Group project,10,7,,2,9,0,Medium,R033,5
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,7,210,4,,1,Medium,R034,1
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,4,6,390,4,,1,High,R034,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,4,9,90,4,,1,Medium,R034,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,2,8,45,4,,1,Low,R034,4
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,2,390,4,10,1,High,R035,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,7,,4,10,1,Low,R035,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,9,45,4,10,1,Medium,R035,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,6,45,4,10,1,Medium,R035,4
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,6,8,210,1,3,0,Medium,R036,1
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,4,7,390,1,3,0,Medium,R036,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,8,90,1,3,0,High,R036,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,4,10,90,1,3,0,High,R036,4
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,8,4,45,2,9,5,Low,R037,1
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,6,2,210,2,9,5,Low,R037,2
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,6,390,2,9,5,High,R037,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,6,90,6,7,6,Low,R038,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,4,90,6,7,6,Low,R038,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,4,9,210,6,7,6,Medium,R038,3
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,8,8,390,6,7,6,Medium,R038,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,8,6,45,6,7,6,High,R038,5
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,10,,6,5,0,High,R039,1
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,7,390,6,5,0,Medium,R039,2
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,6,6,90,6,5,0,Medium,R039,3
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,6,45,6,5,0,Low,R039,4
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,6,390,6,5,0,Medium,R039,5
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,8,210,6,3,0,High,R040,1
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,7,210,6,3,0,Medium,R040,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,2,7,90,6,3,0,Low,R040,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,2,9,15,6,3,0,Medium,R040,4
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,6,,1,5,11,Low,R041,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,8,8,90,1,5,11,High,R041,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,8,90,1,5,11,Medium,R041,3
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,90,1,5,11,Medium,R041,4
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,9,390,1,5,11,Medium,R041,5
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,4,7,,10,3,9,Low,R042,1
+Group Report Write-up,Write the methodology section of the group research report.,Group project,10,9,15,10,3,9,High,R042,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,8,210,10,3,9,Low,R042,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,2,9,90,10,3,9,Low,R042,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,10,210,2,9,12,High,R043,1
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,8,8,,2,9,12,Medium,R043,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,7,,2,9,12,Low,R043,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,4,8,390,2,9,12,Medium,R043,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,7,,2,9,12,Medium,R043,5
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,7,90,6,5,2,Medium,R044,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,8,90,6,5,2,High,R044,2
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,7,15,6,5,2,High,R044,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,6,,6,5,2,Low,R044,4
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,4,90,2,7,0,Low,R045,1
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,4,90,2,7,0,Low,R045,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,2,45,2,7,0,Low,R045,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,6,9,210,2,7,0,High,R045,4
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,8,210,2,7,0,High,R045,5
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,9,45,4,1,0,Medium,R046,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,8,90,4,1,0,Medium,R046,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,6,,4,1,0,High,R046,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,4,6,390,4,1,0,Low,R046,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,6,390,4,1,0,Medium,R046,5
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,4,8,45,2,7,5,Medium,R048,1
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,10,15,2,7,5,High,R048,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,2,210,2,7,5,Low,R048,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,8,90,2,7,5,Medium,R048,4
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,8,45,2,7,5,Medium,R048,5
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,1,90,4,5,1,Low,R049,1
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,10,8,45,4,5,1,High,R049,2
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,4,390,4,5,1,Low,R049,3
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,6,210,4,5,1,Medium,R049,4
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,10,45,2,,0,Medium,R050,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,7,90,2,,0,Medium,R050,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,7,210,2,,0,Medium,R050,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,10,10,45,2,,0,High,R050,4
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,4,10,390,2,,0,Medium,R050,5
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,2,6,210,2,9,0,Low,R051,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,4,9,15,2,9,0,Medium,R051,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,10,210,2,9,0,Critical,R051,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,1,210,2,9,0,Low,R051,4
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,6,15,6,7,3,Low,R052,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,210,6,7,3,Medium,R052,2
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,8,8,210,6,7,3,High,R052,3
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,8,6,,6,7,3,Medium,R052,4
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,2,7,210,2,9,2,Medium,R053,1
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,6,90,2,9,2,Medium,R053,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,8,,2,9,2,High,R053,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,2,,4,3,0,Low,R054,1
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,8,9,15,4,3,0,High,R054,2
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,9,90,4,3,0,Medium,R054,3
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,7,600,4,3,0,High,R054,4
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,4,210,4,3,0,Low,R054,5
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,7,15,1,10,5,Low,R055,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,8,7,90,1,10,5,High,R055,2
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,10,2,15,1,10,5,Medium,R055,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,7,,4,5,1,Medium,R056,1
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,7,210,4,5,1,High,R056,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,10,6,90,4,5,1,High,R056,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,6,45,4,5,1,Medium,R056,4
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,9,600,8,3,0,High,R057,1
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,4,,8,3,0,Medium,R057,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,2,2,90,8,3,0,Low,R057,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,8,4,90,8,3,0,Low,R057,4
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,4,15,8,3,0,Low,R057,5
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,8,390,8,5,0,Low,R058,1
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,6,90,8,5,0,High,R058,2
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,10,7,,8,5,0,Medium,R058,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,7,210,4,7,10,Low,R059,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,2,9,390,4,7,10,High,R059,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,2,8,15,4,7,10,Medium,R059,3
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,6,90,4,9,1,Low,R060,1
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,9,45,4,9,1,Medium,R060,2
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,6,210,4,9,1,High,R060,3
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,6,15,4,7,3,Medium,R061,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,2,7,90,4,7,3,Medium,R061,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,8,2,,4,7,3,Low,R061,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,6,210,4,7,3,High,R061,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,8,210,1,5,0,Low,R062,1
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,8,45,1,5,0,High,R062,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,4,15,1,5,0,Low,R062,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,9,210,6,9,8,High,R063,1
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,6,2,90,6,9,8,Medium,R063,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,2,90,6,9,8,Low,R063,3
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,7,45,6,9,8,Low,R063,4
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,6,,6,9,8,Medium,R063,5
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,6,4,90,6,3,0,Medium,R064,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,9,600,6,3,0,High,R064,2
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,8,90,6,3,0,Low,R064,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,9,90,6,3,0,High,R064,4
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,8,6,210,6,3,0,High,R064,5
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,10,15,6,5,0,Medium,R065,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,6,45,6,5,0,Medium,R065,2
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,8,45,6,5,0,High,R065,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,2,8,45,6,5,0,Medium,R065,4
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,10,8,390,6,5,0,High,R065,5
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,8,210,2,3,0,High,R066,1
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,8,90,2,3,0,Low,R066,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,10,1,,2,3,0,Medium,R066,3
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,6,8,45,6,3,2,Medium,R067,1
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,6,210,6,3,2,Medium,R067,2
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,9,,6,3,2,Medium,R067,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,8,210,6,3,2,High,R067,4
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,2,15,6,3,2,Low,R068,1
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,6,390,6,3,2,Low,R068,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,2,9,45,6,3,2,High,R068,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,2,45,1,3,3,Low,R069,1
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,6,390,1,3,3,Low,R069,2
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,8,1,90,1,3,3,Low,R069,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,10,45,1,3,3,High,R069,4
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,9,210,4,1,0,High,R070,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,7,15,4,1,0,Medium,R070,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,8,90,4,1,0,Medium,R070,3
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,8,45,4,1,0,Medium,R070,4
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,8,7,,4,1,0,Medium,R070,5
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,2,45,6,7,0,Low,R072,1
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,10,7,600,6,7,0,Medium,R072,2
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,4,45,6,7,0,Medium,R072,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,7,390,6,7,0,High,R072,4
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,6,1,90,6,7,0,Low,R072,5
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,6,9,210,2,5,0,High,R073,1
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,8,9,210,2,5,0,Medium,R073,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,4,15,2,5,0,Low,R073,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,4,90,2,5,0,Low,R073,4
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,8,7,,4,3,0,Medium,R074,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,8,15,4,3,0,Medium,R074,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,8,390,4,3,0,Medium,R074,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,8,390,4,3,0,High,R074,4
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,2,390,4,3,0,Low,R074,5
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,10,7,90,4,5,2,High,R076,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,1,15,4,5,2,Low,R076,2
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,6,45,4,5,2,Low,R076,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,7,600,6,5,4,Medium,R077,1
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,8,7,390,6,5,4,High,R077,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,90,6,5,4,Medium,R077,3
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,2,7,45,2,9,0,Medium,R079,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,10,210,2,9,0,High,R079,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,8,9,45,2,9,0,High,R079,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,10,45,2,9,0,High,R079,4
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,2,4,210,2,9,0,Low,R079,5
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,2,7,210,6,5,0,Medium,R080,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,8,600,6,5,0,Medium,R080,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,8,10,45,6,5,0,High,R080,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,4,4,210,6,5,0,Medium,R080,4
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,9,45,6,5,5,High,R081,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,6,45,6,5,5,Low,R081,2
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,4,7,90,6,5,5,Low,R081,3
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,4,8,45,6,5,5,Medium,R081,4
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,2,10,45,6,5,5,Medium,R081,5
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,7,210,6,5,6,Medium,R082,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,8,1,45,6,5,6,Low,R082,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,6,210,6,5,6,Low,R082,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,8,9,90,6,5,6,Medium,R082,4
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,9,210,6,5,6,High,R082,5
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,8,90,10,1,0,Medium,R083,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,9,390,10,1,0,High,R083,2
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,7,15,10,1,0,Medium,R083,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,4,7,45,10,1,0,Medium,R083,4
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,9,45,10,1,0,Medium,R083,5
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,7,90,6,5,8,High,R084,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,7,390,6,5,8,Medium,R084,2
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,8,45,6,5,8,Medium,R084,3
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,8,8,45,6,5,8,High,R084,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,8,90,2,3,0,Medium,R085,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,8,10,210,2,3,0,High,R085,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,8,45,2,3,0,Medium,R085,3
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,4,10,90,2,3,0,High,R085,4
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,8,1,15,8,9,0,Low,R086,1
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,2,6,90,8,9,0,Low,R086,2
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,4,7,45,8,9,0,Low,R086,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,4,9,600,8,9,0,High,R086,4
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,9,90,6,3,3,Medium,R088,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,8,8,210,6,3,3,High,R088,2
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,8,1,210,6,3,3,Medium,R088,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,7,15,8,5,11,Low,R089,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,2,6,90,8,5,11,Low,R089,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,8,15,8,5,11,High,R089,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,9,90,8,5,11,Medium,R089,4
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,2,15,8,5,11,Low,R089,5
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,4,9,45,4,1,2,Medium,R090,1
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,7,390,4,1,2,High,R090,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,4,45,4,1,2,Low,R090,3
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,4,210,8,5,1,High,R091,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,2,15,8,5,1,Low,R091,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,8,390,8,5,1,Low,R091,3
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,4,90,8,5,1,Low,R091,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,9,15,6,7,0,Medium,R092,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,2,6,15,6,7,0,Low,R092,2
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,9,600,6,7,0,High,R092,3
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,10,1,15,6,7,0,Medium,R092,4
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,7,210,6,7,0,Medium,R092,5
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,4,600,6,5,8,Low,R093,1
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,7,390,6,5,8,Medium,R093,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,6,45,6,5,8,High,R093,3
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,6,390,6,5,8,Low,R093,4
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,7,15,6,5,8,Medium,R093,5
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,1,45,4,5,9,Low,R095,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,7,90,4,5,9,Low,R095,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,2,210,4,5,9,High,R095,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,10,2,90,2,3,0,Medium,R096,1
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,4,8,390,2,3,0,Medium,R096,2
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,7,390,2,3,0,Medium,R096,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,7,90,2,3,0,High,R096,4
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,7,210,2,3,0,Low,R096,5
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,7,15,6,3,1,High,R097,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,1,15,6,3,1,Low,R097,2
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,2,45,6,3,1,Low,R097,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,6,15,6,3,1,Low,R097,4
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,6,15,6,3,1,Medium,R097,5
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,7,390,8,,3,High,R099,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,8,90,8,,3,Low,R099,2
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,6,8,210,8,,3,Medium,R099,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,10,90,4,9,0,High,R100,1
+Group Report Write-up,Write the methodology section of the group research report.,Group project,4,8,45,4,9,0,Medium,R100,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,7,45,4,9,0,Low,R100,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,8,2,15,4,9,0,Medium,R100,4
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,6,45,2,9,0,High,R101,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,8,210,2,9,0,Medium,R101,2
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,6,7,45,2,9,0,Medium,R101,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,4,6,390,6,3,2,Low,R102,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,6,8,600,6,3,2,Medium,R102,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,10,,6,3,2,High,R102,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,8,4,45,6,5,0,Medium,R103,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,1,45,6,5,0,Low,R103,2
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,8,7,390,6,5,0,High,R103,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,6,8,45,4,9,0,High,R104,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,8,210,4,9,0,Medium,R104,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,8,1,15,4,9,0,Low,R104,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,8,90,4,9,0,Medium,R104,4
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,4,6,45,4,9,0,Low,R104,5
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,8,45,4,3,0,Medium,R105,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,8,4,390,4,3,0,Low,R105,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,9,45,4,3,0,High,R105,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,7,45,4,3,0,Low,R105,4
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,6,7,90,6,5,5,Medium,R106,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,10,9,210,6,5,5,High,R106,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,9,90,6,5,5,High,R106,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,9,45,4,5,11,Medium,R107,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,1,210,4,5,11,Medium,R107,2
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,7,90,4,5,11,Medium,R107,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,2,4,600,4,5,11,Low,R107,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,8,8,210,4,5,11,High,R107,5
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,8,45,4,5,0,Medium,R109,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,10,8,90,4,5,0,High,R109,2
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,7,,4,5,0,Medium,R109,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,6,45,4,5,0,Low,R109,4
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,8,390,4,1,8,Medium,R110,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,2,2,45,4,1,8,Low,R110,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,7,210,4,1,8,Low,R110,3
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,7,15,4,1,8,High,R110,4
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,10,15,2,1,7,High,R111,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,2,8,,2,1,7,Low,R111,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,6,90,2,1,7,Low,R111,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,9,210,4,9,0,High,R112,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,6,90,4,9,0,Medium,R112,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,8,7,45,4,9,0,Medium,R112,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,4,6,600,2,5,0,Low,R113,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,7,45,2,5,0,Medium,R113,2
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,8,8,45,2,5,0,High,R113,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,2,600,4,5,0,Low,R116,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,10,6,15,4,5,0,High,R116,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,2,90,4,5,0,Low,R116,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,2,15,4,5,0,Medium,R116,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,8,210,4,5,0,Medium,R116,5
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,9,45,8,9,0,Critical,R117,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,8,45,8,9,0,Medium,R117,2
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,6,9,90,8,9,0,High,R117,3
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,8,2,45,8,9,8,Low,R118,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,1,90,8,9,8,Medium,R118,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,4,7,45,8,9,8,High,R118,3
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,2,4,600,4,5,0,Low,R119,1
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,8,210,4,5,0,Medium,R119,2
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,10,2,45,4,5,0,Low,R119,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,7,45,4,5,0,Medium,R119,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,8,8,390,4,5,0,High,R119,5
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,15,2,7,2,Medium,R120,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,8,7,45,2,7,2,High,R120,2
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,2,7,45,2,7,2,Low,R120,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,4,4,45,2,7,2,Medium,R120,4
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,6,,6,3,0,Medium,R121,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,2,7,390,6,3,0,Medium,R121,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,6,600,6,3,0,Medium,R121,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,8,10,600,6,3,0,High,R121,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,8,90,4,5,0,High,R122,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,2,7,45,4,5,0,Low,R122,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,4,7,390,4,5,0,Low,R122,3
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,7,390,6,9,2,Medium,R123,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,7,600,6,9,2,Medium,R123,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,8,390,6,9,2,High,R123,3
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,2,390,10,3,9,Low,R124,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,2,210,10,3,9,High,R124,2
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,2,15,10,3,9,Low,R124,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,4,390,10,3,9,Low,R124,4
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,6,210,10,,9,Medium,R125,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,10,7,45,10,,9,Medium,R125,2
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,2,90,10,,9,Low,R125,3
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,10,8,210,10,,9,High,R125,4
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,1,390,6,10,0,Low,R127,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,8,7,15,6,10,0,Medium,R127,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,2,8,390,6,10,0,Medium,R127,3
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,8,8,45,6,10,0,High,R127,4
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,7,45,6,10,0,Medium,R127,5
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,8,9,,2,3,0,High,R128,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,8,210,2,3,0,Medium,R128,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,2,7,15,2,3,0,Low,R128,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,9,390,2,3,0,Medium,R128,4
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,4,9,45,2,3,0,Medium,R128,5
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,210,8,7,0,High,R129,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,7,390,8,7,0,Medium,R129,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,2,45,8,7,0,Medium,R129,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,2,7,90,8,7,0,Medium,R129,4
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,6,210,2,1,0,Medium,R130,1
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,10,45,2,1,0,Medium,R130,2
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,8,4,45,2,1,0,Medium,R130,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,9,45,2,1,0,High,R130,4
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,9,15,2,1,0,High,R130,5
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,6,8,390,4,9,2,Medium,R131,1
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,2,15,4,9,2,Low,R131,2
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,7,210,4,9,2,High,R131,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,8,4,90,2,5,3,Medium,R132,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,7,15,2,5,3,Low,R132,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,7,390,2,5,3,Medium,R132,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,8,10,90,2,5,3,High,R132,4
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,2,8,45,2,5,3,Medium,R132,5
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,2,1,15,1,5,0,Low,R133,1
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,7,600,1,5,0,Medium,R133,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,2,8,210,1,5,0,Low,R133,3
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,8,,1,5,0,High,R133,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,10,8,15,1,5,0,High,R133,5
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,6,90,6,5,1,Low,R134,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,10,7,210,6,5,1,Low,R134,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,7,45,6,5,1,High,R134,3
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,2,8,90,6,5,1,Medium,R134,4
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,10,4,210,4,3,13,Medium,R135,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,9,15,4,3,13,High,R135,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,10,390,4,3,13,High,R135,3
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,6,9,390,10,5,5,High,R136,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,9,90,10,5,5,Medium,R136,2
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,4,10,210,10,5,5,Medium,R136,3
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,2,4,,10,5,5,Medium,R136,4
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,4,7,210,10,5,5,Medium,R136,5
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,6,6,90,6,5,0,Medium,R137,1
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,8,45,6,5,0,Medium,R137,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,8,210,6,5,0,High,R137,3
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,2,8,45,6,5,0,Low,R137,4
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,6,45,4,5,12,High,R138,1
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,4,9,15,4,5,12,Medium,R138,2
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,8,9,210,4,5,12,High,R138,3
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,4,210,4,7,0,Low,R139,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,8,7,90,4,7,0,Medium,R139,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,10,9,45,4,7,0,High,R139,3
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,8,7,45,8,5,0,Medium,R140,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,8,210,8,5,0,Medium,R140,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,8,4,45,8,5,0,Medium,R140,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,6,8,210,8,5,0,High,R140,4
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,8,8,90,8,5,0,Medium,R140,5
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,6,7,15,4,10,0,Low,R141,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,10,10,90,4,10,0,Critical,R141,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,6,600,4,10,0,Low,R141,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,8,8,390,4,10,0,Medium,R141,4
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,6,45,4,10,0,Low,R141,5
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,7,210,6,3,2,Medium,R142,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,2,390,6,3,2,Low,R142,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,7,390,6,3,2,High,R142,3
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,4,1,45,6,3,2,Low,R142,4
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,9,210,6,3,5,Low,R143,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,6,45,6,3,5,Low,R143,2
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,8,15,6,3,5,High,R143,3
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,8,45,4,3,2,High,R144,1
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,10,7,90,4,3,2,Medium,R144,2
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,1,90,4,3,2,Low,R144,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,4,45,4,3,2,Medium,R144,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,7,390,1,7,0,Medium,R145,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,8,90,1,7,0,High,R145,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,8,15,1,7,0,Low,R145,3
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,6,90,1,7,0,Medium,R145,4
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,1,210,1,7,0,Low,R145,5
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,4,6,90,8,5,0,Low,R146,1
+Group Report Write-up,Write the methodology section of the group research report.,Group project,6,2,90,8,5,0,Low,R146,2
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,6,90,8,5,0,Low,R146,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,10,6,90,8,5,0,Medium,R146,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,8,90,8,5,0,High,R146,5
+Group Report Write-up,Write the methodology section of the group research report.,Group project,2,7,,10,7,1,Medium,R147,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,7,15,10,7,1,Medium,R147,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,10,6,45,10,7,1,High,R147,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,4,10,45,8,3,10,Medium,R148,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,8,90,8,3,10,Medium,R148,2
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,6,90,8,3,10,Medium,R148,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,10,90,8,3,10,High,R148,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,8,7,90,8,3,10,Low,R148,5
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,6,210,6,5,0,Medium,R149,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,6,390,6,5,0,Medium,R149,2
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,9,45,6,5,0,High,R149,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,7,90,6,5,0,Low,R149,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,9,90,2,7,13,Medium,R150,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,7,45,2,7,13,Medium,R150,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,9,,2,7,13,Medium,R150,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,9,390,2,7,13,High,R150,4
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,6,45,2,7,13,Medium,R150,5
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,9,,4,1,0,Critical,R151,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,6,7,,4,1,0,Medium,R151,2
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,7,210,4,1,0,Medium,R151,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,1,45,4,1,0,Low,R151,4
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,45,4,7,0,High,R153,1
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,8,7,15,4,7,0,Medium,R153,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,8,45,4,7,0,Medium,R153,3
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,9,45,6,7,0,Medium,R154,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,6,15,6,7,0,Medium,R154,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,10,4,210,6,7,0,Low,R154,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,7,390,6,7,0,High,R154,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,2,9,45,6,7,0,Medium,R154,5
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,2,7,90,6,7,2,Medium,R155,1
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,4,6,,6,7,2,Medium,R155,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,8,90,6,7,2,High,R155,3
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,9,210,4,3,0,High,R157,1
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,6,7,210,4,3,0,Medium,R157,2
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,4,600,4,3,0,Low,R157,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,4,600,10,1,0,Low,R159,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,4,90,10,1,0,Low,R159,2
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,8,90,10,1,0,High,R159,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,10,390,10,1,0,Medium,R159,4
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,8,15,10,1,0,Low,R159,5
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,4,7,210,8,5,2,Low,R160,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,4,390,8,5,2,Medium,R160,2
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,1,90,8,5,2,Low,R160,3
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,8,4,390,8,5,2,High,R160,4
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,8,6,90,1,7,0,Low,R161,1
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,7,45,1,7,0,Medium,R161,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,7,390,1,7,0,High,R161,3
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,1,45,1,7,0,Low,R161,4
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,1,15,4,9,2,Low,R162,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,9,390,4,9,2,Medium,R162,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,10,15,4,9,2,Medium,R162,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,7,390,4,9,2,High,R162,4
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,8,210,4,9,2,High,R162,5
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,8,8,15,6,9,0,Medium,R163,1
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,8,45,6,9,0,High,R163,2
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,6,7,90,6,9,0,Low,R163,3
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,2,8,600,6,9,0,Low,R163,4
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,4,45,6,9,0,Low,R163,5
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,4,600,4,1,2,Low,R164,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,6,600,4,1,2,Low,R164,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,2,90,4,1,2,High,R164,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,8,2,45,1,9,2,Low,R165,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,7,90,1,9,2,Low,R165,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,7,90,1,9,2,High,R165,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,8,9,90,8,3,0,High,R166,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,7,45,8,3,0,Medium,R166,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,6,90,8,3,0,Medium,R166,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,8,15,4,1,1,High,R167,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,6,600,4,1,1,Medium,R167,2
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,8,390,4,1,1,Medium,R167,3
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,4,8,45,4,5,4,Medium,R168,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,4,45,4,5,4,Low,R168,2
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,6,390,4,5,4,High,R168,3
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,2,7,45,4,5,4,Low,R168,4
+Group Report Write-up,Write the methodology section of the group research report.,Group project,8,4,210,4,10,2,High,R170,1
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,6,90,4,10,2,Low,R170,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,6,15,4,10,2,Low,R170,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,6,7,15,1,9,1,High,R171,1
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,4,2,210,1,9,1,Low,R171,2
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,4,90,1,9,1,Low,R171,3
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,4,600,1,9,1,Low,R171,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,8,210,6,7,0,Medium,R172,1
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,8,45,6,7,0,High,R172,2
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,4,15,6,7,0,Low,R172,3
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,10,8,90,6,10,2,High,R173,1
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,4,45,6,10,2,Low,R173,2
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,4,7,,6,10,2,Medium,R173,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,6,4,210,1,5,10,Low,R174,1
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,8,2,90,1,5,10,Medium,R174,2
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,10,7,,1,5,10,High,R174,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,7,45,2,1,1,Low,R175,1
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,6,9,90,2,1,1,Medium,R175,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,8,45,2,1,1,High,R175,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,9,90,2,1,1,High,R175,4
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,2,,2,1,1,Low,R175,5
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,2,4,45,10,5,0,Medium,R177,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,7,45,10,5,0,Medium,R177,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,2,45,10,5,0,Low,R177,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,10,7,90,10,5,0,High,R177,4
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,15,6,3,1,Medium,R179,1
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,4,9,45,6,3,1,High,R179,2
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,8,45,6,3,1,Medium,R179,3
+Org Report Submission,Submit the activity report of the student council to the adviser.,Extracurricular activity,8,6,45,6,3,1,Medium,R179,4
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,8,600,10,1,0,High,R180,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,8,8,15,10,1,0,Medium,R180,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,8,15,10,1,0,Medium,R180,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,8,210,10,1,0,Medium,R180,4
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,8,,10,1,0,Medium,R180,5
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,9,90,8,7,0,High,R181,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,7,45,8,7,0,Medium,R181,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,8,4,390,8,7,0,Medium,R181,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,10,600,8,7,0,Medium,R181,4
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,6,7,90,8,7,0,Medium,R181,5
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,6,15,1,3,0,High,R182,1
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,2,390,1,3,0,Low,R182,2
+Group Report Write-up,Write the methodology section of the group research report.,Group project,2,2,390,1,3,0,Low,R182,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,1,15,10,3,5,Low,R183,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,6,90,10,3,5,Medium,R183,2
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,8,90,10,3,5,High,R183,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,8,390,1,5,1,Medium,R184,1
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,9,390,1,5,1,High,R184,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,4,9,390,1,5,1,Medium,R184,3
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,4,15,1,5,1,Medium,R184,4
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,7,600,8,3,0,Medium,R185,1
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,7,90,8,3,0,High,R185,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,4,210,8,3,0,Medium,R185,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,2,9,210,2,9,2,Low,R186,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,2,4,45,2,9,2,Low,R186,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,7,210,2,9,2,Medium,R186,3
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,7,,2,9,2,High,R186,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,6,45,2,9,2,Low,R186,5
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,8,45,6,9,3,High,R187,1
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,10,210,6,9,3,High,R187,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,8,7,,6,9,3,Medium,R187,3
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,8,210,4,5,0,High,R188,1
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,6,2,,4,5,0,Low,R188,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,9,90,4,5,0,Medium,R188,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,2,4,45,2,3,3,High,R189,1
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,1,390,2,3,3,Low,R189,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,4,90,2,3,3,Medium,R189,3
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,4,7,210,4,5,2,Medium,R190,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,8,45,4,5,2,High,R190,2
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,8,8,90,4,5,2,High,R190,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,6,210,4,5,2,Medium,R190,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,4,2,90,4,7,0,Medium,R191,1
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,4,7,210,4,7,0,High,R191,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,4,4,45,4,7,0,Low,R191,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,2,9,45,1,9,2,High,R193,1
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,4,,1,9,2,Low,R193,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,4,210,1,9,2,Low,R193,3
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,6,6,210,8,7,2,Low,R194,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,9,45,8,7,2,High,R194,2
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,4,4,390,8,7,2,Low,R194,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,8,6,90,8,7,2,Low,R194,4
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,7,90,8,7,2,Medium,R194,5
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,6,6,15,4,5,11,High,R195,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,9,90,4,5,11,Medium,R195,2
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,4,7,210,4,5,11,Medium,R195,3
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,2,8,210,4,5,11,Low,R195,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,8,600,4,5,11,Medium,R195,5
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,7,390,6,3,0,High,R196,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,7,45,6,3,0,Medium,R196,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,6,8,210,6,3,0,Medium,R196,3
+Part-time Job Schedule,Confirm shift schedule and complete pending deliverables for the part-time job.,Other,8,7,90,6,3,0,Medium,R196,4
+Sports Practice,Attend basketball practice in preparation for the inter-college tournament.,Extracurricular activity,6,2,600,6,3,0,Low,R196,5
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,6,390,2,5,1,Medium,R197,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,6,10,390,2,5,1,High,R197,2
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,4,9,210,2,5,1,High,R197,3
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,8,8,45,2,5,1,Medium,R197,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,6,2,45,4,5,3,Low,R198,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,8,6,210,4,5,3,High,R198,2
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,8,2,90,4,5,3,Low,R198,3
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,2,4,45,4,5,3,Low,R198,4
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,4,7,45,2,1,1,Low,R199,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,8,90,2,1,1,High,R199,2
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,8,45,2,1,1,High,R199,3
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,8,7,90,2,1,1,Medium,R199,4
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,6,9,45,2,1,1,Medium,R199,5
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,9,45,2,7,5,High,R200,1
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,8,15,2,7,5,Medium,R200,2
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,9,210,2,7,5,High,R200,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,7,390,4,10,2,Medium,R201,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,1,45,4,10,2,Low,R201,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,6,390,4,10,2,Medium,R201,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,4,6,390,4,10,2,Low,R201,4
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,6,8,,4,10,2,High,R201,5
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,4,4,210,1,5,10,Low,R202,1
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,9,,1,5,10,Medium,R202,2
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,4,9,90,1,5,10,High,R202,3
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,8,2,90,1,5,10,Medium,R202,4
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,4,7,45,1,5,10,Low,R202,5
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,90,10,7,9,Medium,R203,1
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,8,1,390,10,7,9,Low,R203,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,2,8,,10,7,9,Medium,R203,3
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,8,8,90,10,7,9,High,R203,4
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,10,7,390,4,3,0,Low,R204,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,2,7,390,4,3,0,Low,R204,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,7,90,4,3,0,Low,R204,3
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,2,9,210,4,3,0,Medium,R204,4
+Renew Rental Agreement,Review and sign the renewal documents for the apartment lease.,Personal responsibility,4,8,,4,3,0,High,R204,5
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,4,6,45,2,1,4,Low,R205,1
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,8,,2,1,4,High,R205,2
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,8,9,45,2,1,4,Critical,R205,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,2,4,15,2,1,4,Medium,R205,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,2,600,1,5,0,Low,R206,1
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,2,1,45,1,5,0,Low,R206,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,8,7,45,1,5,0,Medium,R206,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,9,210,1,5,0,High,R206,4
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,6,6,45,1,5,0,Low,R206,5
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,10,7,210,6,7,0,High,R207,1
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,4,9,600,6,7,0,Medium,R207,2
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,6,9,15,6,7,0,Medium,R207,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,2,9,390,6,7,3,Medium,R208,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,7,390,6,7,3,Medium,R208,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,6,90,6,7,3,Medium,R208,3
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,8,7,90,6,7,3,High,R208,4
+Commute Permit Renewal,Process the renewal of the student commuter discount card.,Other,2,7,390,2,7,0,Medium,R209,1
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,10,6,15,2,7,0,Low,R209,2
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,4,4,45,2,7,0,Low,R209,3
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,10,7,45,2,7,0,High,R209,4
+History Reaction Paper,Write a reflection on the documentary about martial law and its socio-economic effects.,Academic assignment,2,6,45,6,1,0,Low,R211,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,8,,6,1,0,High,R211,2
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,4,1,45,6,1,0,Low,R211,3
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,7,210,6,1,0,Medium,R211,4
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,6,90,6,5,0,Medium,R212,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,6,390,6,5,0,High,R212,2
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,9,90,6,5,0,Medium,R212,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,2,45,6,5,0,Low,R212,4
+Lab Report,Complete the physics lab report on projectile motion including data analysis and error discussion.,Academic assignment,8,9,210,6,5,0,High,R212,5
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,2,1,600,4,1,0,Low,R213,1
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,6,390,4,1,0,Low,R213,2
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,4,,4,1,0,Low,R213,3
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,8,9,90,4,1,0,High,R213,4
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,8,45,4,5,0,High,R214,1
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,4,8,45,4,5,0,Medium,R214,2
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,8,6,390,4,5,0,Medium,R214,3
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,1,600,4,5,0,Low,R214,4
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,2,9,90,2,9,10,High,R215,1
+Quiz Preparation,Review lecture slides on macroeconomics for a surprise quiz this week.,Examination or review,8,2,210,2,9,10,Low,R215,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,6,6,90,2,9,10,Low,R215,3
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,2,7,90,8,9,4,Medium,R216,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,1,15,8,9,4,Medium,R216,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,10,7,210,8,9,4,High,R216,3
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,4,9,210,8,9,4,Medium,R216,4
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,4,9,90,4,7,0,Medium,R217,1
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,2,7,15,4,7,0,Low,R217,2
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,4,6,390,4,7,0,Low,R217,3
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,8,,4,7,0,Medium,R217,4
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,6,9,390,4,7,0,High,R217,5
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,6,7,,4,7,0,Low,R218,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,6,7,600,4,7,0,Medium,R218,2
+Programming Assignment,Implement a Java program that simulates a bank account system with inheritance.,Academic assignment,4,9,90,4,7,0,High,R218,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,6,8,45,2,5,3,Medium,R220,1
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,8,210,2,5,3,Medium,R220,2
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,8,90,2,5,3,High,R220,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,7,45,2,1,0,Medium,R221,1
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,8,8,45,2,1,0,Medium,R221,2
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,8,90,2,1,0,High,R221,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,8,6,390,2,1,0,Low,R221,4
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,6,7,210,2,1,0,Medium,R221,5
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,6,45,2,1,1,Low,R222,1
+Midterm Exam Review,Study chapters 4 to 8 of the biology textbook for the upcoming midterm exam.,Examination or review,2,9,15,2,1,1,High,R222,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,2,6,15,2,1,1,Low,R222,3
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,8,2,600,2,1,1,Medium,R222,4
+Literature Review,Summarize and synthesize ten journal articles for a literature review chapter.,Academic assignment,8,2,210,4,5,10,Low,R223,1
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,2,9,600,4,5,10,Low,R223,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,4,8,210,4,5,10,High,R223,3
+Group Presentation Prep,Prepare slides and rehearse the group presentation on climate policy.,Group project,2,6,90,4,7,0,Low,R224,1
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,2,1,45,4,7,0,Low,R224,2
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,6,4,90,4,7,0,Low,R224,3
+Volunteer Shift,Complete a scheduled volunteer shift at the community literacy program.,Extracurricular activity,8,7,600,4,7,0,High,R224,4
+Finals Review - Calculus,Review past exam papers and practice solving limit and derivative problems.,Examination or review,6,1,,4,7,0,Low,R224,5
+Pay Tuition Installment,Pay the monthly tuition installment before the deadline to avoid late fees.,Personal responsibility,6,10,45,4,5,0,Medium,R225,1
+Nursing Exam Review,Review pharmacology drug classifications using flashcards and practice tests.,Examination or review,6,9,90,4,5,0,High,R225,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,8,6,390,4,5,0,Medium,R225,3
+Online Course Module,Finish the pending module of an online certificate course on data analysis.,Other,2,1,45,4,5,0,Low,R227,1
+Peer Evaluation Forms,Complete peer evaluation forms for group project members before the deadline.,Group project,6,8,390,4,5,0,High,R227,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,6,7,,4,5,0,Low,R227,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,10,4,90,4,5,0,Low,R227,4
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,8,4,390,4,1,3,Low,R228,1
+Job Application Follow-up,Update resume and submit applications for internship or entry-level positions.,Other,6,6,90,4,1,3,Medium,R228,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,2,6,210,4,1,3,Low,R228,3
+Research Paper Draft,Write the first draft of a research paper on renewable energy adoption in Southeast Asia.,Academic assignment,6,7,390,4,1,3,High,R228,4
+Laundry,Do the laundry and tidy up the dorm room.,Personal responsibility,6,2,90,4,7,2,Medium,R229,1
+Chemistry Worksheet,Answer the organic chemistry worksheet on nomenclature and reaction mechanisms.,Academic assignment,8,7,90,4,7,2,High,R229,2
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,8,9,600,4,7,2,High,R229,3
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,4,1,390,4,7,2,Low,R229,4
+Scholarship Requirements,Compile and submit required documents for the scholarship renewal.,Personal responsibility,8,4,45,4,7,2,Low,R229,5
+Portfolio Update,Update the personal portfolio website with recent projects.,Other,4,7,90,4,3,0,Low,R230,1
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,2,10,600,4,3,0,High,R230,2
+Video Project Editing,Edit the group documentary video and add subtitles and background music.,Group project,6,6,90,4,3,0,Medium,R230,3
+Group Report Write-up,Write the methodology section of the group research report.,Group project,10,9,45,4,5,0,High,R231,1
+Groceries and Meal Prep,Buy groceries for the week and prepare meals in advance to save time.,Personal responsibility,6,2,600,4,5,0,Low,R231,2
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,4,390,4,5,0,Low,R231,3
+Case Study Analysis,Analyze a business case on supply chain disruption and propose recommendations.,Academic assignment,8,6,45,4,5,0,Medium,R231,4
+Math Problem Set,Finish the weekly problem set on calculus covering integration by parts and applications.,Academic assignment,8,7,210,6,,0,High,R232,1
+Statistics Homework,Solve hypothesis testing exercises for the statistics course using R.,Academic assignment,4,4,390,6,,0,Low,R232,2
+Family Errands,Help process documents for a family matter at the local government office.,Personal responsibility,4,4,90,6,,0,Low,R232,3
+Memory Work Review,Memorize key formulas and definitions for the chemistry cumulative exam.,Examination or review,4,6,45,6,,0,Medium,R232,4
+Bank Account Update,Update account documents and settle a pending balance at the bank.,Personal responsibility,8,1,45,6,9,4,High,R233,1
+Essay on Ethics,"Write a 1,500-word argumentative essay on AI ethics and academic integrity.",Academic assignment,4,6,600,6,9,4,Low,R233,2
+Survey Data Collection,Distribute and collect survey responses for the group study on student spending habits.,Group project,4,2,45,6,9,4,Low,R233,3
+Board Exam Practice,Answer 100 practice questions for the upcoming licensure examination.,Examination or review,6,9,390,8,10,0,High,R234,1
+Club Event Planning,Finalize logistics and budget for the upcoming student organization event.,Extracurricular activity,4,6,390,8,10,0,Low,R234,2
+Capstone Group Meeting,Finalize the division of work and merge individual sections of the capstone report.,Group project,4,7,45,8,10,0,Low,R234,3
+Debate Team Briefing,Prepare arguments and evidence for the inter-school debate competition.,Extracurricular activity,4,7,90,8,10,0,Medium,R234,4
+Choir Rehearsal,Attend rehearsal and memorize the assigned vocal parts for the recital.,Extracurricular activity,6,2,390,8,10,0,Low,R234,5

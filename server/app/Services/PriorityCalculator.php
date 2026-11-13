@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use InvalidArgumentException;
+
 class PriorityCalculator
 {
     public const WEIGHTS = [
@@ -12,11 +14,16 @@ class PriorityCalculator
     ];
 
     public static function calculate(
-        int $importance,
-        int $urgency,
-        int $timeAvailability,
-        int $currentWorkload
+        mixed $importance,
+        mixed $urgency,
+        mixed $timeAvailability,
+        mixed $currentWorkload
     ): float {
+        self::validateFactors($importance, $urgency, $timeAvailability, $currentWorkload);
+        [$importance, $urgency, $timeAvailability, $currentWorkload] = array_map('intval', [
+            $importance, $urgency, $timeAvailability, $currentWorkload,
+        ]);
+
         $score = ($importance * self::WEIGHTS['importance'])
             + ($urgency * self::WEIGHTS['urgency'])
             + ($timeAvailability * self::WEIGHTS['time_availability'])
@@ -26,11 +33,16 @@ class PriorityCalculator
     }
 
     public static function breakdown(
-        int $importance,
-        int $urgency,
-        int $timeAvailability,
-        int $currentWorkload
+        mixed $importance,
+        mixed $urgency,
+        mixed $timeAvailability,
+        mixed $currentWorkload
     ): array {
+        self::validateFactors($importance, $urgency, $timeAvailability, $currentWorkload);
+        [$importance, $urgency, $timeAvailability, $currentWorkload] = array_map('intval', [
+            $importance, $urgency, $timeAvailability, $currentWorkload,
+        ]);
+
         return [
             'importance' => [
                 'value' => $importance,
@@ -59,5 +71,27 @@ class PriorityCalculator
                 $currentWorkload
             ),
         ];
+    }
+
+    public static function validateFactors(
+        mixed $importance,
+        mixed $urgency,
+        mixed $timeAvailability,
+        mixed $currentWorkload
+    ): void {
+        foreach ([
+            'importance' => $importance,
+            'urgency' => $urgency,
+            'time_availability' => $timeAvailability,
+            'current_workload' => $currentWorkload,
+        ] as $name => $value) {
+            $integerValue = is_int($value)
+                ? $value
+                : (is_string($value) && preg_match('/^-?\d+$/D', $value) ? (int) $value : null);
+
+            if ($integerValue === null || $integerValue < 1 || $integerValue > 10) {
+                throw new InvalidArgumentException("The {$name} scoring factor must be an integer from 1 to 10.");
+            }
+        }
     }
 }

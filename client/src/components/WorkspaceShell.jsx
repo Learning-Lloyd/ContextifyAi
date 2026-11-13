@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiAward, FiChevronDown, FiClock, FiCommand, FiCompass, FiHelpCircle, FiLogOut, FiMessageSquare, FiMoon, FiPlus, FiSearch, FiShield, FiSun, FiTrendingUp, FiUser } from 'react-icons/fi';
+import { FiAward, FiChevronDown, FiClock, FiCommand, FiCompass, FiDatabase, FiFileText, FiHelpCircle, FiLogOut, FiMessageSquare, FiMoon, FiPlus, FiSearch, FiShield, FiSun, FiTrendingUp, FiUser } from 'react-icons/fi';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -18,7 +18,9 @@ const decisionNav = [
   { to: '/decision-lab', label: 'Decision Lab', description: 'Compare priorities and run What-If analysis', icon: FiAward, end: true },
   { to: '/decision-insights', label: 'Decision Insights', description: 'Explore patterns in your saved decisions', icon: FiTrendingUp },
   { to: '/decision-history', label: 'Decision Timeline', description: 'Browse your past analyses and comparisons', icon: FiClock },
+  { to: '/research-dataset', label: 'Research Dataset', description: 'Browse the imported study datasets', icon: FiDatabase },
   { to: '/feedback', label: 'Feedback', description: 'Share feedback with the Contextify team', icon: FiMessageSquare },
+  { to: '/reports', label: 'My Reports', description: 'Download your private activity report', icon: FiFileText },
 ];
 
 export default function WorkspaceShell({ children, admin = false }) {
@@ -136,7 +138,7 @@ export default function WorkspaceShell({ children, admin = false }) {
             </button>
             {profileOpen && <div className="profile-menu" role="menu">
               <div className="profile-menu-person"><strong>{user?.name}</strong><span>{user?.email}</span></div>
-              <Link role="menuitem" to="/profile"><FiUser size={15} /> Profile & preferences</Link>
+              <Link role="menuitem" to="/profile"><FiUser size={15} /> Profile</Link>
               {!isAdmin && <Link role="menuitem" to="/help"><FiHelpCircle size={15} /> Help & getting started</Link>}
               {isAdmin && <Link role="menuitem" to="/admin"><FiShield size={15} /> Administration</Link>}
               <button type="button" role="menuitem" onClick={handleLogout}><FiLogOut size={15} /> Sign out</button>

@@ -19,14 +19,14 @@ class TaskScoringService
      * @param  array<string, mixed>  $taskData
      * @return array<string, mixed>
      */
-    public function resolveFactors(User $user, array $taskData, ?Task $existingTask = null): array
+    public function resolveFactors(User $user, array $taskData, ?Task $existingTask = null, bool $allowAi = true): array
     {
         $title = trim((string) ($taskData['title'] ?? ''));
         $description = isset($taskData['description']) ? (string) $taskData['description'] : null;
         $dueDate = ! empty($taskData['due_date']) ? (string) $taskData['due_date'] : null;
         $dueTime = $taskData['due_time'] ?? null;
 
-        $importanceAnalysis = $this->importanceAnalysisService->analyze($title, $description);
+        $importanceAnalysis = $this->importanceAnalysisService->analyze($title, $description, $allowAi);
         $calendarContext = $this->calendarContextService->analyze(
             $user,
             $dueDate,
@@ -56,7 +56,7 @@ class TaskScoringService
             'description' => $description,
             'due_date' => $dueDate,
             'due_time' => $dueTime,
-        ]);
+        ], allowAi: false);
 
         return [
             'importance' => $factors['importance'],

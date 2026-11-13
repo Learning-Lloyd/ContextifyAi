@@ -11,6 +11,7 @@ use App\Services\TaskAnalysisStatusService;
 use App\Services\WeatherService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class TaskController extends Controller
 {
@@ -72,11 +73,18 @@ class TaskController extends Controller
 
         $sort = $validated['sort'] ?? 'priority_score';
         $direction = $validated['direction'] ?? 'desc';
-        $query->orderBy($sort, $direction);
-
-        if ($sort !== 'due_date') {
-            $query->orderBy('due_date');
+        if (empty($validated['status'])) {
+            $query->orderByRaw("CASE WHEN status = 'completed' THEN 1 ELSE 0 END");
         }
+        if ($sort === 'due_date') {
+            $query->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+                ->orderBy('due_date', $direction);
+        } else {
+            $query->orderBy($sort, $direction)
+                ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+                ->orderBy('due_date');
+        }
+        $query->orderBy('id');
 
         $taskModels = $query->get();
         $analysisService = app(TaskAnalysisStatusService::class);
@@ -265,6 +273,7 @@ class TaskController extends Controller
             'due_date' => ($requireTitle ? 'required' : 'sometimes') . '|date',
             'due_time' => 'nullable|date_format:H:i',
             'status' => 'sometimes|in:pending,completed',
+            'importance' => 'sometimes|required|integer|min:1|max:10',
         ];
 
         return $request->validate($rules);
@@ -278,13 +287,35 @@ class TaskController extends Controller
      */
     private function applyAutomaticScoringFactors(Request $request, array $validated, ?Task $existingTask = null): array
     {
+        $userProvidedImportance = array_key_exists('importance', $validated);
+        $scoringInput = array_merge([
+            'title' => $existingTask?->title ?? '',
+            'description' => $existingTask?->description,
+            'due_date' => $existingTask?->due_date?->format('Y-m-d'),
+            'due_time' => $existingTask?->due_time,
+        ], $validated);
         $factors = $this->taskScoringService->resolveFactors(
             $request->user(),
-            $validated,
-            $existingTask
+            $scoringInput,
+            $existingTask,
+            allowAi: ! $userProvidedImportance && $existingTask?->importance_source !== 'user'
         );
 
-        $validated['importance'] = $factors['importance'];
+        if ($userProvidedImportance) {
+            $validated['importance'] = (int) $validated['importance'];
+            $validated['importance_source'] = 'user';
+        } elseif ($existingTask?->importance_source === 'user') {
+            if ($existingTask->importance === null || $existingTask->importance < 1 || $existingTask->importance > 10) {
+                throw ValidationException::withMessages([
+                    'importance' => 'This task has an invalid saved importance value. Choose a value from 1 to 10 before saving.',
+                ]);
+            }
+            $validated['importance'] = $existingTask->importance;
+            $validated['importance_source'] = 'user';
+        } else {
+            $validated['importance'] = $factors['importance'];
+            $validated['importance_source'] = $factors['importance_analysis']['source'] ?? 'heuristic';
+        }
         $validated['urgency'] = $factors['urgency'];
         $validated['urgency_manual'] = false;
         $validated['time_availability'] = $factors['time_availability'];
@@ -355,6 +386,7 @@ class TaskController extends Controller
             'countdown' => $task->countdown,
             'priority_level' => $task->priority_level,
             'importance' => $task->importance,
+            'importance_source' => $task->importance_source ?? 'legacy',
             'urgency' => $task->urgency,
             'urgency_manual' => $task->urgency_manual,
             'time_availability' => $task->time_availability,

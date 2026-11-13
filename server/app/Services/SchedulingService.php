@@ -20,10 +20,9 @@ class SchedulingService
 
         $start = Carbon::parse($startDate)->startOfDay();
         $end = $start->copy()->addDays(6)->endOfDay();
-        $tasks = $user->tasks()
+        $allPendingTasks = $user->tasks()
             ->active()
             ->where('status', 'pending')
-            ->whereBetween('due_date', [$start->toDateString(), $end->toDateString()])
             ->get()
             ->sort(function ($a, $b) {
                 $scoreOrder = $b->priority_score <=> $a->priority_score;
@@ -31,6 +30,15 @@ class SchedulingService
                 return $scoreOrder !== 0 ? $scoreOrder : ($a->due_date <=> $b->due_date);
             })
             ->values();
+
+        $tasks = $allPendingTasks->filter(function ($task) use ($start, $end) {
+            if (! $task->due_date) {
+                return true;
+            }
+
+            return $task->due_date->lt($start->copy()->startOfDay())
+                || $task->due_date->betweenIncluded($start->copy()->startOfDay(), $end->copy()->endOfDay());
+        })->values();
 
         $days = [];
         $dayStartMinutes = $this->timeToMinutes((string) $user->workday_start_time);
@@ -47,10 +55,33 @@ class SchedulingService
 
         $unplanned = [];
         foreach ($tasks as $task) {
+            $dueDate = $task->due_date?->format('Y-m-d');
+            $deadlineStatus = DeadlineUrgencyService::deadlineGroup($dueDate, null, $task->due_time);
+            if ($deadlineStatus === 'overdue') {
+                $unplanned[] = [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'issue_type' => 'overdue',
+                    'reason' => 'This deadline has passed. Review the task and update its deadline if needed.',
+                ];
+                continue;
+            }
+
+            if (! $dueDate) {
+                $unplanned[] = [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'issue_type' => 'no_deadline',
+                    'reason' => 'Add a deadline to place this task in the schedule.',
+                ];
+                continue;
+            }
+
             if (! $task->estimated_time_minutes) {
                 $unplanned[] = [
                     'id' => $task->id,
                     'title' => $task->title,
+                    'issue_type' => 'missing_duration',
                     'reason' => 'Add an estimated duration before this task can be placed in the schedule.',
                 ];
                 continue;
@@ -84,6 +115,7 @@ class SchedulingService
                 $unplanned[] = [
                     'id' => $task->id,
                     'title' => $task->title,
+                    'issue_type' => 'cannot_fit',
                     'reason' => 'This task does not fit within the available minutes before its deadline.',
                 ];
             }
@@ -95,7 +127,7 @@ class SchedulingService
             'workday_start_time' => substr((string) $user->workday_start_time, 0, 5),
             'days' => array_values($days),
             'unplanned_tasks' => $unplanned,
-            'note' => 'Suggestions use your stated daily capacity, task durations, deadlines, and existing deterministic scores. They do not change task data or scoring.',
+            'note' => 'Suggestions use your stated daily capacity, task durations, deadlines, and existing deterministic scores. They do not check actual calendar appointments and do not change task data or scoring.',
         ];
     }
 

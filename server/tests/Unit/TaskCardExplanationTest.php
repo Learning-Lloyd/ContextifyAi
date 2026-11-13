@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class TaskCardExplanationTest extends TestCase
 {
-    public function test_fallback_explanation_uses_the_largest_saved_factor_contributions(): void
+    public function test_fallback_explanation_uses_saved_context_and_weighted_factor_contributions(): void
     {
         $explanation = (new ExplanationService())->forTaskCard([
             'breakdown' => [
@@ -22,10 +22,11 @@ class TaskCardExplanationTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(
-            'This is the top priority in the current analysis. No deadline is set, so this ranking is based on the current task factors. Importance and Deadline urgency had the strongest influence on its result.',
-            $explanation
-        );
+        $this->assertStringContainsString('This is the top priority in the current analysis.', $explanation);
+        $this->assertStringContainsString('Importance is 5/10.', $explanation);
+        $this->assertStringContainsString('No deadline is set.', $explanation);
+        $this->assertStringContainsString('Available-time factor: 5/10; current-workload factor: 5/10.', $explanation);
+        $this->assertStringContainsString('Importance and Deadline urgency contributed most to its score.', $explanation);
     }
 
     public function test_explanation_uses_its_actual_rank_and_local_deadline_time(): void
@@ -71,33 +72,46 @@ class TaskCardExplanationTest extends TestCase
         }
     }
 
+    public function test_deadline_with_a_past_time_today_is_grouped_as_overdue(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-13 16:00:00', 'Asia/Manila'));
+        try {
+            $this->assertSame(
+                'overdue',
+                \App\Services\DeadlineUrgencyService::deadlineGroup('2026-11-13', 'Asia/Manila', '15:00')
+            );
+            $this->assertSame(
+                'today',
+                \App\Services\DeadlineUrgencyService::deadlineGroup('2026-11-13', 'Asia/Manila', '17:00')
+            );
+        } finally {
+            Carbon::setTestNow();
+        }
+    }
+
     public function test_ai_explanation_returns_only_task_scoped_explanations(): void
     {
         config([
             'ai.enabled' => true,
             'ai.api_key' => 'test-key',
-            'ai.provider' => 'openrouter',
-            'ai.base_url' => 'https://openrouter.test/api/v1',
+            'ai.provider' => 'gemini',
+            'ai.base_url' => 'https://gemini.test/v1beta',
             'ai.model' => 'test-model',
             'ai.timeout' => 2,
         ]);
 
         Http::fake([
-            'openrouter.test/*' => Http::response([
-                'choices' => [[
-                    'message' => [
-                        'content' => json_encode([
+            'gemini.test/*' => Http::response([
+                'candidates' => [['content' => ['parts' => [['text' => json_encode([
                             'summary' => 'The exam ranks first due to its strong factors.',
                             'top_task_explanation' => 'Importance and urgency contribute most.',
                             'task_explanations' => [
-                                ['id' => 12, 'explanation' => 'Importance and urgency contribute most.'],
-                                ['id' => 999, 'explanation' => 'Unrelated result.'],
+                                ['task_ref' => 'task_1', 'explanation' => 'Importance and urgency contribute most.'],
+                                ['task_ref' => 'task_999', 'explanation' => 'Unrelated result.'],
                             ],
                             'productivity_tips' => [],
                             'weather_advice' => null,
-                        ]),
-                    ],
-                ]],
+                        ])]]]]],
             ]),
         ]);
 
@@ -125,5 +139,32 @@ class TaskCardExplanationTest extends TestCase
 
         $this->assertSame('Importance and urgency contribute most.', $result['task_explanations'][12]);
         $this->assertArrayNotHasKey(999, $result['task_explanations']);
+        Http::assertSent(function ($request) {
+            $prompt = $request['contents'][0]['parts'][0]['text'] ?? '';
+            return ! str_contains($prompt, '"id": 12')
+                && ! str_contains($prompt, 'location')
+                && ! str_contains($prompt, 'priority_score')
+                && ! str_contains($prompt, 'factor_contributions')
+                && ! str_contains($prompt, 'formula')
+                && str_contains($prompt, 'main_context');
+        });
+    }
+
+    public function test_unavailable_ai_uses_plain_guidance_without_score_breakdown(): void
+    {
+        config(['ai.enabled' => true, 'ai.api_key' => null]);
+        $result = (new AiExplanationService(new AiClient()))->explainRanking([[
+            'id' => 42,
+            'rank' => 1,
+            'title' => 'Prepare for exam',
+            'priority_score' => 8.4,
+            'due_date' => '2026-11-14',
+            'breakdown' => ['importance' => ['weighted' => 3.2]],
+        ]]);
+
+        $this->assertSame('heuristic', $result['source']);
+        $this->assertStringContainsString('deadline is', $result['summary']);
+        $this->assertStringNotContainsString('8.4', $result['summary']);
+        $this->assertStringNotContainsString('points', $result['top_task_explanation']);
     }
 }

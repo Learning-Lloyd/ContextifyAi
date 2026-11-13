@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'contextify_priority_model' => [
+        'url' => env('CONTEXTIFY_PRIORITY_MODEL_URL', 'http://127.0.0.1:8010/predict-priority'),
+        'timeout' => env('CONTEXTIFY_PRIORITY_MODEL_TIMEOUT', 4),
+    ],
+
 ];

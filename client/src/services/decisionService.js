@@ -1,5 +1,20 @@
 import api from './api';
 
+const analysisRequestsInFlight = new Map();
+
+function coalesceAnalysisRequest(taskIds) {
+  const ids = [...new Set(taskIds)].sort((a, b) => Number(a) - Number(b));
+  const key = JSON.stringify(ids);
+  const existing = analysisRequestsInFlight.get(key);
+  if (existing) return existing;
+
+  const request = api.post('/decision-lab/analyze', { task_ids: ids })
+    .then((response) => response.data)
+    .finally(() => analysisRequestsInFlight.delete(key));
+  analysisRequestsInFlight.set(key, request);
+  return request;
+}
+
 const WEIGHTS = {
   importance: 0.4,
   urgency: 0.3,
@@ -184,8 +199,12 @@ export const decisionService = {
     return response.data;
   },
 
-  async analyzeMultiple(taskIds) {
-    const response = await api.post('/decision-lab/analyze', { task_ids: taskIds });
+  analyzeMultiple(taskIds) {
+    return coalesceAnalysisRequest(taskIds);
+  },
+
+  async predictExperimentalPriority(taskIds) {
+    const response = await api.post('/decision-lab/predict-experimental-priority', { task_ids: taskIds });
     return response.data;
   },
 

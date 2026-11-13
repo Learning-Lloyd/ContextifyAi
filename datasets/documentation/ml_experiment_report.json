@@ -1,0 +1,439 @@
+{
+  "dataset": "Microsoft MS-LaTTE",
+  "dataset_sha256": "c8991285693ae869964b4143435fb19b05f9ec652ffdb945f8b799c4ca622a14",
+  "model_version": "1.0.5",
+  "source_records": 10101,
+  "method": "Independent multi-label targets use the union of supplied Known=true human annotations. Titles are lowercased and token-normalized for grouping, so repeated titles cannot cross train, validation, or test boundaries. Fixed 65/15/20 group split with seed 42. The label threshold is selected from 0.30, 0.40, 0.50, 0.60, 0.70 by validation macro F1; vocabulary and final model are refit on train+validation. Text feature is TaskTitle only; ListTitle is not substituted with Contextify task category because the field meanings differ. No Contextify priority labels or scoring factors are used.",
+  "experiments": {
+    "likely_location": {
+      "eligible_records": 10101,
+      "train_records": 6566,
+      "validation_records": 1516,
+      "final_fit_records": 8082,
+      "test_records": 2019,
+      "evaluation_protocol": "ms-latte-title-group-65-15-20-seed42-v1",
+      "promotion_comparison": {
+        "metric": "validation macro F1",
+        "active_threshold": 0.4,
+        "active_pipeline_macro_f1": 0.8175368075325841,
+        "candidate_threshold": 0.4,
+        "candidate_macro_f1": 0.8175368075325841
+      },
+      "threshold_selection": {
+        "metric": "validation macro F1",
+        "selected_threshold": 0.4,
+        "candidates": [
+          {
+            "threshold": 0.3,
+            "macro_f1": 0.8154956390537554
+          },
+          {
+            "threshold": 0.4,
+            "macro_f1": 0.8175368075325841
+          },
+          {
+            "threshold": 0.5,
+            "macro_f1": 0.8022160495259892
+          },
+          {
+            "threshold": 0.6,
+            "macro_f1": 0.7761924062072426
+          },
+          {
+            "threshold": 0.7,
+            "macro_f1": 0.7427616961867027
+          }
+        ]
+      },
+      "distinct_title_groups": 9996,
+      "labels": {
+        "home": 9026,
+        "public": 2514,
+        "work": 7205
+      },
+      "metrics": {
+        "baseline_most_frequent": {
+          "micro_precision": 0.803615651312531,
+          "micro_recall": 0.8651026392961877,
+          "micro_f1": 0.8332263448452948,
+          "macro_f1": 0.5923760656782517,
+          "exact_match_accuracy": 0.5611688954928182,
+          "hamming_loss": 0.2144626052501238,
+          "per_label": {
+            "home": {
+              "support": 1797,
+              "precision": 0.8900445765230312,
+              "recall": 1.0,
+              "true_positive": 1797,
+              "false_positive": 222,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.9418238993710691
+            },
+            "public": {
+              "support": 506,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0,
+              "false_positive": 0,
+              "false_negative": 506,
+              "true_negative": 1513,
+              "f1": 0.0
+            },
+            "work": {
+              "support": 1448,
+              "precision": 0.7171867261020307,
+              "recall": 1.0,
+              "true_positive": 1448,
+              "false_positive": 571,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.8353042976636861
+            }
+          },
+          "label_count": 3,
+          "positive_labels": 3751
+        },
+        "multinomial_naive_bayes": {
+          "micro_precision": 0.8473451327433629,
+          "micro_recall": 0.9189549453479072,
+          "micro_f1": 0.881698426908812,
+          "macro_f1": 0.819722758786185,
+          "exact_match_accuracy": 0.6423972263496781,
+          "hamming_loss": 0.15271586594023445,
+          "per_label": {
+            "home": {
+              "support": 1797,
+              "precision": 0.8969331322272499,
+              "recall": 0.9927657206455203,
+              "true_positive": 1784,
+              "false_positive": 205,
+              "false_negative": 13,
+              "true_negative": 17,
+              "f1": 0.9424194400422609
+            },
+            "public": {
+              "support": 506,
+              "precision": 0.6688741721854304,
+              "recall": 0.5988142292490118,
+              "true_positive": 303,
+              "false_positive": 150,
+              "false_negative": 203,
+              "true_negative": 1363,
+              "f1": 0.6319082377476538
+            },
+            "work": {
+              "support": 1448,
+              "precision": 0.8364083640836408,
+              "recall": 0.9392265193370166,
+              "true_positive": 1360,
+              "false_positive": 266,
+              "false_negative": 88,
+              "true_negative": 305,
+              "f1": 0.8848405985686403
+            }
+          },
+          "label_count": 3,
+          "positive_labels": 3751
+        }
+      },
+      "model_version": "1.0.5",
+      "model": "Multinomial Naive Bayes, one-vs-rest, Laplace alpha=1",
+      "input_features": [
+        "TaskTitle"
+      ],
+      "dataset_sha256": "c8991285693ae869964b4143435fb19b05f9ec652ffdb945f8b799c4ca622a14"
+    },
+    "likely_time": {
+      "eligible_records": 10101,
+      "train_records": 6566,
+      "validation_records": 1516,
+      "final_fit_records": 8082,
+      "test_records": 2019,
+      "evaluation_protocol": "ms-latte-title-group-65-15-20-seed42-v1",
+      "promotion_comparison": {
+        "metric": "validation macro F1",
+        "active_threshold": 0.5,
+        "active_pipeline_macro_f1": 0.6559628865274709,
+        "candidate_threshold": 0.3,
+        "candidate_macro_f1": 0.6697395732914285
+      },
+      "threshold_selection": {
+        "metric": "validation macro F1",
+        "selected_threshold": 0.3,
+        "candidates": [
+          {
+            "threshold": 0.3,
+            "macro_f1": 0.6697395732914285
+          },
+          {
+            "threshold": 0.4,
+            "macro_f1": 0.6681084062068089
+          },
+          {
+            "threshold": 0.5,
+            "macro_f1": 0.6559628865274709
+          },
+          {
+            "threshold": 0.6,
+            "macro_f1": 0.6240202249841322
+          },
+          {
+            "threshold": 0.7,
+            "macro_f1": 0.5739251673487312
+          }
+        ]
+      },
+      "distinct_title_groups": 9996,
+      "labels": {
+        "wd-afternoon": 6828,
+        "wd-anytime": 1925,
+        "wd-evening": 9589,
+        "wd-morning": 5870,
+        "wd-night": 1436,
+        "we-afternoon": 7711,
+        "we-anytime": 2122,
+        "we-evening": 5995,
+        "we-morning": 5985,
+        "we-night": 887
+      },
+      "metrics": {
+        "baseline_most_frequent": {
+          "micro_precision": 0.6986957239557536,
+          "micro_recall": 0.868993839835729,
+          "micro_f1": 0.774595039809646,
+          "macro_f1": 0.4897902916252881,
+          "exact_match_accuracy": 0.07330361565131253,
+          "hamming_loss": 0.2439821693907875,
+          "per_label": {
+            "wd-afternoon": {
+              "support": 1384,
+              "precision": 0.6854878652798415,
+              "recall": 1.0,
+              "true_positive": 1384,
+              "false_positive": 635,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.8133999412283279
+            },
+            "wd-anytime": {
+              "support": 382,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0,
+              "false_positive": 0,
+              "false_negative": 382,
+              "true_negative": 1637,
+              "f1": 0.0
+            },
+            "wd-evening": {
+              "support": 1930,
+              "precision": 0.9559187716691432,
+              "recall": 1.0,
+              "true_positive": 1930,
+              "false_positive": 89,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.977462648771841
+            },
+            "wd-morning": {
+              "support": 1206,
+              "precision": 0.5973254086181278,
+              "recall": 1.0,
+              "true_positive": 1206,
+              "false_positive": 813,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.7479069767441859
+            },
+            "wd-night": {
+              "support": 297,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0,
+              "false_positive": 0,
+              "false_negative": 297,
+              "true_negative": 1722,
+              "f1": 0.0
+            },
+            "we-afternoon": {
+              "support": 1525,
+              "precision": 0.7553244180287271,
+              "recall": 1.0,
+              "true_positive": 1525,
+              "false_positive": 494,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.8606094808126411
+            },
+            "we-anytime": {
+              "support": 420,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0,
+              "false_positive": 0,
+              "false_negative": 420,
+              "true_negative": 1599,
+              "f1": 0.0
+            },
+            "we-evening": {
+              "support": 1205,
+              "precision": 0.5968301139177811,
+              "recall": 1.0,
+              "true_positive": 1205,
+              "false_positive": 814,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.7475186104218362
+            },
+            "we-morning": {
+              "support": 1214,
+              "precision": 0.6012877662209014,
+              "recall": 1.0,
+              "true_positive": 1214,
+              "false_positive": 805,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.7510052582740488
+            },
+            "we-night": {
+              "support": 177,
+              "precision": 0.0,
+              "recall": 0.0,
+              "true_positive": 0,
+              "false_positive": 0,
+              "false_negative": 177,
+              "true_negative": 1842,
+              "f1": 0.0
+            }
+          },
+          "label_count": 10,
+          "positive_labels": 9740
+        },
+        "multinomial_naive_bayes": {
+          "micro_precision": 0.7246770344770839,
+          "micro_recall": 0.9042094455852157,
+          "micro_f1": 0.8045493993513908,
+          "macro_f1": 0.6907342439116488,
+          "exact_match_accuracy": 0.09262010896483408,
+          "hamming_loss": 0.21193660227835562,
+          "per_label": {
+            "wd-afternoon": {
+              "support": 1384,
+              "precision": 0.7455790074158585,
+              "recall": 0.944364161849711,
+              "true_positive": 1307,
+              "false_positive": 446,
+              "false_negative": 77,
+              "true_negative": 189,
+              "f1": 0.8332802040165762
+            },
+            "wd-anytime": {
+              "support": 382,
+              "precision": 0.6674157303370787,
+              "recall": 0.7774869109947644,
+              "true_positive": 297,
+              "false_positive": 148,
+              "false_negative": 85,
+              "true_negative": 1489,
+              "f1": 0.7182587666263603
+            },
+            "wd-evening": {
+              "support": 1930,
+              "precision": 0.9559187716691432,
+              "recall": 1.0,
+              "true_positive": 1930,
+              "false_positive": 89,
+              "false_negative": 0,
+              "true_negative": 0,
+              "f1": 0.977462648771841
+            },
+            "wd-morning": {
+              "support": 1206,
+              "precision": 0.6500586166471278,
+              "recall": 0.9195688225538972,
+              "true_positive": 1109,
+              "false_positive": 597,
+              "false_negative": 97,
+              "true_negative": 216,
+              "f1": 0.7616758241758241
+            },
+            "wd-night": {
+              "support": 297,
+              "precision": 0.3687150837988827,
+              "recall": 0.2222222222222222,
+              "true_positive": 66,
+              "false_positive": 113,
+              "false_negative": 231,
+              "true_negative": 1609,
+              "f1": 0.27731092436974786
+            },
+            "we-afternoon": {
+              "support": 1525,
+              "precision": 0.7618806875631952,
+              "recall": 0.9881967213114754,
+              "true_positive": 1507,
+              "false_positive": 471,
+              "false_negative": 18,
+              "true_negative": 23,
+              "f1": 0.8604053668284328
+            },
+            "we-anytime": {
+              "support": 420,
+              "precision": 0.6980728051391863,
+              "recall": 0.7761904761904762,
+              "true_positive": 326,
+              "false_positive": 141,
+              "false_negative": 94,
+              "true_negative": 1458,
+              "f1": 0.7350620067643743
+            },
+            "we-evening": {
+              "support": 1205,
+              "precision": 0.6200221238938053,
+              "recall": 0.9302904564315353,
+              "true_positive": 1121,
+              "false_positive": 687,
+              "false_negative": 84,
+              "true_negative": 127,
+              "f1": 0.7441088615997344
+            },
+            "we-morning": {
+              "support": 1214,
+              "precision": 0.6482236458940012,
+              "recall": 0.9168039538714992,
+              "true_positive": 1113,
+              "false_positive": 604,
+              "false_negative": 101,
+              "true_negative": 201,
+              "f1": 0.759467758444217
+            },
+            "we-night": {
+              "support": 177,
+              "precision": 0.38271604938271603,
+              "recall": 0.1751412429378531,
+              "true_positive": 31,
+              "false_positive": 50,
+              "false_negative": 146,
+              "true_negative": 1792,
+              "f1": 0.24031007751937983
+            }
+          },
+          "label_count": 10,
+          "positive_labels": 9740
+        }
+      },
+      "model_version": "1.0.5",
+      "model": "Multinomial Naive Bayes, one-vs-rest, Laplace alpha=1",
+      "input_features": [
+        "TaskTitle"
+      ],
+      "dataset_sha256": "c8991285693ae869964b4143435fb19b05f9ec652ffdb945f8b799c4ca622a14"
+    }
+  },
+  "limitations": [
+    "The labels represent annotators' judgments of likely context, not observed completion events or Contextify user behavior.",
+    "This external task corpus does not establish performance for Contextify users.",
+    "The simple Naive Bayes model and single holdout are research baselines, not deployment validation."
+  ]
+}

@@ -13,13 +13,6 @@ import { useToast } from '../hooks/useToast';
 import { taskService } from '../services/taskService';
 import { getCountdownLabel } from '../utils/taskUtils';
 
-const SORT_OPTIONS = [
-  { value: 'priority_score', label: 'Priority' },
-  { value: 'due_date', label: 'Deadline' },
-  { value: 'created_at', label: 'Created' },
-  { value: 'title', label: 'Title' },
-];
-
 export default function Tasks() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tasks, setTasks] = useState([]);
@@ -31,13 +24,14 @@ export default function Tasks() {
   const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, taskId: null });
   const [selectedTask, setSelectedTask] = useState(null);
   const [viewMode, setViewMode] = useState('table');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [groupBy, setGroupBy] = useState('status');
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
-    sort: 'due_date',
-    direction: 'asc',
+    sort: 'priority_score',
+    direction: 'desc',
     status: '',
     category: '',
     priority_level: '',
@@ -72,7 +66,7 @@ export default function Tasks() {
       setTasks(filters.status === 'overdue'
         ? fetchedTasks.filter((task) => task.status !== 'completed' && getCountdownLabel(task.due_date, task.due_time)?.startsWith('Overdue'))
         : fetchedTasks);
-      setCategories(result.categories || []);
+      setCategories([...new Set(['Academic', 'Personal', 'Work', ...(result.categories || [])])].sort());
     } catch {
       showToast('Failed to load tasks', 'error');
     } finally {
@@ -213,24 +207,18 @@ export default function Tasks() {
             <h1 className="page-title">Tasks</h1>
             <p className="page-subtitle">Manage your tasks and deadlines.</p>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              setEditingTask(null);
-              setFormOpen(true);
-            }}
-            className="btn btn-primary task-add-button"
-          >
-            <FiPlus size={16} />
-            Add task
-          </button>
-        </div>
-
-        {/* Filter and Search Bar */}
-        <div className="queue-controls">
-          {/* Row 1: Search and Sort */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
+          <div className="queue-heading-actions">
+            <button
+              type="button"
+              className="btn btn-ghost btn-icon queue-filter-toggle"
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-label="Filters"
+              aria-expanded={filtersOpen}
+              title="Filters"
+            >
+              <FiFilter size={17} />
+            </button>
+            <div className="queue-heading-search">
               <FiSearch className="input-leading-icon" size={16} aria-hidden="true" />
               <input
                 type="text"
@@ -241,37 +229,23 @@ export default function Tasks() {
                 aria-label="Search tasks"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:w-auto shrink-0">
-              <select
-                value={filters.sort}
-                onChange={(e) => updateFilter('sort', e.target.value)}
-                className="input text-sm w-full sm:w-44"
-                aria-label="Sort tasks by"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={filters.direction}
-                onChange={(e) => updateFilter('direction', e.target.value)}
-                className="input text-sm w-full sm:w-28"
-                aria-label="Sort direction"
-              >
-                <option value="asc">Soonest first</option>
-                <option value="desc">Latest first</option>
-              </select>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setEditingTask(null);
+                setFormOpen(true);
+              }}
+              className="btn btn-primary task-add-button"
+            >
+              <FiPlus size={16} />
+              Add task
+            </button>
           </div>
+        </div>
 
-          {/* Row 2: Status and Category Filters */}
-          <div className="flex flex-wrap gap-2.5 items-center pt-2 text-xs">
-            <div className="flex items-center gap-1.5 text-[var(--app-text-muted)] mr-1">
-              <FiFilter size={14} />
-              <span className="font-semibold">Filters</span>
-            </div>
+        {/* Compact filter controls */}
+        <div className="queue-controls">
+          {filtersOpen && <div className="queue-filter-panel">
 
             <select
               value={filters.status}
@@ -320,7 +294,7 @@ export default function Tasks() {
               />
               Show archived
             </label>
-          </div>
+          </div>}
         </div>
 
         <div className="task-view-toolbar">

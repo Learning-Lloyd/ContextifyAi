@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { FiBell, FiInfo, FiMail, FiMapPin, FiSave, FiShield, FiUser } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { FiBell, FiInfo, FiMail, FiMapPin, FiSave, FiShield, FiTarget, FiUser, FiX } from 'react-icons/fi';
 import Layout from '../components/Layout';
 import LocationSearch from '../components/LocationSearch';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import { authService } from '../services/authService';
+import Goals from './Goals';
 
 export default function Profile() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user, updateProfile, isAdmin } = useAuth();
   const { showToast } = useToast();
   const [name, setName] = useState(user?.name || '');
@@ -16,11 +20,19 @@ export default function Profile() {
     longitude: user?.city_longitude ?? null,
   });
   const [saving, setSaving] = useState(false);
+  const [goalsOpen, setGoalsOpen] = useState(false);
   const [taskRemindersEnabled, setTaskRemindersEnabled] = useState(user?.task_reminders_enabled ?? true);
   const [overdueRemindersEnabled, setOverdueRemindersEnabled] = useState(user?.overdue_reminders_enabled ?? true);
   const [deadlineReminderMinutes, setDeadlineReminderMinutes] = useState(user?.deadline_reminder_minutes ?? 1440);
   const [dailyAvailableMinutes, setDailyAvailableMinutes] = useState(user?.daily_available_minutes ?? '');
   const [workdayStartTime, setWorkdayStartTime] = useState(user?.workday_start_time?.slice(0, 5) || '');
+
+  useEffect(() => {
+    if (location.state?.openGoals) {
+      setGoalsOpen(true);
+      navigate(location.pathname, { replace: true, state: null });
+    }
+  }, [location.pathname, location.state, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,12 +60,16 @@ export default function Profile() {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
+      <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">
         {/* Page Header */}
         <div className="pb-2 border-b border-[var(--app-border)]">
           <h1 className="page-title">Profile</h1>
-          <p className="page-subtitle text-sm">Account and planning preferences.</p>
+          <p className="page-subtitle text-sm">Account details, user preferences, and personal goals.</p>
         </div>
+        {!isAdmin && <section className="card p-5 space-y-3">
+          <div className="flex items-start justify-between gap-4"><div><h2 className="font-semibold text-[var(--app-text)]">User preferences</h2><p className="text-sm text-[var(--app-text-muted)] mt-1">Personalize your workspace focus and task categories.</p></div><Link to="/onboarding" className="btn btn-secondary btn-sm">Edit user preferences</Link></div>
+          <div className="flex flex-wrap gap-2">{(user?.workspace_preferences?.focus || []).map((item) => <span key={item} className="badge badge-neutral">{item}</span>)}{(user?.workspace_preferences?.categories || []).map((item) => <span key={item} className="task-category-tag">{item}</span>)}{!(user?.workspace_preferences?.focus?.length || user?.workspace_preferences?.categories?.length) && <span className="text-sm text-[var(--app-text-muted)]">No preferences selected yet.</span>}</div>
+        </section>}
 
         {/* User Identity Banner */}
         <div className="card p-6 flex items-center gap-4 bg-[var(--app-card)] shadow-sm">
@@ -97,6 +113,7 @@ export default function Profile() {
                 required
               />
             </div>
+            {!isAdmin && <button type="button" className="btn btn-secondary btn-sm mt-2" onClick={() => setGoalsOpen(true)}><FiTarget size={14} /> Set goals</button>}
           </div>
 
           <div className="space-y-2 pt-2 border-t border-[var(--app-border)]">
@@ -158,6 +175,12 @@ export default function Profile() {
           </div>
         </form>
       </div>
+      {goalsOpen && <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm p-3 sm:p-6 flex items-center justify-center" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setGoalsOpen(false); }}>
+        <section className="relative bg-[var(--app-bg)] rounded-2xl border border-[var(--app-border)] shadow-2xl w-full max-w-5xl max-h-[92vh] overflow-y-auto p-5 sm:p-7" role="dialog" aria-modal="true" aria-labelledby="profile-goals-title">
+          <button type="button" className="absolute top-4 right-4 btn btn-ghost btn-icon" aria-label="Close goals" onClick={() => setGoalsOpen(false)}><FiX /></button>
+          <div className="pr-10"><Goals embedded titleId="profile-goals-title" /></div>
+        </section>
+      </div>}
     </Layout>
   );
 }

@@ -1,5 +1,17 @@
 import api from './api';
 
+const descriptionRequestsInFlight = new Map();
+const aiRequestsInFlight = new Map();
+
+function coalesceAiRequest(key, operation) {
+  const existing = aiRequestsInFlight.get(key);
+  if (existing) return existing;
+
+  const request = operation().finally(() => aiRequestsInFlight.delete(key));
+  aiRequestsInFlight.set(key, request);
+  return request;
+}
+
 export const taskService = {
   async getAll(params = {}) {
     const response = await api.get('/tasks', { params });
@@ -46,29 +58,42 @@ export const taskService = {
     return response.data;
   },
 
-  async analyzeImportance(title, description) {
-    const response = await api.post('/tasks/analyze-importance', { title, description });
-    return response.data;
+  analyzeImportance(title, description) {
+    const body = { title, description };
+    return coalesceAiRequest(`importance:${JSON.stringify(body)}`, () =>
+      api.post('/tasks/analyze-importance', body).then((response) => response.data)
+    );
   },
 
-  async generateDescription(title, description) {
-    const response = await api.post('/tasks/generate-description', { title, description });
-    return response.data;
+  generateDescription(title, description) {
+    const requestKey = JSON.stringify([title, description || '']);
+    const existingRequest = descriptionRequestsInFlight.get(requestKey);
+    if (existingRequest) return existingRequest;
+
+    const request = api.post('/tasks/generate-description', { title, description })
+      .then((response) => response.data)
+      .finally(() => descriptionRequestsInFlight.delete(requestKey));
+    descriptionRequestsInFlight.set(requestKey, request);
+
+    return request;
   },
 
-  async generateBreakdown(taskId) {
-    const response = await api.post('/tasks/breakdown', { task_id: taskId });
-    return response.data;
+  generateBreakdown(taskId) {
+    return coalesceAiRequest(`breakdown:${taskId}`, () =>
+      api.post('/tasks/breakdown', { task_id: taskId }).then((response) => response.data)
+    );
   },
 
-  async previewScoring({ title, description, due_date, due_time }) {
-    const response = await api.post('/tasks/scoring-preview', {
+  previewScoring({ title, description, due_date, due_time }) {
+    const body = {
       title,
       description,
       due_date,
       due_time,
-    });
-    return response.data;
+    };
+    return coalesceAiRequest(`scoring-preview:${JSON.stringify(body)}`, () =>
+      api.post('/tasks/scoring-preview', body).then((response) => response.data)
+    );
   },
 
   async getCalendarContext(params = {}) {

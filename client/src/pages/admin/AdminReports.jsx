@@ -48,7 +48,7 @@ const formats = [
 export default function AdminReports() {
   const handleExport = (type, format) => {
     const token = localStorage.getItem('token');
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+    const base = import.meta.env.VITE_API_URL || '/api';
     const ext = format === 'xlsx' ? 'xls' : format;
     fetch(`${base}/admin/reports/export?type=${type}&format=${format}`, {
       headers: { Authorization: `Bearer ${token}` },

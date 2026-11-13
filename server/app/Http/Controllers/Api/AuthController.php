@@ -112,6 +112,12 @@ class AuthController extends Controller
             'deadline_reminder_minutes' => 'sometimes|integer|in:60,360,720,1440,2880',
             'daily_available_minutes' => 'nullable|integer|min:1|max:720',
             'workday_start_time' => 'nullable|date_format:H:i',
+            'workspace_preferences' => 'sometimes|array',
+            'workspace_preferences.focus' => 'sometimes|array|max:5',
+            'workspace_preferences.focus.*' => 'string|in:Education,Projects and Tasks,Personal Productivity,Work,Other',
+            'workspace_preferences.categories' => 'sometimes|array|max:3',
+            'workspace_preferences.categories.*' => 'string|in:Academic,Personal,Work',
+            'onboarding_completed' => 'sometimes|boolean',
         ]);
 
         if (array_key_exists('city', $validated) && empty($validated['city'])) {
@@ -119,6 +125,11 @@ class AuthController extends Controller
             $validated['city_longitude'] = null;
         }
 
+        $completed = $validated['onboarding_completed'] ?? false;
+        unset($validated['onboarding_completed']);
+        if ($completed && ! $request->user()->onboarding_completed_at) {
+            $validated['onboarding_completed_at'] = now();
+        }
         $request->user()->update($validated);
 
         return response()->json([
@@ -175,6 +186,8 @@ class AuthController extends Controller
             'daily_available_minutes',
             'workday_start_time',
             'created_at',
+            'workspace_preferences',
+            'onboarding_completed_at',
         ]);
     }
 }

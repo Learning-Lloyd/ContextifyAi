@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class TaskDescriptionController extends Controller
 {
-    public function __construct(private readonly TaskDescriptionService $service)
-    {
-    }
+    public function __construct(private readonly TaskDescriptionService $service) {}
 
     public function generate(Request $request): JsonResponse
     {
@@ -23,7 +21,7 @@ class TaskDescriptionController extends Controller
         $description = $this->service->generate($validated['title'], $validated['description'] ?? null);
         if ($description === null) {
             return response()->json([
-                'message' => 'Description help is unavailable. Check that the AI provider is configured, then try again.',
+                'message' => $this->service->unavailableMessage(),
             ], 503);
         }
 

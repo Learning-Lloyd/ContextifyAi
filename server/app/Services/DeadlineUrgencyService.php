@@ -43,16 +43,23 @@ class DeadlineUrgencyService
         };
     }
 
-    public static function deadlineGroup(?string $dueDate, ?string $timezone = null): string
+    public static function deadlineGroup(?string $dueDate, ?string $timezone = null, ?string $dueTime = null): string
     {
         if (! $dueDate) {
             return 'upcoming';
         }
 
         $date = Carbon::parse($dueDate, $timezone ?: config('app.timezone'))->startOfDay();
-        $today = ($timezone ? Carbon::now($timezone) : now())->startOfDay();
+        $now = $timezone ? Carbon::now($timezone) : now();
+        $deadline = Carbon::parse($dueDate, $timezone ?: config('app.timezone'));
+        if ($dueTime) {
+            $deadline = Carbon::parse("{$dueDate} {$dueTime}", $timezone ?: config('app.timezone'));
+        } else {
+            $deadline->endOfDay();
+        }
+        $today = $now->copy()->startOfDay();
 
-        if ($date->lt($today)) {
+        if ($date->lt($today) || $deadline->lt($now)) {
             return 'overdue';
         }
 

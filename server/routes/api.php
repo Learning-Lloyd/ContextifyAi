@@ -21,6 +21,11 @@ use App\Http\Controllers\Api\TaskDescriptionController;
 use App\Http\Controllers\Api\TaskBreakdownController;
 use App\Http\Controllers\Api\TaskScoringController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ResearchDatasetController;
+use App\Http\Controllers\Api\ResearchContextController;
+use App\Http\Controllers\Api\GoalController;
+use App\Http\Controllers\Api\UserReportController;
+use App\Http\Controllers\Api\ExperimentalPriorityPredictionController;
 use App\Http\Controllers\Api\SchedulingController;
 use App\Http\Controllers\Api\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -33,9 +38,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+    Route::get('/user/report', [UserReportController::class, 'download']);
+    Route::apiResource('/goals', GoalController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/analytics', [AnalyticsController::class, 'index']);
+    Route::get('/research-dataset/records', [ResearchDatasetController::class, 'index']);
+    Route::post('/research-context/predict', [ResearchContextController::class, 'predict']);
     Route::get('/calendar', [CalendarController::class, 'index']);
     Route::get('/schedule/recommendations', [SchedulingController::class, 'index']);
     Route::get('/notifications', [NotificationController::class, 'index']);
@@ -46,14 +55,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/weather/current', [WeatherController::class, 'current']);
 
     Route::get('/tasks', [TaskController::class, 'index']);
-    Route::post('/tasks', [TaskController::class, 'store']);
-    Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze']);
-    Route::post('/tasks/generate-description', [TaskDescriptionController::class, 'generate']);
-    Route::post('/tasks/breakdown', [TaskBreakdownController::class, 'generate']);
+    Route::post('/tasks', [TaskController::class, 'store'])->middleware('throttle:ai');
+    Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze'])->middleware('throttle:ai');
+    Route::post('/tasks/generate-description', [TaskDescriptionController::class, 'generate'])->middleware('throttle:ai');
+    Route::post('/tasks/breakdown', [TaskBreakdownController::class, 'generate'])->middleware('throttle:ai');
     Route::post('/tasks/scoring-preview', [TaskScoringController::class, 'preview']);
     Route::get('/tasks/calendar-context', [TaskScoringController::class, 'calendarContext']);
     Route::get('/tasks/{task}', [TaskController::class, 'show']);
-    Route::put('/tasks/{task}', [TaskController::class, 'update']);
+    Route::put('/tasks/{task}', [TaskController::class, 'update'])->middleware('throttle:ai');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
     Route::patch('/tasks/{task}/toggle-complete', [TaskController::class, 'toggleComplete']);
     Route::post('/tasks/{task}/archive', [TaskController::class, 'archive']);
@@ -61,7 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tasks/{task}/duplicate', [TaskController::class, 'duplicate']);
 
     Route::post('/decision-lab/compare', [DecisionLabController::class, 'compare']);
-    Route::post('/decision-lab/analyze', [DecisionLabController::class, 'analyze']);
+    Route::post('/decision-lab/analyze', [DecisionLabController::class, 'analyze'])->middleware('throttle:ai');
+    Route::post('/decision-lab/predict-experimental-priority', [ExperimentalPriorityPredictionController::class, 'predict']);
     Route::post('/decision-lab/simulate', [DecisionLabController::class, 'simulate']);
     Route::post('/decision-lab/save-simulation', [DecisionLabController::class, 'saveSimulation']);
     Route::get('/decision-lab/insights', [DecisionLabController::class, 'insights']);

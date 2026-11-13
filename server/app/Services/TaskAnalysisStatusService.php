@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class TaskAnalysisStatusService
 {
-    /** @return array<int, array{explanation:string, source:string}> Current saved explanation for each task. */
+    /** @return array<int, array{explanation:string, source:string}> Current task explanation for each task. */
     public function analysisDetailsForTasks(User $user, Collection $tasks, ?string $timezone = null): array
     {
         if ($tasks->isEmpty()) {
@@ -26,9 +26,18 @@ class TaskAnalysisStatusService
 
                 $aiExplanations = $analysis->summary['ai_explanation']['task_explanations'] ?? [];
                 $aiExplanation = $aiExplanations[$id] ?? $aiExplanations[(string) $id] ?? null;
-                $explanation = $rankedTask['task_card_explanation'] ?? $aiExplanation;
-                $source = $rankedTask['explanation_source'] ?? ($aiExplanation ? 'ai' : 'rule_based');
-                if (! $explanation) {
+                $savedExplanation = $rankedTask['task_card_explanation'] ?? null;
+                $isAiExplanation = ($rankedTask['explanation_source'] ?? null) === 'ai'
+                    && is_string($savedExplanation)
+                    && trim($savedExplanation) !== '';
+
+                if ($isAiExplanation) {
+                    $explanation = trim($savedExplanation);
+                    $source = 'ai';
+                } elseif (is_string($aiExplanation) && trim($aiExplanation) !== '') {
+                    $explanation = trim($aiExplanation);
+                    $source = 'ai';
+                } else {
                     $explanation = app(ExplanationService::class)->forTaskCard(
                         $rankedTask,
                         $rank + 1,

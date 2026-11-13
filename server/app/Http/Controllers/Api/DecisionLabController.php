@@ -67,7 +67,14 @@ class DecisionLabController extends Controller
                 ], 403);
             }
 
-            $payload = $tasks->map(fn (Task $task) => $this->taskToArray($task))->all();
+            $pendingTasks = $tasks->filter(fn (Task $task) => $task->status === 'pending' && ! $task->is_archived);
+            if ($pendingTasks->isEmpty()) {
+                return response()->json([
+                    'message' => 'Select at least one pending task. Completed tasks are not recommended as unfinished work.',
+                ], 422);
+            }
+
+            $payload = $pendingTasks->map(fn (Task $task) => $this->taskToArray($task))->all();
             $payload = $this->attachScheduledForecasts($payload, $request);
             $weatherContext = $this->resolveUserWeatherContext($request);
             $pendingTaskCount = $request->user()->tasks()->active()->where('status', 'pending')->count();
@@ -79,7 +86,7 @@ class DecisionLabController extends Controller
             );
 
             $saved = $request->user()->decisionAnalyses()->create([
-                'task_ids' => $validated['task_ids'],
+                'task_ids' => collect($analysis['ranked_tasks'])->pluck('id')->filter()->values()->all(),
                 'ranked_tasks' => $analysis['ranked_tasks'],
                 'summary' => array_merge($analysis['summary'] ?? [], [
                     'ai_explanation' => $analysis['ai_explanation'] ?? null,
@@ -181,7 +188,7 @@ class DecisionLabController extends Controller
         $analysis = $this->decisionService->simulateWhatIf($scenarios, $this->resolveUserWeatherContext($request));
 
         $saved = $request->user()->decisionAnalyses()->create([
-            'task_ids' => collect($scenarios)->pluck('id')->filter()->values()->all(),
+            'task_ids' => collect($analysis['ranked_tasks'])->pluck('id')->filter()->values()->all(),
             'ranked_tasks' => $analysis['ranked_tasks'],
             'summary' => array_merge($analysis['summary'] ?? [], [
                 'type' => 'what_if_scenario',

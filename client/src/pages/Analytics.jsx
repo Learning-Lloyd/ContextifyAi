@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
 import {
   Cell,
+  Bar,
+  BarChart,
+  CartesianGrid,
   Legend,
+  Line,
+  LineChart,
   Pie,
   PieChart,
   ResponsiveContainer,
+  XAxis,
+  YAxis,
   Tooltip,
 } from 'recharts';
 import Layout from '../components/Layout';
@@ -13,7 +20,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import EmptyState from '../components/EmptyState';
 import { analyticsService } from '../services/analyticsService';
 
-const CHART_PALETTE = ['#111111', '#666666'];
+const CHART_PALETTE = ['#22A06B', '#F5A623', '#E45B5B', '#3B82F6', '#8B5CF6', '#14B8A6'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -72,6 +79,7 @@ export default function Analytics() {
         {/* Page Header */}
         <div className="pb-2 border-b border-[var(--app-border)]">
           <h1 className="page-title">Productivity</h1>
+          <p className="page-subtitle text-sm">A live view of your task activity and progress.</p>
         </div>
 
         {/* Metrics Grid */}
@@ -117,7 +125,11 @@ export default function Analytics() {
               </p>
             )}
           </div>
-
+          <div className="card p-6 shadow-sm space-y-3"><h3 className="text-base font-bold text-[var(--app-text)]">Tasks by category</h3>{charts.category?.some((x) => x.value) ? <ResponsiveContainer width="100%" height={260}><BarChart data={charts.category} margin={{ left: -20, bottom: 16 }}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)"/><XAxis dataKey="name" tick={{ fontSize: 11 }} interval={0} angle={-12}/><YAxis allowDecimals={false} tick={{ fontSize: 11 }}/><Tooltip content={<CustomTooltip/>}/><Bar dataKey="value" name="Tasks" radius={[6,6,0,0]}>{charts.category.map((item, i) => <Cell key={item.name} fill={CHART_PALETTE[i % CHART_PALETTE.length]}/>)}</Bar></BarChart></ResponsiveContainer> : <p className="text-sm text-center text-[var(--app-text-muted)] py-20">Create tasks to see category trends.</p>}</div>
+          <div className="card p-6 shadow-sm space-y-3"><h3 className="text-base font-bold text-[var(--app-text)]">Tasks by priority</h3>{charts.priority?.some((x) => x.value) ? <ResponsiveContainer width="100%" height={260}><BarChart data={charts.priority} margin={{ left: -20 }}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)"/><XAxis dataKey="name" tick={{ fontSize: 11 }}/><YAxis allowDecimals={false} tick={{ fontSize: 11 }}/><Tooltip content={<CustomTooltip/>}/><Bar dataKey="value" name="Tasks" radius={[6,6,0,0]}>{charts.priority.map((item) => <Cell key={item.name} fill={item.name === 'High' ? '#E45B5B' : item.name === 'Medium' ? '#F5A623' : '#22A06B'}/>)}</Bar></BarChart></ResponsiveContainer> : <p className="text-sm text-center text-[var(--app-text-muted)] py-20">No priority data yet.</p>}</div>
+          <div className="card p-6 shadow-sm space-y-3"><h3 className="text-base font-bold text-[var(--app-text)]">Completion trend · 7 days</h3><ResponsiveContainer width="100%" height={260}><LineChart data={charts.completion_trend || []}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)"/><XAxis dataKey="date" tick={{ fontSize: 11 }}/><YAxis allowDecimals={false} tick={{ fontSize: 11 }}/><Tooltip/><Line type="monotone" dataKey="completed" stroke="#22A06B" strokeWidth={3} dot={{ r: 4 }}/></LineChart></ResponsiveContainer></div>
+          <div className="card p-6 shadow-sm space-y-3"><h3 className="text-base font-bold text-[var(--app-text)]">Tasks by due date</h3>{charts.due_dates?.length ? <ResponsiveContainer width="100%" height={260}><BarChart data={charts.due_dates}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--app-border)"/><XAxis dataKey="date" tick={{ fontSize: 11 }}/><YAxis allowDecimals={false} tick={{ fontSize: 11 }}/><Tooltip content={<CustomTooltip/>}/><Bar dataKey="value" name="Tasks" fill="#3B82F6" radius={[6,6,0,0]}/></BarChart></ResponsiveContainer> : <p className="text-sm text-center text-[var(--app-text-muted)] py-20">Add task deadlines to see the schedule overview.</p>}</div>
+          <div className="card p-6 shadow-sm flex flex-col justify-center"><p className="text-sm text-[var(--app-text-muted)]">Task completion rate</p><p className="text-4xl font-bold mt-2">{data.completion_rate ?? 0}%</p><p className="text-sm text-[var(--app-text-secondary)] mt-2">{stats.completed_tasks} completed out of {stats.total_tasks} tasks</p></div>
         </div>
       </div>
     </Layout>

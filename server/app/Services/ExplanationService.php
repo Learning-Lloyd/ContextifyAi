@@ -47,32 +47,49 @@ class ExplanationService
                 : "This task ranks {$ordinal} of {$total} analyzed tasks.";
         }
 
+        $importance = (int) ($task['importance'] ?? 5);
+        $timeAvailability = (int) ($task['time_availability'] ?? 5);
+        $workload = (int) ($task['current_workload'] ?? 5);
+        $score = $task['priority_score'] ?? null;
         $parts = [$rankingSentence];
+        if (is_numeric($score)) {
+            $parts[] = "Its official score is {$score}/10. Importance is {$importance}/10.";
+        } else {
+            $parts[] = "Importance is {$importance}/10.";
+        }
+
         $countdown = DeadlineUrgencyService::countdownLabel(
             $task['due_date'] ?? null,
             $task['due_time'] ?? null,
             $timezone
         );
         if ($countdown) {
-            $parts[] = "{$countdown}.";
+            $parts[] = "Deadline: {$countdown}.";
         } else {
-            $parts[] = 'No deadline is set, so this ranking is based on the current task factors.';
+            $parts[] = 'No deadline is set.';
         }
+
+        $duration = $task['estimated_time_minutes'] ?? null;
+        if (is_numeric($duration) && (int) $duration > 0) {
+            $parts[] = "Estimated completion time is " . (int) $duration . ' minutes.';
+        }
+        $parts[] = "Available-time factor: {$timeAvailability}/10; current-workload factor: {$workload}/10.";
 
         $weatherNote = $this->taskWeatherAdvisory($task);
         if ($weatherNote) {
             $parts[] = $weatherNote;
-        } elseif ($contributions->isNotEmpty()) {
+        }
+        if ($contributions->isNotEmpty()) {
             $leading = $contributions->first();
             $next = $contributions->get(1);
             $parts[] = $next && abs($leading['value'] - $next['value']) < 0.001
-                ? "{$leading['label']} and {$next['label']} influenced its result most."
+                ? "{$leading['label']} and {$next['label']} contributed most to its score."
                 : ($next
-                    ? "{$leading['label']} and {$next['label']} had the strongest influence on its result."
-                    : "{$leading['label']} had the strongest influence on its result.");
+                    ? "{$leading['label']} and {$next['label']} contributed most to its score."
+                    : "{$leading['label']} contributed most to its score.");
         }
 
-        return implode(' ', array_slice($parts, 0, 3));
+        return implode(' ', $parts);
     }
 
     private function taskWeatherAdvisory(array $task): ?string
@@ -102,14 +119,14 @@ class ExplanationService
     /**
      * Generate contextual explanation. Weather is advisory only and never changes score.
      */
-    public function forTask(array $task): string
+    public function forTask(array $task, ?string $timezone = null): string
     {
         $parts = [];
 
         $parts[] = 'This task is evaluated using importance, urgency, available time, and current workload.';
 
         if (! empty($task['due_date'])) {
-            $group = DeadlineUrgencyService::deadlineGroup($task['due_date']);
+            $group = DeadlineUrgencyService::deadlineGroup($task['due_date'], $timezone, $task['due_time'] ?? null);
             $countdown = DeadlineUrgencyService::countdownLabel($task['due_date'], $task['due_time'] ?? null);
             if ($group === 'overdue') {
                 $parts[] = 'It is overdue and should be addressed as soon as possible.';
@@ -354,7 +371,7 @@ class ExplanationService
         }
 
         if (! empty($task['due_date'])) {
-            $group = DeadlineUrgencyService::deadlineGroup($task['due_date']);
+            $group = DeadlineUrgencyService::deadlineGroup($task['due_date'], null, $task['due_time'] ?? null);
             if ($group === 'overdue') {
                 $bullets[] = 'This task is overdue, significantly increasing urgency.';
             } elseif ($group === 'today') {

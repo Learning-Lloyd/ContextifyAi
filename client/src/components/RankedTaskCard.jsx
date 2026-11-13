@@ -1,8 +1,7 @@
+import { FiChevronDown } from 'react-icons/fi';
 import PriorityBadge from './PriorityBadge';
-import DecisionConfidenceBadge from './DecisionConfidenceBadge';
-import WhyNotPanel from './WhyNotPanel';
-import ScoreRing from './ScoreRing';
 import FactorBar from './FactorBar';
+import WhyNotPanel from './WhyNotPanel';
 import { weatherIcon } from '../utils/taskUtils';
 
 function ordinal(value) {
@@ -11,170 +10,48 @@ function ordinal(value) {
 }
 
 export default function RankedTaskCard({ task }) {
-  const breakdown = task.factor_breakdown || {};
-  const factors = breakdown.factors || [];
-
-  const isTopRank = task.rank === 1;
+  const factors = task.factor_breakdown?.factors || [];
 
   return (
-    <div
-      className={`card p-6 space-y-5 animate-fade-in transition-all ${
-        isTopRank
-          ? 'border-2 border-[#111111]/40 shadow-md bg-gradient-to-br from-[var(--app-card)] to-[var(--app-muted)]/30'
-          : ''
-      }`}
-    >
-      {/* Top Header: Rank, Title, Badges, Score */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3.5 min-w-0">
-          <div
-            className={`w-10 h-10 rounded-xl flex items-center justify-center font-extrabold text-base shrink-0 shadow-sm ${
-              isTopRank
-                ? 'bg-[#111111] text-white'
-                : 'bg-[var(--app-muted)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
-            }`}
-          >
-            {ordinal(task.rank)}
-          </div>
-
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base sm:text-lg font-bold text-[var(--app-text)] leading-snug">
-                {task.title}
-              </h3>
-              <span className="rank-position-label">{task.rank === 1 ? 'First priority' : `${ordinal(task.rank)} in ranking`}</span>
-              <PriorityBadge level={task.priority_level} score={task.priority_score} />
-              {task.rank_confidence && <DecisionConfidenceBadge confidence={task.rank_confidence} />}
-            </div>
-
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5 text-xs text-[var(--app-text-muted)]">
-              {task.due_date && (
-                <span>
-                  Due: <strong className="text-[var(--app-text)]">{task.due_date}</strong>
-                  {task.due_time ? ` at ${task.due_time}` : ''}
-                </span>
-              )}
-              {task.countdown && (
-                <span className="font-semibold text-[#111111] bg-zinc-500/10 px-2 py-0.5 rounded-full text-[11px]">
-                  {task.countdown}
-                </span>
-              )}
-              {task.location && <span>📍 {task.location}</span>}
-            </div>
-          </div>
+    <article className={`ranked-result-card ${task.rank === 1 ? 'is-first' : ''}`}>
+      <span className="ranked-result-number" aria-label={`Rank ${task.rank}`}>{task.rank}</span>
+      <div className="ranked-result-main">
+        <div className="ranked-result-heading">
+          <h3 title={task.title}>{task.title}</h3>
+          <PriorityBadge level={task.priority_level} score={task.priority_score} />
         </div>
-
-        {/* Score Ring Display */}
-        <div className="flex flex-col items-center shrink-0">
-          <ScoreRing score={task.priority_score} variant="md" />
-          <span className="text-[10px] uppercase font-bold tracking-wider text-[var(--app-text-muted)] mt-1">
-            Score
-          </span>
+        <div className="ranked-result-meta">
+          <span>{ordinal(task.rank)} priority</span>
+          {task.due_date && <span>Due {task.due_date}{task.due_time ? ` · ${task.due_time.slice(0, 5)}` : ''}</span>}
+          {task.countdown && <span className={task.countdown.startsWith('Overdue') ? 'is-overdue' : ''}>{task.countdown}</span>}
+          {task.location && <span>📍 {task.location}</span>}
         </div>
-      </div>
-
-      {task.task_card_explanation && (
-        <div className="task-analysis-explanation">
-          <div className="flex items-center justify-between gap-2">
-            <strong>Why this is your priority</strong>
-            {task.explanation_source && <span className="task-explanation-source">{task.explanation_source === 'ai' ? 'AI explanation' : 'Based on scoring results'}</span>}
-          </div>
-          <p>{task.task_card_explanation}</p>
-        </div>
-      )}
-
-      {(task.weather_context || task.reason_bullets?.length > 0 || task.overall_explanation) && (
-      <details className="border-t border-[var(--app-border)] pt-3">
-        <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">Why this rank?</summary>
-      <div className="mt-3 space-y-3">
-      {/* Weather Context (if available) */}
-      {task.weather_context && (
-        <div className="p-3.5 rounded-xl bg-[var(--app-muted)]/50 border border-[var(--app-border)] text-sm space-y-1.5">
-          <div className="flex items-center justify-between">
-            <span className="font-semibold text-[var(--app-text)] flex items-center gap-1.5">
-              <span>{weatherIcon(task.weather_context.weather_condition)}</span>
-              Weather · {task.weather_context.location}
-            </span>
-            <span className="text-[var(--app-text-muted)]">
-              {task.weather_context.weather_condition}
-              {task.weather_context.temperature != null && ` · ${task.weather_context.temperature}°C`}
-            </span>
-          </div>
-          <p className="text-[var(--app-text-secondary)] leading-relaxed">
-            {task.weather_context.explanation}
+        {task.task_card_explanation && (
+          <p className="ranked-result-explanation" title={task.task_card_explanation}>
+            <strong>{task.explanation_source === 'ai' ? 'Gemini explanation' : 'Basic guidance'}:</strong> {task.task_card_explanation}
           </p>
-        </div>
-      )}
-
-      {/* Reason Bullets */}
-      {task.reason_bullets?.length > 0 && (
-        <div className="space-y-1.5">
-          <ul className="space-y-1 text-sm text-[var(--app-text-secondary)]">
-            {task.reason_bullets.map((bullet, idx) => (
-              <li key={idx} className="flex items-start gap-2">
-                <span className="text-[#111111] font-bold">•</span>
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Overall Explanation */}
-      {task.overall_explanation && (
-        <div className="p-3.5 rounded-xl border border-[var(--app-border)] bg-[var(--app-card)] text-sm text-[var(--app-text-secondary)] leading-relaxed">
-          {task.overall_explanation}
-        </div>
-      )}
+        )}
+        {task.recommendation && <p className="ranked-result-next"><strong>Next:</strong> {task.recommendation}</p>}
+        {(task.reason_bullets?.length > 0 || task.overall_explanation || task.weather_context || task.why_not || factors.length > 0) && (
+          <details className="ranked-result-details">
+            <summary><FiChevronDown size={13} /> More details</summary>
+            <div className="ranked-result-detail-content">
+              {task.reason_bullets?.length > 0 && <ul>{task.reason_bullets.map((reason, index) => <li key={index}>{reason}</li>)}</ul>}
+              {task.overall_explanation && <p>{task.overall_explanation}</p>}
+              {task.weather_context && <p>{weatherIcon(task.weather_context.weather_condition)} Weather in {task.weather_context.location}: {task.weather_context.explanation}</p>}
+              {task.why_not && <WhyNotPanel whyNot={task.why_not} />}
+              {factors.length > 0 && (
+                <div className="ranked-result-factors">
+                  {factors.filter((factor) => factor.label).map((factor) => {
+                    const weight = factor.key === 'importance' ? 0.4 : factor.key === 'urgency' ? 0.3 : factor.key === 'time_availability' ? 0.2 : 0.1;
+                    return <FactorBar key={factor.key} label={factor.label} factorKey={factor.key} value={factor.value} weight={weight} showFormula />;
+                  })}
+                </div>
+              )}
+            </div>
+          </details>
+        )}
       </div>
-      </details>
-      )}
-
-      {/* Contrastive Why-Not Panel */}
-      <WhyNotPanel whyNot={task.why_not} />
-
-      {/* Optional score details */}
-      {factors.length > 0 && (
-        <details className="pt-2 border-t border-[var(--app-border)]">
-          <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">View score breakdown</summary>
-          <div className="mt-3 grid sm:grid-cols-2 gap-3">
-            {factors
-              .filter((f) => f.label)
-              .map((factor) => {
-                const weight =
-                  factor.key === 'importance'
-                    ? 0.4
-                    : factor.key === 'urgency'
-                    ? 0.3
-                    : factor.key === 'time_availability'
-                    ? 0.2
-                    : 0.1;
-                return (
-                  <div
-                    key={factor.key}
-                    className="p-3 rounded-lg border border-[var(--app-border)] bg-[var(--app-muted)]/30"
-                  >
-                    <FactorBar
-                      label={factor.label}
-                      factorKey={factor.key}
-                      value={factor.value}
-                      weight={weight}
-                      showFormula={true}
-                    />
-                  </div>
-                );
-              })}
-          </div>
-        </details>
-      )}
-
-      {/* Recommended Action Pill */}
-      {task.recommendation && (
-        <div className="pt-2 border-t border-[var(--app-border)] flex items-center gap-2 text-xs font-semibold text-[#555555]">
-          <span>Next step:</span>
-          <span className="text-[var(--app-text-secondary)] font-normal">{task.recommendation}</span>
-        </div>
-      )}
-    </div>
+    </article>
   );
 }

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiArrowRight, FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiCpu, FiPlus, FiZap } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { FiArrowRight, FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiCpu, FiPlus, FiTarget, FiZap } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import TaskForm from '../components/TaskForm';
 import WeatherWidget from '../components/WeatherWidget';
@@ -8,6 +9,7 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import { useToast } from '../hooks/useToast';
 import { dashboardService } from '../services/dashboardService';
 import { taskService } from '../services/taskService';
+import { goalsService } from '../services/goalsService';
 import { getCountdownLabel } from '../utils/taskUtils';
 
 const factors = [
@@ -54,10 +56,15 @@ function dateLabel(value) {
 }
 
 export default function Dashboard() {
+  const { user: authUser, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
+  const [goals, setGoals] = useState([]);
+  const [goalsLoading, setGoalsLoading] = useState(true);
+  const [goalsUnavailable, setGoalsUnavailable] = useState(false);
   const { showToast } = useToast();
 
   const fetchDashboard = useCallback(async () => {
@@ -72,6 +79,19 @@ export default function Dashboard() {
   }, [showToast]);
 
   useEffect(() => { fetchDashboard(); }, [fetchDashboard]);
+
+  useEffect(() => {
+    let active = true;
+    goalsService.list()
+      .then((result) => { if (active) setGoals(result || []); })
+      .catch(() => { if (active) setGoalsUnavailable(true); })
+      .finally(() => { if (active) setGoalsLoading(false); });
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin && authUser && !authUser.onboarding_completed_at) navigate('/onboarding', { replace: true });
+  }, [isAdmin, authUser, navigate]);
 
   const handleSave = async (formData) => {
     setFormLoading(true);
@@ -122,6 +142,7 @@ export default function Dashboard() {
       .map((factor) => factor.label.toLowerCase())
     : [];
   const greeting = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
+  const weeklyGoals = goals;
 
   return (
     <Layout>
@@ -131,27 +152,49 @@ export default function Dashboard() {
             <p className="eyebrow"><span className="eyebrow-dot" /> DAILY BRIEF · {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
             <h1>{greeting}, <em>{user?.name?.split(' ')[0] || 'there'}.</em></h1>
           </div>
-          <button type="button" className="text-action" onClick={() => setFormOpen(true)}><FiPlus /> Add a task</button>
         </div>
 
         <section className="card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4" aria-label="Task progress">
           <div className="min-w-0 flex-1">
-            <div className="flex justify-between gap-3 text-sm"><strong className="text-[var(--app-text)]">Daily Progress</strong><span className="text-[var(--app-text-muted)]">{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining</span></div>
-            <div className="h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="block h-full rounded-full bg-[#111111] transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
+            <div className="flex justify-between gap-3 text-sm"><strong className="text-[var(--app-text)]">Task Progress</strong><span className="text-[var(--app-text-muted)]">{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining</span></div>
+            <div className="daily-progress-track h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="daily-progress-fill block h-full rounded-full transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
           </div>
-          <span className="text-sm font-bold text-[#111111]">{stats.completion_percent || 0}%</span>
+          <span className="daily-progress-percent text-sm font-bold">{stats.completion_percent || 0}%</span>
           {stats.unread_notifications > 0 && <Link to="/notifications" className="text-xs font-semibold text-[#111111]">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
         </section>
 
-        {needsAnalysis ? (
-          <section className="first-task-prompt analysis-needed-prompt">
-            <div className="first-task-mark"><FiCpu /></div>
-            <div>
-              <p className="eyebrow">ANALYSIS RECOMMENDED FIRST</p>
-              <h2>Analyze tasks to see what comes first.</h2>
-              <p>{unanalyzedCount} task{unanalyzedCount === 1 ? '' : 's'} need analysis.</p>
-              <Link to="/decision-lab" className="btn btn-primary"><FiCpu /> Analyze tasks <FiArrowRight /></Link>
+        <section className="dashboard-goal-progress" aria-labelledby="weekly-goals-heading">
+          <div className="dashboard-goal-heading">
+            <div><p className="eyebrow">THIS WEEK</p><h2 id="weekly-goals-heading">Weekly progress</h2></div>
+            <Link to="/profile" state={{ openGoals: true }} className="dashboard-goal-manage">Manage goals <FiArrowUpRight /></Link>
+          </div>
+          {goalsLoading ? <p className="dashboard-goal-loading">Loading your goals…</p> : goalsUnavailable ? (
+            <p className="dashboard-goal-loading" role="status">Goal progress is temporarily unavailable.</p>
+          ) : weeklyGoals.length ? (
+            <div className="dashboard-goal-list">
+              {weeklyGoals.map((goal) => (
+                <article className="dashboard-goal-item" key={goal.id}>
+                  <div className="dashboard-goal-item-heading"><strong>{goal.title}</strong><span>{goal.completed_count} of {goal.target_count} tasks · {goal.progress}% · {goal.status.replace('_', ' ')}</span></div>
+                  <div className="dashboard-goal-track" role="progressbar" aria-label={`${goal.title} progress`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={goal.progress}>
+                    <span style={{ width: `${Math.max(0, Math.min(100, goal.progress || 0))}%` }} />
+                  </div>
+                </article>
+              ))}
             </div>
+          ) : (
+            <div className="dashboard-goal-empty">
+              <span className="dashboard-goal-icon"><FiTarget /></span>
+              <div><strong>No weekly goal set</strong><p>Choose a small task target to track your progress this week.</p></div>
+              <Link to="/profile" state={{ openGoals: true }} className="btn btn-secondary btn-sm">Set a goal <FiArrowRight /></Link>
+            </div>
+          )}
+        </section>
+
+        {needsAnalysis ? (
+          <section className="analysis-needed-prompt" aria-label="Task analysis needed">
+            <span className="analysis-needed-icon"><FiCpu /></span>
+            <div className="analysis-needed-copy"><strong>Analyze tasks to get your next recommendation</strong><span>{unanalyzedCount} pending task{unanalyzedCount === 1 ? '' : 's'} need analysis.</span></div>
+            <Link to="/decision-lab" className="btn btn-primary btn-sm"><FiCpu /> Analyze tasks <FiArrowRight /></Link>
           </section>
         ) : focusTask ? (
           <section className="focus-workspace" aria-labelledby="focus-heading">
@@ -163,7 +206,7 @@ export default function Dashboard() {
                 <div className="task-analysis-explanation focus-analysis-explanation">
                   <div className="flex items-center justify-between gap-2">
                     <strong>Why this is your priority</strong>
-                    {focusTask.analysis_explanation_source && <span className="task-explanation-source">{focusTask.analysis_explanation_source === 'ai' ? 'AI explanation' : 'Based on scoring results'}</span>}
+                    {focusTask.analysis_explanation_source && <span className="task-explanation-source">{focusTask.analysis_explanation_source === 'ai' ? 'Gemini explanation' : 'Basic guidance'}</span>}
                   </div>
                   <p>{focusTask.analysis_explanation}</p>
                 </div>

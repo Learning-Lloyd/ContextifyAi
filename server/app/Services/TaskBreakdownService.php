@@ -10,6 +10,9 @@ class TaskBreakdownService
 
     public function generate(array $task): ?array
     {
+        $privacy = new AiPrivacyFilter();
+        $task = array_intersect_key($task, array_flip(['title', 'description', 'due_date']));
+        $task = array_map(fn ($value) => is_string($value) ? $privacy->redact($value) : $value, $task);
         $result = $this->aiClient->chatJson(
             <<<'PROMPT'
 You help users break one task into smaller actionable subtasks. Return only JSON in this shape:
@@ -32,5 +35,10 @@ PROMPT,
             ->filter(fn (array $item) => $item['title'] !== '')
             ->values()
             ->all();
+    }
+
+    public function unavailableMessage(): string
+    {
+        return $this->aiClient->unavailableMessage('AI task breakdown');
     }
 }

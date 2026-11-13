@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-11-13T05:55:31+08:00",
+  "repeatable_import": true,
+  "source_files": [
+    {
+      "filename": "MS-LaTTE.json",
+      "bytes": 10307386,
+      "sha256": "dae1991266fe35bfa613f7356b9c9e8d31010bd15c180fdb86faf76776981290"
+    }
+  ],
+  "ms_latte": {
+    "source_records": 10101,
+    "processed_records": 10101,
+    "invalid_or_duplicate": 0,
+    "known_location_judgements": 29154,
+    "known_time_judgements": 50245,
+    "location_annotation_counts": {
+      "home": 22178,
+      "work": 16786,
+      "public": 5001
+    },
+    "time_annotation_counts": {
+      "we-morning": 10146,
+      "we-afternoon": 15093,
+      "wd-evening": 26011,
+      "we-evening": 10123,
+      "wd-afternoon": 15573,
+      "wd-morning": 9743,
+      "wd-night": 2170,
+      "wd-anytime": 3258,
+      "we-anytime": 4038,
+      "we-night": 1253
+    }
+  },
+  "personal_tasks_created": 0,
+  "notes": [
+    "External dataset records are stored separately from authenticated users' tasks.",
+    "MS-LaTTE annotation fields are preserved as their original human judgements.",
+    "Missing values remain null; no scoring factors or priority labels are synthesized."
+  ]
+}

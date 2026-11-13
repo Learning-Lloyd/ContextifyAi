@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\DeadlineUrgencyService;
 use App\Services\PriorityCalculator;
+use InvalidArgumentException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -30,6 +31,7 @@ class Task extends Model
         'due_time',
         'weather_last_updated',
         'importance',
+        'importance_source',
         'urgency',
         'urgency_manual',
         'time_availability',
@@ -69,11 +71,22 @@ class Task extends Model
                 );
             }
 
+            try {
+                $rawScoringFactors = $task->getAttributes();
+                PriorityCalculator::validateFactors(
+                    $rawScoringFactors['importance'] ?? null,
+                    $rawScoringFactors['urgency'] ?? null,
+                    $rawScoringFactors['time_availability'] ?? null,
+                    $rawScoringFactors['current_workload'] ?? null
+                );
+            } catch (InvalidArgumentException $exception) {
+                throw new InvalidArgumentException('A task cannot be saved without valid 1–10 scoring factors.', previous: $exception);
+            }
             $task->priority_score = PriorityCalculator::calculate(
-                (int) ($task->importance ?? 5),
-                (int) ($task->urgency ?? 5),
-                (int) ($task->time_availability ?? 5),
-                (int) ($task->current_workload ?? 5)
+                $task->importance,
+                $task->urgency,
+                $task->time_availability,
+                $task->current_workload
             );
         });
     }
@@ -96,7 +109,9 @@ class Task extends Model
     public function getDeadlineGroupAttribute(): string
     {
         return DeadlineUrgencyService::deadlineGroup(
-            $this->due_date?->format('Y-m-d')
+            $this->due_date?->format('Y-m-d'),
+            null,
+            $this->due_time
         );
     }
 

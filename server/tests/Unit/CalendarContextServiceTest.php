@@ -35,6 +35,8 @@ class CalendarContextServiceTest extends TestCase
                 'due_date' => now()->addDays($dayOffset)->format('Y-m-d'),
                 'importance' => 8,
                 'urgency' => 8,
+                'time_availability' => 5,
+                'current_workload' => 5,
                 'estimated_time_minutes' => 240,
                 'status' => 'pending',
             ]);

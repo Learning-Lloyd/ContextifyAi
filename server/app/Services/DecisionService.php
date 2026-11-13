@@ -80,6 +80,7 @@ class DecisionService
     ): array
     {
         $ranked = collect($tasks)
+            ->reject(fn (array $task) => ($task['status'] ?? 'pending') === 'completed')
             ->map(function (array $task) {
                 $normalized = $this->normalizeTask($task);
                 $breakdown = PriorityCalculator::breakdown(
@@ -96,9 +97,25 @@ class DecisionService
 
                 return $normalized;
             })
-            ->sortByDesc('priority_score')
-            ->values()
             ->all();
+
+        usort($ranked, static function (array $left, array $right): int {
+            $scoreOrder = $right['priority_score'] <=> $left['priority_score'];
+            if ($scoreOrder !== 0) {
+                return $scoreOrder;
+            }
+
+            $leftDate = $left['due_date'] ?? null;
+            $rightDate = $right['due_date'] ?? null;
+            if ($leftDate !== $rightDate) {
+                if ($leftDate === null) return 1;
+                if ($rightDate === null) return -1;
+                return strcmp($leftDate, $rightDate);
+            }
+
+            $idOrder = ((int) ($left['id'] ?? PHP_INT_MAX)) <=> ((int) ($right['id'] ?? PHP_INT_MAX));
+            return $idOrder !== 0 ? $idOrder : strcmp((string) $left['title'], (string) $right['title']);
+        });
 
         $conflicts = $this->detectSameDayConflicts($ranked);
 
@@ -158,10 +175,11 @@ class DecisionService
 
         foreach ($ranked as &$task) {
             $aiTaskExplanation = $aiExplanation['task_explanations'][$task['id'] ?? -1] ?? null;
-            if ($aiTaskExplanation) {
-                $task['task_card_explanation'] = $aiTaskExplanation;
+            if (($aiExplanation['source'] ?? null) === 'ai' && is_string($aiTaskExplanation) && trim($aiTaskExplanation) !== '') {
+                $task['task_card_explanation'] = trim($aiTaskExplanation);
                 $task['explanation_source'] = 'ai';
             } else {
+                // Keep the transparent, formula-backed explanation when OpenRouter is unavailable.
                 $task['explanation_source'] = 'rule_based';
             }
         }

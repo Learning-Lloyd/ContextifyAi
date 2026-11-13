@@ -29,7 +29,7 @@ class TaskBreakdownController extends Controller
 
         if ($suggestions === null) {
             return response()->json([
-                'message' => 'AI task breakdown is unavailable. Check the AI provider connection and try again.',
+                'message' => $this->service->unavailableMessage(),
             ], 503);
         }
 

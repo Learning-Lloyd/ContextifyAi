@@ -1,0 +1,181 @@
+﻿test_case_id,title,description,category,estimated_time_minutes,importance,urgency,time_availability,current_workload,other_pending_assignments,importance_weight,urgency_weight,time_availability_weight,current_workload_weight,importance_points,urgency_points,time_availability_points,current_workload_points,expected_priority_score,expected_priority_level,record_type
+CTX-001,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,10,10,10,10,0,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-002,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,9,8,7,6,1,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-003,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,8,8,8,8,2,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-004,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,9,10,10,9,3,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-005,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,7,7,6,6,4,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-006,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,6,5,7,4,5,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-007,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,5,5,5,5,0,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-008,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,6,9,3,7,1,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-009,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,8,5,4,2,2,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-010,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,4,3,8,6,3,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-011,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,3,4,5,3,4,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-012,Prepare biology lab report,Organize observations and submit the lab report.,Academic,90,2,2,4,3,5,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-013,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,10,10,10,10,1,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-014,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,9,8,7,6,2,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-015,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,8,8,8,8,3,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-016,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,9,10,10,9,4,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-017,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,7,7,6,6,5,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-018,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,6,5,7,4,0,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-019,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,5,5,5,5,1,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-020,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,6,9,3,7,2,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-021,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,8,5,4,2,3,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-022,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,4,3,8,6,4,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-023,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,3,4,5,3,5,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-024,Review lecture notes,Review this week's lecture notes and list questions.,Academic,45,2,2,4,3,0,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-025,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,10,10,10,10,2,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-026,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,9,8,7,6,3,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-027,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,8,8,8,8,4,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-028,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,9,10,10,9,5,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-029,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,7,7,6,6,0,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-030,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,6,5,7,4,1,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-031,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,5,5,5,5,2,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-032,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,6,9,3,7,3,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-033,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,8,5,4,2,4,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-034,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,4,3,8,6,5,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-035,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,3,4,5,3,0,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-036,Finish group presentation,Complete slides and rehearse the assigned section.,Academic,120,2,2,4,3,1,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-037,Read research articles,Read and summarize sources for the literature review.,Academic,75,10,10,10,10,3,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-038,Read research articles,Read and summarize sources for the literature review.,Academic,75,9,8,7,6,4,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-039,Read research articles,Read and summarize sources for the literature review.,Academic,75,8,8,8,8,5,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-040,Read research articles,Read and summarize sources for the literature review.,Academic,75,9,10,10,9,0,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-041,Read research articles,Read and summarize sources for the literature review.,Academic,75,7,7,6,6,1,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-042,Read research articles,Read and summarize sources for the literature review.,Academic,75,6,5,7,4,2,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-043,Read research articles,Read and summarize sources for the literature review.,Academic,75,5,5,5,5,3,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-044,Read research articles,Read and summarize sources for the literature review.,Academic,75,6,9,3,7,4,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-045,Read research articles,Read and summarize sources for the literature review.,Academic,75,8,5,4,2,5,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-046,Read research articles,Read and summarize sources for the literature review.,Academic,75,4,3,8,6,0,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-047,Read research articles,Read and summarize sources for the literature review.,Academic,75,3,4,5,3,1,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-048,Read research articles,Read and summarize sources for the literature review.,Academic,75,2,2,4,3,2,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-049,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,10,10,10,10,4,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-050,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,9,8,7,6,5,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-051,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,8,8,8,8,0,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-052,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,9,10,10,9,1,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-053,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,7,7,6,6,2,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-054,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,6,5,7,4,3,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-055,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,5,5,5,5,4,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-056,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,6,9,3,7,5,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-057,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,8,5,4,2,0,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-058,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,4,3,8,6,1,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-059,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,3,4,5,3,2,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-060,Submit programming exercise,Test and submit the weekly programming exercise.,Academic,100,2,2,4,3,3,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-061,Plan project milestones,Break the team project into milestones and owners.,Work,60,10,10,10,10,5,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-062,Plan project milestones,Break the team project into milestones and owners.,Work,60,9,8,7,6,0,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-063,Plan project milestones,Break the team project into milestones and owners.,Work,60,8,8,8,8,1,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-064,Plan project milestones,Break the team project into milestones and owners.,Work,60,9,10,10,9,2,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-065,Plan project milestones,Break the team project into milestones and owners.,Work,60,7,7,6,6,3,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-066,Plan project milestones,Break the team project into milestones and owners.,Work,60,6,5,7,4,4,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-067,Plan project milestones,Break the team project into milestones and owners.,Work,60,5,5,5,5,5,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-068,Plan project milestones,Break the team project into milestones and owners.,Work,60,6,9,3,7,0,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-069,Plan project milestones,Break the team project into milestones and owners.,Work,60,8,5,4,2,1,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-070,Plan project milestones,Break the team project into milestones and owners.,Work,60,4,3,8,6,2,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-071,Plan project milestones,Break the team project into milestones and owners.,Work,60,3,4,5,3,3,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-072,Plan project milestones,Break the team project into milestones and owners.,Work,60,2,2,4,3,4,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-073,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,10,10,10,10,0,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-074,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,9,8,7,6,1,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-075,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,8,8,8,8,2,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-076,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,9,10,10,9,3,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-077,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,7,7,6,6,4,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-078,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,6,5,7,4,5,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-079,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,5,5,5,5,0,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-080,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,6,9,3,7,1,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-081,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,8,5,4,2,2,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-082,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,4,3,8,6,3,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-083,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,3,4,5,3,4,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-084,Prepare meeting agenda,Draft topics and materials for the team meeting.,Work,30,2,2,4,3,5,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-085,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,10,10,10,10,1,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-086,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,9,8,7,6,2,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-087,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,8,8,8,8,3,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-088,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,9,10,10,9,4,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-089,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,7,7,6,6,5,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-090,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,6,5,7,4,0,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-091,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,5,5,5,5,1,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-092,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,6,9,3,7,2,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-093,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,8,5,4,2,3,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-094,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,4,3,8,6,4,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-095,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,3,4,5,3,5,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-096,Review client feedback,Group the latest feedback and identify follow-up actions.,Work,50,2,2,4,3,0,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-097,Update project documentation,Bring project notes and documentation up to date.,Work,70,10,10,10,10,2,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-098,Update project documentation,Bring project notes and documentation up to date.,Work,70,9,8,7,6,3,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-099,Update project documentation,Bring project notes and documentation up to date.,Work,70,8,8,8,8,4,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-100,Update project documentation,Bring project notes and documentation up to date.,Work,70,9,10,10,9,5,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-101,Update project documentation,Bring project notes and documentation up to date.,Work,70,7,7,6,6,0,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-102,Update project documentation,Bring project notes and documentation up to date.,Work,70,6,5,7,4,1,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-103,Update project documentation,Bring project notes and documentation up to date.,Work,70,5,5,5,5,2,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-104,Update project documentation,Bring project notes and documentation up to date.,Work,70,6,9,3,7,3,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-105,Update project documentation,Bring project notes and documentation up to date.,Work,70,8,5,4,2,4,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-106,Update project documentation,Bring project notes and documentation up to date.,Work,70,4,3,8,6,5,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-107,Update project documentation,Bring project notes and documentation up to date.,Work,70,3,4,5,3,0,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-108,Update project documentation,Bring project notes and documentation up to date.,Work,70,2,2,4,3,1,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-109,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,10,10,10,10,3,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-110,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,9,8,7,6,4,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-111,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,8,8,8,8,5,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-112,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,9,10,10,9,0,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-113,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,7,7,6,6,1,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-114,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,6,5,7,4,2,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-115,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,5,5,5,5,3,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-116,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,6,9,3,7,4,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-117,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,8,5,4,2,5,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-118,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,4,3,8,6,0,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-119,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,3,4,5,3,1,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-120,Send weekly progress update,Summarize completed work and blockers for the team.,Work,25,2,2,4,3,2,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-121,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,10,10,10,10,4,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-122,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,9,8,7,6,5,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-123,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,8,8,8,8,0,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-124,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,9,10,10,9,1,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-125,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,7,7,6,6,2,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-126,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,6,5,7,4,3,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-127,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,5,5,5,5,4,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-128,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,6,9,3,7,5,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-129,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,8,5,4,2,0,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-130,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,4,3,8,6,1,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-131,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,3,4,5,3,2,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-132,Pay utility bill,Check the amount and pay the monthly utility bill.,Personal,15,2,2,4,3,3,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-133,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,10,10,10,10,5,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-134,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,9,8,7,6,0,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-135,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,8,8,8,8,1,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-136,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,9,10,10,9,2,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-137,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,7,7,6,6,3,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-138,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,6,5,7,4,4,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-139,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,5,5,5,5,5,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-140,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,6,9,3,7,0,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-141,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,8,5,4,2,1,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-142,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,4,3,8,6,2,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-143,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,3,4,5,3,3,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-144,Schedule health appointment,Find a suitable time and confirm an appointment.,Personal,20,2,2,4,3,4,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-145,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,10,10,10,10,0,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-146,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,9,8,7,6,1,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-147,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,8,8,8,8,2,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-148,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,9,10,10,9,3,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-149,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,7,7,6,6,4,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-150,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,6,5,7,4,5,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-151,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,5,5,5,5,0,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-152,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,6,9,3,7,1,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-153,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,8,5,4,2,2,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-154,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,4,3,8,6,3,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-155,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,3,4,5,3,4,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-156,Organize study space,Sort materials and prepare a clear workspace.,Personal,35,2,2,4,3,5,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-157,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,10,10,10,10,1,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-158,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,9,8,7,6,2,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-159,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,8,8,8,8,3,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-160,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,9,10,10,9,4,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-161,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,7,7,6,6,5,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-162,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,6,5,7,4,0,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-163,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,5,5,5,5,1,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-164,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,6,9,3,7,2,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-165,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,8,5,4,2,3,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-166,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,4,3,8,6,4,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-167,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,3,4,5,3,5,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-168,Plan weekly meals,Choose meals and prepare a short shopping list.,Personal,40,2,2,4,3,0,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-169,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,10,10,10,10,2,0.4,0.3,0.2,0.1,4.0,3.0,2.0,1.0,10.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-170,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,9,8,7,6,3,0.4,0.3,0.2,0.1,3.6,2.4,1.4,0.6,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-171,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,8,8,8,8,4,0.4,0.3,0.2,0.1,3.2,2.4,1.6,0.8,8.00,High,SYNTHETIC_VALIDATION_ONLY
+CTX-172,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,9,10,10,9,5,0.4,0.3,0.2,0.1,3.6,3.0,2.0,0.9,9.50,High,SYNTHETIC_VALIDATION_ONLY
+CTX-173,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,7,7,6,6,0,0.4,0.3,0.2,0.1,2.8,2.1,1.2,0.6,6.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-174,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,6,5,7,4,1,0.4,0.3,0.2,0.1,2.4,1.5,1.4,0.4,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-175,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,5,5,5,5,2,0.4,0.3,0.2,0.1,2.0,1.5,1.0,0.5,5.00,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-176,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,6,9,3,7,3,0.4,0.3,0.2,0.1,2.4,2.7,0.6,0.7,6.40,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-177,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,8,5,4,2,4,0.4,0.3,0.2,0.1,3.2,1.5,0.8,0.2,5.70,Medium,SYNTHETIC_VALIDATION_ONLY
+CTX-178,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,4,3,8,6,5,0.4,0.3,0.2,0.1,1.6,0.9,1.6,0.6,4.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-179,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,3,4,5,3,0,0.4,0.3,0.2,0.1,1.2,1.2,1.0,0.3,3.70,Low,SYNTHETIC_VALIDATION_ONLY
+CTX-180,Review monthly expenses,Check recurring expenses and update the budget.,Personal,55,2,2,4,3,1,0.4,0.3,0.2,0.1,0.8,0.6,0.8,0.3,2.50,Low,SYNTHETIC_VALIDATION_ONLY

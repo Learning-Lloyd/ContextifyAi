@@ -4,14 +4,14 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
   if (!explanation) return null;
 
   const isAi = explanation.source === 'ai';
-  const sourceLabel = isAi ? 'AI explanation' : 'Context explanation';
+  const sourceLabel = isAi ? 'Gemini explanation' : 'Basic guidance';
 
   return (
-    <div className="card p-6 space-y-5 border-l-4 border-l-[#666666] bg-[var(--app-card)] animate-fade-in shadow-sm">
+    <div className="card p-6 space-y-5 border-l-4 border-l-[#2563eb] bg-[var(--app-card)] animate-fade-in shadow-sm">
       {/* Header with clear separation banner */}
       <div className="flex items-center justify-between gap-3 flex-wrap border-b border-[var(--app-border)] pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-zinc-500/10 text-[#666666] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center">
             {isAi ? <FiZap size={16} /> : <FiCpu size={16} />}
           </div>
           <div>
@@ -38,7 +38,7 @@ export default function AiExplanationPanel({ explanation, weatherContext }) {
       {explanation.top_task_explanation && (
         <div className="rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/50 p-4">
           <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--app-text)] uppercase tracking-wider mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#666666]" />
+            <span className="w-2 h-2 rounded-full bg-blue-600" />
             Recommended task
           </div>
           <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] leading-relaxed">
