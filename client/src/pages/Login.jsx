@@ -43,7 +43,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6" style={{ background: 'var(--app-bg)' }}>
+    <div className="auth-stage min-h-screen flex items-center justify-center p-4 sm:p-6">
       {/* Theme Toggle in Corner */}
       <button
         type="button"
@@ -55,22 +55,23 @@ export default function Login() {
       </button>
 
       {/* Main Container */}
-      <div className="w-full max-w-4xl grid md:grid-cols-2 rounded-2xl overflow-hidden shadow-2xl border border-[var(--app-border)] bg-[var(--app-card)] animate-fade-in">
+      <div className="auth-card w-full max-w-5xl grid md:grid-cols-2 rounded-[28px] overflow-hidden animate-fade-in">
         {/* Left Brand Panel (Desktop) */}
-        <div className="hidden md:flex flex-col justify-between p-10 bg-gradient-to-br from-[#333333] via-[#111111] to-[#555555] text-white">
+        <div className="auth-brand-panel hidden md:flex flex-col justify-between p-10 lg:p-12 text-white">
           <div>
             <Logo size="lg" variant="dark" />
             <div className="mt-12 space-y-4">
-              <h2 className="text-2xl font-extrabold tracking-tight leading-snug">
-                Personalized Decision Support for Daily Priorities
+              <div className="auth-pill">◎ &nbsp; WORKSPACE PRIORITY</div>
+              <h2 className="auth-headline text-3xl font-extrabold tracking-tight leading-snug">
+                Focus on what<br /><span>matters most.</span>
               </h2>
-              <p className="text-zinc-100 text-sm leading-relaxed">
+              <p className="auth-description text-sm leading-relaxed">
                 Experience explainable, multi-factor contextual ranking designed to resolve task ambiguity and workload overload.
               </p>
             </div>
           </div>
 
-          <div className="space-y-3 text-xs text-zinc-100">
+          <div className="space-y-3 text-xs auth-features">
             <div className="flex items-center gap-2">
               <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
                 <FiCheck size={12} />
@@ -93,7 +94,7 @@ export default function Login() {
         </div>
 
         {/* Right Form Panel */}
-        <div className="p-8 sm:p-10 flex flex-col justify-center">
+        <div className="auth-form-panel p-8 sm:p-10 lg:p-14 flex flex-col justify-center">
           <div className="mb-6 md:hidden">
             <Logo size="md" variant="light" className="mb-2" />
           </div>
