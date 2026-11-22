@@ -14,6 +14,7 @@ import TaskForm from '../components/TaskForm';
 import TaskBreakdownPanel from '../components/TaskBreakdownPanel';
 import { taskService } from '../services/taskService';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
+import { formatMinutesAsHours } from '../utils/duration';
 
 export default function TaskDetail() {
   const [task, setTask] = useState(null);
@@ -174,7 +175,7 @@ export default function TaskDetail() {
                   </span>
                 )}
                 {task.estimated_time_minutes && (
-                  <span>⏱ {task.estimated_time_minutes} min duration</span>
+                  <span>⏱ {formatMinutesAsHours(task.estimated_time_minutes)}</span>
                 )}
               </div>
             </div>

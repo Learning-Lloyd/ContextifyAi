@@ -3,6 +3,7 @@ import { FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiCopy, FiEdit2, Fi
 import { Link } from 'react-router-dom';
 import PriorityBadge from './PriorityBadge';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
+import { formatMinutesAsHours } from '../utils/duration';
 
 function formatDeadline(task) {
   if (!task.due_date) return 'No deadline';
@@ -39,7 +40,7 @@ export default function TaskDetailPanel({ task, onClose, onEdit, onToggle, onDel
             <div><dt><FiCalendar /> Deadline</dt><dd>{formatDeadline(task)}</dd></div>
             <div><dt><FiClock /> Time remaining</dt><dd className={overdue ? 'is-overdue' : ''}>{countdown || '—'}</dd></div>
             <div><dt>Category</dt><dd>{task.category || '—'}</dd></div>
-            <div><dt>Estimated duration</dt><dd>{task.estimated_time_minutes ? `${task.estimated_time_minutes} minutes` : '—'}</dd></div>
+            <div><dt>Estimated duration</dt><dd>{formatMinutesAsHours(task.estimated_time_minutes)}</dd></div>
             {task.location && <div><dt><FiMapPin /> Location</dt><dd>{task.location}</dd></div>}
             {task.weather_condition && <div><dt>Weather context</dt><dd>{weatherIcon(task.weather_condition)} {task.weather_condition}{task.temperature != null ? ` · ${task.temperature}°` : ''}{task.rain_probability != null ? ` · ${task.rain_probability}% rain` : ''}</dd></div>}
             {task.notes && <div><dt>Notes</dt><dd>{task.notes}</dd></div>}

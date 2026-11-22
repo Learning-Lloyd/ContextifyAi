@@ -5,6 +5,7 @@ import Layout from '../components/Layout';
 import TaskCard from '../components/TaskCard';
 import TaskDetailPanel from '../components/TaskDetailPanel';
 import PriorityBadge from '../components/PriorityBadge';
+import PriorityGuide from '../components/PriorityGuide';
 import TaskForm from '../components/TaskForm';
 import ConfirmDialog from '../components/ConfirmDialog';
 import EmptyState from '../components/EmptyState';
@@ -242,6 +243,8 @@ export default function Tasks() {
             </button>
           </div>
         </div>
+
+        <PriorityGuide />
 
         {/* Compact filter controls */}
         <div className="queue-controls">

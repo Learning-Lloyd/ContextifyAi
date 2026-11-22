@@ -21,7 +21,9 @@ class DeadlineUrgencyService
             $deadline = Carbon::parse("{$dueDate} {$dueTime}");
         }
 
-        $daysUntil = now()->startOfDay()->diffInDays($deadline->copy()->startOfDay(), false);
+        // Carbon 3 returns a float for diffInDays; normalize this date-only
+        // difference before the strict day-bucket comparisons below.
+        $daysUntil = (int) now()->startOfDay()->diffInDays($deadline->copy()->startOfDay(), false);
 
         return match (true) {
             $daysUntil < 0 => 10,

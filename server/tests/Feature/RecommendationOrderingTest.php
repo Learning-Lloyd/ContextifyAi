@@ -51,4 +51,30 @@ class RecommendationOrderingTest extends TestCase
             array_column($dashboard->json('widgets.highest_priority_tasks'), 'id')
         );
     }
+
+    public function test_equal_scores_use_exact_deadline_time_before_task_id(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $later = $user->tasks()->create([
+            'title' => 'Later time, lower id',
+            'importance' => 8, 'urgency' => 8, 'time_availability' => 8, 'current_workload' => 8,
+            'urgency_manual' => true, 'due_date' => '2026-11-21', 'due_time' => '13:00',
+        ]);
+        $earlier = $user->tasks()->create([
+            'title' => 'Earlier time, higher id',
+            'importance' => 8, 'urgency' => 8, 'time_availability' => 8, 'current_workload' => 8,
+            'urgency_manual' => true, 'due_date' => '2026-11-21', 'due_time' => '08:19',
+        ]);
+
+        $tasks = $this->getJson('/api/tasks')->assertOk();
+        $this->assertSame([$earlier->id, $later->id], array_column($tasks->json('tasks'), 'id'));
+
+        $dashboard = $this->getJson('/api/dashboard')->assertOk();
+        $this->assertSame(
+            [$earlier->id, $later->id],
+            array_column($dashboard->json('widgets.highest_priority_tasks'), 'id')
+        );
+    }
 }

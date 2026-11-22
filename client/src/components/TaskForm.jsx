@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiCalendar, FiClock, FiFileText, FiX, FiZap } from 'react-icons/fi';
+import { FiCalendar, FiCheckSquare, FiClock, FiFileText, FiMapPin, FiTag, FiX, FiZap } from 'react-icons/fi';
 import LocationSearch from './LocationSearch';
 import { suggestUrgencyFromDueDate } from '../utils/taskUtils';
+import { hoursToMinutes, minutesToHours } from '../utils/duration';
 import { taskService } from '../services/taskService';
 
 const defaultValues = {
@@ -9,7 +10,7 @@ const defaultValues = {
   description: '',
   category: '',
   notes: '',
-  estimated_time_minutes: '',
+  estimated_duration_hours: '',
   due_date: '',
   due_time: '',
   location: '',
@@ -76,7 +77,7 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         description: task.description || '',
         category: task.category || '',
         notes: task.notes || '',
-        estimated_time_minutes: task.estimated_time_minutes ?? '',
+        estimated_duration_hours: minutesToHours(task.estimated_time_minutes),
         due_date: task.due_date || '',
         due_time: task.due_time?.slice(0, 5) || '',
         location: task.location || '',
@@ -214,15 +215,23 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     const newErrors = {};
     if (!form.title.trim()) newErrors.title = 'Title is required';
     if (!form.due_date) newErrors.due_date = 'Due date is required';
+    if (form.estimated_duration_hours !== '') {
+      const hours = Number(form.estimated_duration_hours);
+      const minutes = hoursToMinutes(hours);
+      if (!Number.isFinite(hours) || hours < 0.02 || hours > 168 || !minutes || minutes > 10080) {
+        newErrors.estimated_duration_hours = 'Enter a duration from 0.02 to 168 hours.';
+      }
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
+    const { estimated_duration_hours: durationHours, ...taskDetails } = form;
     const payload = {
-      ...form,
-      estimated_time_minutes: form.estimated_time_minutes ? Number(form.estimated_time_minutes) : null,
+      ...taskDetails,
+      estimated_time_minutes: hoursToMinutes(durationHours),
     };
     if (importanceOverride !== null) payload.importance = Number(importanceOverride);
 
@@ -236,227 +245,205 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         Object.keys(apiErrors).forEach((key) => {
           mapped[key] = apiErrors[key][0];
         });
+        if (mapped.estimated_time_minutes) {
+          mapped.estimated_duration_hours = mapped.estimated_time_minutes;
+          delete mapped.estimated_time_minutes;
+        }
         setErrors(mapped);
       }
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="task-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div className="absolute inset-0 modal-overlay" onClick={onClose} aria-hidden="true" />
-      <div className="relative card w-full max-w-lg max-h-[90vh] overflow-y-auto animate-fade-in" role="dialog" aria-modal="true">
-        <div className="flex items-center justify-between p-5 border-b border-[var(--app-border)]">
-          <h2 className="section-title">{task ? 'Edit Task' : 'Create Task'}</h2>
-          <button type="button" onClick={onClose} className="btn btn-ghost btn-icon" aria-label="Close">
+      <section className="task-modal-shell relative w-full animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="task-modal-title" aria-describedby="task-modal-subtitle">
+        <header className="task-modal-header">
+          <div className="task-modal-heading-group">
+            <span className="task-modal-icon"><FiCheckSquare size={20} /></span>
+            <div>
+              <p className="task-modal-eyebrow">CONTEXTIFY TASK</p>
+              <h2 id="task-modal-title">{task ? 'Edit Task' : 'Create a New Task'}</h2>
+              <p id="task-modal-subtitle">{task ? 'Update the details and context for this task.' : 'Add the details and context needed to prioritize your task.'}</p>
+            </div>
+          </div>
+          <button type="button" onClick={onClose} className="task-modal-close" aria-label="Close task form">
             <FiX size={18} />
           </button>
-        </div>
+        </header>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
-          <div>
-            <label className="label" htmlFor="task-title">Title</label>
-            <input
-              id="task-title"
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              className="input"
-              placeholder="Task title"
-            />
-            {errors.title && <p className="form-error">{errors.title}</p>}
+        <form onSubmit={handleSubmit} noValidate className="task-modal-form">
+          <div className="task-modal-scroll">
+            <section className="task-form-section" aria-labelledby="task-details-heading">
+              <div className="task-form-section-heading">
+                <span className="task-form-section-icon"><FiFileText size={16} /></span>
+                <div><h3 id="task-details-heading">Task details</h3><p>Give this task a clear name and category.</p></div>
+              </div>
+
+              <div className="task-form-field">
+                <label className="label" htmlFor="task-title">Task title <span className="task-required">Required</span></label>
+                <input
+                  id="task-title"
+                  type="text"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  className="input task-modal-input"
+                  placeholder="e.g. Prepare for the biology exam"
+                  maxLength={255}
+                  autoFocus
+                  aria-invalid={Boolean(errors.title)}
+                  aria-describedby={errors.title ? 'task-title-error' : undefined}
+                />
+                {errors.title && <p className="form-error" id="task-title-error">{errors.title}</p>}
+              </div>
+
+              <div className="task-form-field">
+                <div className="task-description-heading">
+                  <label className="label" htmlFor="task-description">Description <span>(optional)</span></label>
+                  <button type="button" onClick={handleGenerateDescription} disabled={generatingDescription || !form.title.trim()} className="task-ai-write" aria-busy={generatingDescription}>
+                    <FiFileText size={14} /> {generatingDescription ? 'Writing…' : 'Help me write'}
+                  </button>
+                </div>
+                <textarea
+                  id="task-description"
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  rows={3}
+                  className="input task-modal-input task-modal-textarea"
+                  placeholder="Add helpful context, requirements, or notes for this task…"
+                />
+                {descriptionError && <p className="form-error" role="alert">{descriptionError}</p>}
+                <p className="task-field-hint">AI drafts are optional. Review and edit the description before saving.</p>
+              </div>
+
+              <div className="task-form-field">
+                <label className="label" htmlFor="task-category">Category <span>(optional)</span></label>
+                <div className="task-modal-select-wrap"><FiTag size={15} aria-hidden="true" />
+                  <select id="task-category" name="category" value={form.category} onChange={handleChange} className="input task-modal-input task-modal-select">
+                    <option value="">Choose a category</option>
+                    {form.category && !['Academic', 'Personal', 'Work'].includes(form.category) && <option value={form.category}>{form.category} (existing)</option>}
+                    {['Academic', 'Personal', 'Work'].map((category) => <option key={category} value={category}>{category}</option>)}
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <section className="task-form-section" aria-labelledby="task-schedule-heading">
+              <div className="task-form-section-heading">
+                <span className="task-form-section-icon task-form-section-icon-violet"><FiCalendar size={16} /></span>
+                <div><h3 id="task-schedule-heading">Time &amp; schedule</h3><p>Estimate the effort and set the deadline.</p></div>
+              </div>
+
+              <div className="task-schedule-grid">
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-estimated-duration">Estimated Duration (hours) <span>(optional)</span></label>
+                  <div className="task-duration-input-wrap">
+                    <FiClock size={16} aria-hidden="true" />
+                    <input
+                      id="task-estimated-duration"
+                      type="number"
+                      name="estimated_duration_hours"
+                      min="0.02"
+                      max="168"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={form.estimated_duration_hours}
+                      onChange={handleChange}
+                      className="input task-modal-input"
+                      placeholder="e.g. 1.5"
+                      aria-invalid={Boolean(errors.estimated_duration_hours)}
+                      aria-describedby="task-duration-help"
+                    />
+                    <span className="task-duration-unit">hours</span>
+                  </div>
+                  <p id="task-duration-help" className="task-field-hint">Enter a decimal: 0.5 = 30 min · 1.5 = 1 hr 30 min.</p>
+                  {errors.estimated_duration_hours && <p className="form-error">{errors.estimated_duration_hours}</p>}
+                </div>
+
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-due-date">Due date <span className="task-required">Required</span></label>
+                  <div className="task-date-input-wrap"><FiCalendar size={15} aria-hidden="true" />
+                    <input id="task-due-date" type="date" name="due_date" value={form.due_date} onChange={handleChange} className="input task-modal-input" aria-invalid={Boolean(errors.due_date)} />
+                  </div>
+                  {errors.due_date && <p className="form-error">{errors.due_date}</p>}
+                </div>
+
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-due-time">Due time <span>(optional)</span></label>
+                  <div className="task-date-input-wrap"><FiClock size={15} aria-hidden="true" />
+                    <input id="task-due-time" type="time" name="due_time" value={form.due_time} onChange={handleChange} className="input task-modal-input" />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="task-form-section task-context-section" aria-labelledby="task-context-heading">
+              <div className="task-form-section-heading">
+                <span className="task-form-section-icon task-form-section-icon-teal"><FiMapPin size={16} /></span>
+                <div><h3 id="task-context-heading">Context &amp; location</h3><p>Add a location to include relevant local context.</p></div>
+              </div>
+              <div className="task-modal-location">
+                <LocationSearch
+                  value={{ location: form.location, latitude: form.latitude, longitude: form.longitude }}
+                  onChange={handleLocationChange}
+                  error={errors.location}
+                />
+              </div>
+            </section>
+
+            {task && (
+              <section className="task-form-section">
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-notes">Notes <span>(optional)</span></label>
+                  <textarea id="task-notes" name="notes" value={form.notes} onChange={handleChange} rows={2} className="input task-modal-input task-modal-textarea" placeholder="Private notes for this task" />
+                </div>
+              </section>
+            )}
+
+            {analysisError && <p className="task-analysis-notice" role="status">{analysisError}</p>}
+            <details className="task-scoring-details">
+              <summary><span className="task-form-section-icon task-form-section-icon-violet"><FiZap size={15} /></span><span><strong>Scoring context</strong><small>{analyzingFactors ? 'Updating suggested factors…' : 'View how Contextify will evaluate this task.'}</small></span></summary>
+              <div className="task-scoring-content">
+                <div className="flex items-start justify-between gap-3 py-2 border-b border-[var(--app-border)]">
+                  <div className="min-w-0 flex-1">
+                    <label className="text-sm font-medium text-[var(--app-text)]" htmlFor="task-importance">Importance</label>
+                    <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
+                      {importanceOverride !== null ? 'Your value will be used in the official score.' : `${importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'Suggested') : 'Suggested'} value; change it if needed.`}
+                    </p>
+                    {importanceAnalysis?.reason && importanceOverride === null && <p className="text-xs text-[var(--app-text-secondary)] mt-1">{importanceAnalysis.reason}</p>}
+                    <div className="mt-2 flex items-center gap-2">
+                      <input id="task-importance" type="number" min="1" max="10" step="1" value={importanceOverride ?? factors.importance} onChange={(event) => setImportanceOverride(event.target.value)} className="input w-24" aria-describedby="task-importance-help" />
+                      <span className="text-sm text-[var(--app-text-muted)]">/10</span>
+                      {importanceOverride !== null && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setImportanceOverride(null)}>Use Contextify suggestion</button>}
+                      {analyzingFactors && <span className="text-xs text-[var(--app-text-muted)]">Updating suggestion…</span>}
+                    </div>
+                    <p id="task-importance-help" className="text-xs text-[var(--app-text-muted)] mt-1">Choose a whole number from 1 to 10. Leave the suggestion unchanged to let Gemini suggest the saved value when available; the keyword suggestion is used if Gemini cannot respond. A value you set is kept as yours.</p>
+                    {errors.importance && <p className="form-error mt-1">{errors.importance}</p>}
+                  </div>
+                </div>
+                <AutoFactorRow label="Urgency" value={factors.urgency} source="From deadline" reason={form.due_date ? 'Based on how soon it is due.' : 'Set a deadline to calculate.'} loading={false} />
+                <AutoFactorRow label="Time Availability" value={factors.time_availability} source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'} reason={calendarContext?.reason_time_availability} loading={analyzingFactors && form.title.trim().length >= 3} />
+                <AutoFactorRow label="Current Workload" value={factors.current_workload} source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'} reason={calendarContext?.reason_current_workload} loading={analyzingFactors && form.title.trim().length >= 3} />
+                {importanceAnalysis && !analyzingFactors && <p className="text-xs text-[var(--app-text-muted)] mt-3 flex items-center gap-1"><FiClock size={12} /> Importance confidence: {importanceAnalysis.confidence}%</p>}
+                {calendarContext?.commitments_count > 0 && !analyzingFactors && <p className="text-xs text-[var(--app-text-muted)] mt-1 flex items-center gap-1"><FiCalendar size={12} /> {calendarContext.commitments_count} upcoming calendar commitment(s) considered</p>}
+                <p className="text-xs text-[var(--app-text-muted)] mt-3">Calculated automatically from task details and your calendar.</p>
+              </div>
+            </details>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between gap-2 mb-1.5">
-              <label className="label mb-0" htmlFor="task-description">Description <span className="text-[var(--app-text-muted)] font-normal">(optional)</span></label>
-              <button type="button" onClick={handleGenerateDescription} disabled={generatingDescription || !form.title.trim()} className="btn btn-ghost text-sm px-2 py-1 disabled:opacity-50">
-                <FiFileText size={14} /> {generatingDescription ? 'Writing…' : 'Help me write'}
+          <footer className="task-modal-footer">
+            <p><span className="task-required-dot" /> Required fields are marked</p>
+            <div className="task-modal-footer-actions">
+              <button type="button" onClick={onClose} className="btn task-modal-cancel" disabled={loading}>Cancel</button>
+              <button type="submit" disabled={loading} className="btn task-modal-submit">
+                {loading ? <><span className="task-submit-spinner" /> Saving…</> : task ? 'Save Changes' : 'Create Task'}
               </button>
             </div>
-            <textarea
-              id="task-description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              rows={3}
-              className="input resize-none"
-              placeholder="Add a short description (optional)"
-            />
-            {descriptionError && <p className="form-error mt-1">{descriptionError}</p>}
-            <p className="text-xs text-[var(--app-text-muted)] mt-1">AI drafts text for you to review.</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label" htmlFor="task-category">Category</label>
-              <select
-                id="task-category"
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                className="input"
-              >
-                <option value="">Choose a category</option>
-                {form.category && !['Academic', 'Personal', 'Work'].includes(form.category) && <option value={form.category}>{form.category} (existing)</option>}
-                {['Academic', 'Personal', 'Work'].map((category) => <option key={category} value={category}>{category}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="label" htmlFor="task-estimated-time">Estimated time (min)</label>
-              <input
-                id="task-estimated-time"
-                type="number"
-                name="estimated_time_minutes"
-                min="1"
-                value={form.estimated_time_minutes}
-                onChange={handleChange}
-                className="input"
-                placeholder="60"
-              />
-            </div>
-          </div>
-
-          {task && (
-            <div>
-              <label className="label" htmlFor="task-notes">Notes</label>
-              <textarea
-                id="task-notes"
-                name="notes"
-                value={form.notes}
-                onChange={handleChange}
-                rows={2}
-                className="input resize-none"
-                placeholder="Optional notes"
-              />
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label" htmlFor="task-due-date">Due Date</label>
-              <input
-                id="task-due-date"
-                type="date"
-                name="due_date"
-                value={form.due_date}
-                onChange={handleChange}
-                className="input"
-              />
-              {errors.due_date && <p className="form-error">{errors.due_date}</p>}
-            </div>
-            <div>
-              <label className="label" htmlFor="task-due-time">Due Time</label>
-              <input
-                id="task-due-time"
-                type="time"
-                name="due_time"
-                value={form.due_time}
-                onChange={handleChange}
-                className="input"
-              />
-            </div>
-          </div>
-
-          <LocationSearch
-            value={{ location: form.location, latitude: form.latitude, longitude: form.longitude }}
-            onChange={handleLocationChange}
-            error={errors.location}
-          />
-
-          {analysisError && <p className="text-sm text-[#444444]" role="status">{analysisError}</p>}
-          <details className="card-kpi p-4 border-[rgba(37,99,235,0.2)] bg-[rgba(37,99,235,0.04)]">
-            <summary className="flex cursor-pointer list-none items-center gap-2 text-sm font-semibold text-[#111111]">
-              <FiZap size={14} /> Scoring factors {analyzingFactors ? '· Updating…' : ''}
-            </summary>
-            <div className="mt-3">
-
-            <div className="flex items-start justify-between gap-3 py-2 border-b border-[var(--app-border)]">
-              <div className="min-w-0 flex-1">
-                <label className="text-sm font-medium text-[var(--app-text)]" htmlFor="task-importance">Importance</label>
-                <p className="text-xs text-[var(--app-text-secondary)] mt-0.5">
-                  {importanceOverride !== null
-                    ? 'Your value will be used in the official score.'
-                    : `${importanceAnalysis ? (sourceLabels[importanceAnalysis.source] || 'Suggested') : 'Suggested'} value; change it if needed.`}
-                </p>
-                {importanceAnalysis?.reason && importanceOverride === null && (
-                  <p className="text-xs text-[var(--app-text-secondary)] mt-1">{importanceAnalysis.reason}</p>
-                )}
-                <div className="mt-2 flex items-center gap-2">
-                  <input
-                    id="task-importance"
-                    type="number"
-                    min="1"
-                    max="10"
-                    step="1"
-                    value={importanceOverride ?? factors.importance}
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      setImportanceOverride(value);
-                    }}
-                    className="input w-24"
-                    aria-describedby="task-importance-help"
-                  />
-                  <span className="text-sm text-[var(--app-text-muted)]">/10</span>
-                  {importanceOverride !== null && (
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={() => setImportanceOverride(null)}>
-                      Use Contextify suggestion
-                    </button>
-                  )}
-                  {analyzingFactors && <span className="text-xs text-[var(--app-text-muted)]">Updating suggestion…</span>}
-                </div>
-                <p id="task-importance-help" className="text-xs text-[var(--app-text-muted)] mt-1">Choose a whole number from 1 to 10. Leave the suggestion unchanged to let Gemini suggest the saved value when available; the keyword suggestion is used if Gemini cannot respond. A value you set is kept as yours.</p>
-                {errors.importance && <p className="form-error mt-1">{errors.importance}</p>}
-              </div>
-            </div>
-
-            <AutoFactorRow
-              label="Urgency"
-              value={factors.urgency}
-              source="From deadline"
-              reason={form.due_date ? 'Based on how soon it is due.' : 'Set a deadline to calculate.'}
-              loading={false}
-            />
-
-            <AutoFactorRow
-              label="Time Availability"
-              value={factors.time_availability}
-              source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'}
-              reason={calendarContext?.reason_time_availability}
-              loading={analyzingFactors && form.title.trim().length >= 3}
-            />
-
-            <AutoFactorRow
-              label="Current Workload"
-              value={factors.current_workload}
-              source={calendarContext ? sourceLabels[calendarContext.source] || 'Calendar' : 'Calendar'}
-              reason={calendarContext?.reason_current_workload}
-              loading={analyzingFactors && form.title.trim().length >= 3}
-            />
-
-            {importanceAnalysis && !analyzingFactors && (
-              <p className="text-xs text-[var(--app-text-muted)] mt-3 flex items-center gap-1">
-                <FiClock size={12} />
-                Importance confidence: {importanceAnalysis.confidence}%
-              </p>
-            )}
-
-            {calendarContext?.commitments_count > 0 && !analyzingFactors && (
-              <p className="text-xs text-[var(--app-text-muted)] mt-1 flex items-center gap-1">
-                <FiCalendar size={12} />
-                {calendarContext.commitments_count} upcoming calendar commitment(s) considered
-              </p>
-            )}
-
-            <p className="text-xs text-[var(--app-text-muted)] mt-3">Calculated automatically from task details and your calendar.</p>
-            </div>
-          </details>
-
-          <button type="submit" disabled={loading} className="btn btn-primary w-full">
-            {loading ? 'Saving...' : task ? 'Update Task' : 'Create Task'}
-          </button>
+          </footer>
         </form>
-      </div>
+      </section>
     </div>
   );
 }

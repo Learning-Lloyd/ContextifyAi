@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Task;
+use App\Services\DeadlineUrgencyService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\Sanctum;
@@ -111,5 +113,35 @@ class TaskScoringTest extends TestCase
         }
 
         $this->assertDatabaseCount('tasks', 0);
+    }
+
+    public function test_task_deadline_edits_recalculate_automatic_urgency_and_formula_score(): void
+    {
+        Carbon::setTestNow(Carbon::parse('2026-11-20 10:00:00', 'UTC'));
+        try {
+            $this->assertSame(10, DeadlineUrgencyService::fromDueDate('2026-11-20'));
+            $this->assertSame(8, DeadlineUrgencyService::fromDueDate('2026-11-21'));
+
+            $user = User::factory()->create();
+            $task = $user->tasks()->create([
+                'title' => 'Exam preparation',
+                'importance' => 7,
+                'urgency' => 6,
+                'urgency_manual' => false,
+                'time_availability' => 10,
+                'current_workload' => 5,
+                'due_date' => '2026-11-23',
+            ]);
+
+            $this->assertSame(6, $task->urgency);
+            $this->assertSame(7.1, $task->priority_score);
+
+            $task->update(['due_date' => '2026-11-21']);
+
+            $this->assertSame(8, $task->fresh()->urgency);
+            $this->assertSame(7.7, $task->fresh()->priority_score);
+        } finally {
+            Carbon::setTestNow();
+        }
     }
 }

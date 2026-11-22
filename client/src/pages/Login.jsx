@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiCheck, FiLock, FiMail, FiMoon, FiSun } from 'react-icons/fi';
+import { FiCalendar, FiCpu, FiLock, FiMail, FiMessageSquare, FiMoon, FiSun } from 'react-icons/fi';
 import Logo from '../components/Logo';
+import AuthDecorations from '../components/AuthDecorations';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -44,6 +45,7 @@ export default function Login() {
 
   return (
     <div className="auth-stage min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <AuthDecorations />
       {/* Theme Toggle in Corner */}
       <button
         type="button"
@@ -57,11 +59,11 @@ export default function Login() {
       {/* Main Container */}
       <div className="auth-card w-full max-w-5xl grid md:grid-cols-2 rounded-[28px] overflow-hidden animate-fade-in">
         {/* Left Brand Panel (Desktop) */}
-        <div className="auth-brand-panel hidden md:flex flex-col justify-between p-10 lg:p-12 text-white">
+        <div className="auth-brand-panel hidden md:flex flex-col justify-between p-10 lg:p-12">
           <div>
-            <Logo size="lg" variant="dark" />
+            <Logo size="lg" variant={theme === 'dark' ? 'dark' : 'light'} />
             <div className="mt-12 space-y-4">
-              <div className="auth-pill">◎ &nbsp; WORKSPACE PRIORITY</div>
+              <div className="auth-pill"><span aria-hidden="true">◎</span> WORKSPACE PRIORITY</div>
               <h2 className="auth-headline text-3xl font-extrabold tracking-tight leading-snug">
                 Focus on what<br /><span>matters most.</span>
               </h2>
@@ -72,23 +74,17 @@ export default function Login() {
           </div>
 
           <div className="space-y-3 text-xs auth-features">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>Deterministic mathematical scoring formula</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-blue"><FiCpu size={15} /></span>
+              <span>Deterministic mathematical scoring</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>Automated calendar & deadline context derivation</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-purple"><FiCalendar size={15} /></span>
+              <span>Automated calendar context derivation</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>Explainable AI natural-language justifications</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-indigo"><FiMessageSquare size={15} /></span>
+              <span>Explainable AI natural justifications</span>
             </div>
           </div>
         </div>
@@ -96,12 +92,12 @@ export default function Login() {
         {/* Right Form Panel */}
         <div className="auth-form-panel p-8 sm:p-10 lg:p-14 flex flex-col justify-center">
           <div className="mb-6 md:hidden">
-            <Logo size="md" variant="light" className="mb-2" />
+            <Logo size="md" variant={theme === 'dark' ? 'dark' : 'light'} className="mb-2" />
           </div>
 
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--app-text)]">
-              Sign In
+          <div className="mb-7">
+            <h1 className="auth-form-heading text-3xl font-bold tracking-tight text-[var(--app-text)]">
+              Welcome Back
             </h1>
             <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] mt-1">
               Enter your credentials to access your prioritized workspace
@@ -143,7 +139,7 @@ export default function Login() {
                 <label className="label text-xs font-semibold" htmlFor="password">
                   Password
                 </label>
-                <Link to="/forgot-password" className="text-xs text-[#111111] hover:underline">Forgot password?</Link>
+                <Link to="/forgot-password" className="text-xs auth-link hover:underline">Forgot password?</Link>
               </div>
               <div className="leading-icon-field">
                 <FiLock
@@ -167,14 +163,14 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full py-2.5 text-xs sm:text-sm font-semibold shadow-sm mt-2"
+              className="btn btn-primary auth-submit w-full py-3 text-xs sm:text-sm font-semibold shadow-sm mt-2"
             >
               {loading ? 'Authenticating...' : 'Sign In to Workspace'}
             </button>
 
             <div className="pt-4 border-t border-[var(--app-border)] text-center text-xs text-[var(--app-text-secondary)]">
               Don&apos;t have an account?{' '}
-              <Link to="/register" className="text-[#111111] hover:underline font-bold">
+              <Link to="/register" className="auth-link hover:underline font-bold">
                 Create Account
               </Link>
             </div>

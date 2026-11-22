@@ -98,7 +98,7 @@ class RecommendationConsistencyTest extends TestCase
             $this->assertSame(10, $recommended['urgency']);
             $this->assertStringContainsString('Overdue by 12 hours', $recommended['task_card_explanation']);
             $this->assertStringContainsString('Importance is 9/10', $recommended['task_card_explanation']);
-            $this->assertStringContainsString('120 minutes', $recommended['task_card_explanation']);
+            $this->assertStringContainsString('2 hours', $recommended['task_card_explanation']);
         } finally {
             Carbon::setTestNow();
         }
@@ -156,6 +156,17 @@ class RecommendationConsistencyTest extends TestCase
         $this->assertSame([1, 2, 3, 4], array_column($result['ranked_tasks'], 'rank'));
     }
 
+    public function test_equal_scores_use_the_earlier_time_when_deadline_dates_match(): void
+    {
+        $result = $this->decisionService()->prioritizeMultiple([
+            $this->task(12, 'Later time', ['due_date' => '2026-11-21', 'due_time' => '13:00']),
+            $this->task(11, 'Earlier time', ['due_date' => '2026-11-21', 'due_time' => '08:19']),
+            $this->task(10, 'Date only, end of day', ['due_date' => '2026-11-21']),
+        ]);
+
+        $this->assertSame([11, 12, 10], array_column($result['ranked_tasks'], 'id'));
+    }
+
     public function test_long_task_with_a_short_deadline_shows_the_recorded_duration_and_time_remaining(): void
     {
         Carbon::setTestNow(Carbon::parse('2026-11-13 12:00:00'));
@@ -169,7 +180,7 @@ class RecommendationConsistencyTest extends TestCase
 
             $explanation = $result['ranked_tasks'][0]['task_card_explanation'];
             $this->assertStringContainsString('Due in 3 hours', $explanation);
-            $this->assertStringContainsString('480 minutes', $explanation);
+            $this->assertStringContainsString('8 hours', $explanation);
             $this->assertStringContainsString('Available-time factor: 3/10; current-workload factor: 8/10', $explanation);
         } finally {
             Carbon::setTestNow();

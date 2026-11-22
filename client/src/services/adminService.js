@@ -49,6 +49,10 @@ export const adminService = {
     const response = await api.get('/admin/analytics', { params });
     return response.data;
   },
+  async getReportSummary(params = {}) {
+    const response = await api.get('/admin/reports/summary', { params });
+    return response.data;
+  },
   async getNotifications() {
     const response = await api.get('/admin/notifications');
     return response.data;
@@ -57,10 +61,11 @@ export const adminService = {
     const response = await api.patch(`/admin/notifications/${id}/read`);
     return response.data;
   },
-  exportReport(type, format = 'csv') {
+  exportReport(type, format = 'csv', params = {}) {
     const token = localStorage.getItem('token');
     const base = import.meta.env.VITE_API_URL || '/api';
-    return fetch(`${base}/admin/reports/export?type=${type}&format=${format}`, {
+    const query = new URLSearchParams({ type, format, ...params });
+    return fetch(`${base}/admin/reports/export?${query}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   },

@@ -113,6 +113,13 @@ class DecisionService
                 return strcmp($leftDate, $rightDate);
             }
 
+            if ($leftDate !== null) {
+                $leftTime = isset($left['due_time']) ? substr((string) $left['due_time'], 0, 5) : '23:59:59';
+                $rightTime = isset($right['due_time']) ? substr((string) $right['due_time'], 0, 5) : '23:59:59';
+                $deadlineOrder = strcmp((string) $leftTime, (string) $rightTime);
+                if ($deadlineOrder !== 0) return $deadlineOrder;
+            }
+
             $idOrder = ((int) ($left['id'] ?? PHP_INT_MAX)) <=> ((int) ($right['id'] ?? PHP_INT_MAX));
             return $idOrder !== 0 ? $idOrder : strcmp((string) $left['title'], (string) $right['title']);
         });
@@ -158,6 +165,7 @@ class DecisionService
                 $task['due_time'] ?? null,
                 $timezone
             );
+            $task['countdown'] = $task['time_remaining'];
         }
         unset($task);
         foreach ($ranked as $index => &$task) {

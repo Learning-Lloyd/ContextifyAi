@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FiClock } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { formatMinutesAsHours } from '../utils/duration';
 import LoadingSkeleton from './LoadingSkeleton';
 import { scheduleService } from '../services/scheduleService';
 
@@ -41,12 +42,12 @@ export default function ScheduleSuggestions() {
   const issueCounts = Object.entries(issuesByType).map(([type, items]) => ({ type, count: items.length }));
   return (
     <section className="schedule-suggestions card p-5" aria-labelledby="schedule-suggestions-heading">
-      <div><h2 id="schedule-suggestions-heading" className="text-lg font-bold text-[var(--app-text)]">Next 7 days</h2><p className="text-sm text-[var(--app-text-secondary)] mt-1">{plannedCount} tasks planned · {schedule.daily_available_minutes} min/day from {schedule.workday_start_time}</p></div>
+      <div><h2 id="schedule-suggestions-heading" className="text-lg font-bold text-[var(--app-text)]">Next 7 days</h2><p className="text-sm text-[var(--app-text-secondary)] mt-1">{plannedCount} tasks planned · {formatMinutesAsHours(schedule.daily_available_minutes)}/day from {schedule.workday_start_time}</p></div>
       <div className="grid sm:grid-cols-2 gap-3">
         {schedule.days.filter((day) => day.items.length > 0).map((day) => (
           <div key={day.date} className="rounded-lg border border-[var(--app-border)] p-3">
-            <div className="flex items-center justify-between text-sm font-bold text-[var(--app-text)]"><span>{new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span><span className="text-[var(--app-text-muted)]">{day.scheduled_minutes}/{day.available_minutes} min</span></div>
-            <ul className="mt-2 space-y-2">{day.items.map((item) => <li key={item.task_id} className="flex items-start gap-2 text-sm"><FiClock className="mt-0.5 text-[#111111] shrink-0" /><span><Link to={`/tasks/${item.task_id}`} className="font-semibold text-[var(--app-text)] hover:underline">{item.title}</Link><small className="block text-xs text-[var(--app-text-muted)] mt-0.5">{item.start_time}–{item.end_time} · {item.duration_minutes} min</small></span></li>)}</ul>
+            <div className="flex items-center justify-between text-sm font-bold text-[var(--app-text)]"><span>{new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span><span className="text-[var(--app-text-muted)]">{formatMinutesAsHours(day.scheduled_minutes, true)} / {formatMinutesAsHours(day.available_minutes, true)}</span></div>
+            <ul className="mt-2 space-y-2">{day.items.map((item) => <li key={item.task_id} className="flex items-start gap-2 text-sm"><FiClock className="mt-0.5 text-[#111111] shrink-0" /><span><Link to={`/tasks/${item.task_id}`} className="font-semibold text-[var(--app-text)] hover:underline">{item.title}</Link><small className="block text-xs text-[var(--app-text-muted)] mt-0.5">{item.start_time}–{item.end_time} · {formatMinutesAsHours(item.duration_minutes)}</small></span></li>)}</ul>
           </div>
         ))}
       </div>

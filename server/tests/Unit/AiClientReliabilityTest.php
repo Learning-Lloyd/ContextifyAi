@@ -116,6 +116,45 @@ class AiClientReliabilityTest extends TestCase
         Http::assertSentCount(2);
     }
 
+    public function test_single_provider_503_is_classified_without_claiming_a_retry(): void
+    {
+        config(['ai.retry_attempts' => 1]);
+        Http::fake([
+            'https://gemini.test/v1beta/models/*:generateContent' => Http::response(
+                ['error' => ['message' => 'Temporary upstream overload']],
+                503
+            ),
+        ]);
+
+        $client = app(AiClient::class);
+        $this->assertNull($client->chatJson('system', 'user'));
+        $this->assertSame('provider_error', $client->lastFailure()['category']);
+        $this->assertSame(503, $client->lastFailure()['status']);
+        $this->assertSame(
+            'Google Gemini is temporarily unavailable. Please try again shortly.',
+            $client->unavailableMessage()
+        );
+        Http::assertSentCount(1);
+    }
+
+    public function test_single_network_failure_message_does_not_claim_retries(): void
+    {
+        config(['ai.retry_attempts' => 1]);
+        Http::fake([
+            'https://gemini.test/v1beta/models/*:generateContent' => Http::sequence()
+                ->pushFailedConnection('Connection refused'),
+        ]);
+
+        $client = app(AiClient::class);
+        $this->assertNull($client->chatJson('system', 'user'));
+        $this->assertSame('network_error', $client->lastFailure()['category']);
+        $this->assertSame(
+            'Contextify could not connect to the AI provider. Check the server internet connection and try again.',
+            $client->unavailableMessage()
+        );
+        Http::assertSentCount(1);
+    }
+
     public function test_network_timeout_is_classified_retried_and_can_recover(): void
     {
         Http::fake([

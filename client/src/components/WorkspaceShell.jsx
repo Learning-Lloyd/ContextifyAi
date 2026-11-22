@@ -9,7 +9,7 @@ import NotificationMenu from './NotificationMenu';
 
 const mainNav = [
   { to: '/dashboard', label: 'Today', end: true },
-  { to: '/tasks', label: 'Queue' },
+  { to: '/tasks', label: 'Tasks' },
   { to: '/calendar', label: 'Calendar' },
   { to: '/decision-lab', label: 'Decision lab' },
 ];
@@ -152,7 +152,7 @@ export default function WorkspaceShell({ children, admin = false }) {
 
       <nav className="workspace-mobile-nav" aria-label="Mobile navigation">
         <NavLink to="/dashboard" end className={({ isActive }) => isActive ? 'is-active' : ''}><span className="mobile-nav-glyph">01</span><span>Today</span></NavLink>
-        <NavLink to="/tasks" className={({ isActive }) => isActive ? 'is-active' : ''}><span className="mobile-nav-glyph">02</span><span>Queue</span></NavLink>
+        <NavLink to="/tasks" className={({ isActive }) => isActive ? 'is-active' : ''}><span className="mobile-nav-glyph">02</span><span>Tasks</span></NavLink>
         <div className="mobile-decision-menu" ref={mobileDecisionMenuRef}>
           {decisionMenuOpen && (
             <div className="decision-nav-dropdown" role="menu" aria-label="Decision Lab pages">

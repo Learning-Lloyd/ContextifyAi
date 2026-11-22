@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);
+    Route::get('/user/report/summary', [UserReportController::class, 'summary']);
     Route::get('/user/report', [UserReportController::class, 'download']);
     Route::apiResource('/goals', GoalController::class)->only(['index', 'store', 'update', 'destroy']);
 
@@ -100,6 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/audit-logs', [AdminAuditController::class, 'index']);
         Route::get('/analytics', [AdminAnalyticsController::class, 'index']);
+        Route::get('/reports/summary', [AdminReportController::class, 'summary']);
         Route::get('/reports/export', [AdminReportController::class, 'export']);
 
         Route::get('/notifications', [AdminNotificationController::class, 'index']);

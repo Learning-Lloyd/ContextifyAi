@@ -71,7 +71,9 @@ class ExplanationService
 
         $duration = $task['estimated_time_minutes'] ?? null;
         if (is_numeric($duration) && (int) $duration > 0) {
-            $parts[] = "Estimated completion time is " . (int) $duration . ' minutes.';
+            $durationHours = round(((int) $duration) / 60, 2);
+            $durationLabel = rtrim(rtrim(number_format($durationHours, 2, '.', ''), '0'), '.');
+            $parts[] = 'Estimated completion time is ' . $durationLabel . ' ' . ($durationHours === 1.0 ? 'hour.' : 'hours.');
         }
         $parts[] = "Available-time factor: {$timeAvailability}/10; current-workload factor: {$workload}/10.";
 

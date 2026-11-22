@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiCheck, FiLock, FiMail, FiMoon, FiSun, FiUser } from 'react-icons/fi';
+import { FiCalendar, FiCpu, FiLock, FiMail, FiMessageSquare, FiMoon, FiSun, FiUser } from 'react-icons/fi';
 import Logo from '../components/Logo';
+import AuthDecorations from '../components/AuthDecorations';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -49,6 +50,7 @@ export default function Register() {
 
   return (
     <div className="auth-stage min-h-screen flex items-center justify-center p-4 sm:p-6">
+      <AuthDecorations />
       {/* Theme Toggle */}
       <button
         type="button"
@@ -62,13 +64,13 @@ export default function Register() {
       {/* Main Container */}
       <div className="auth-card w-full max-w-5xl grid md:grid-cols-2 rounded-[28px] overflow-hidden animate-fade-in">
         {/* Left Brand Panel */}
-        <div className="auth-brand-panel hidden md:flex flex-col justify-between p-10 lg:p-12 text-white">
+        <div className="auth-brand-panel hidden md:flex flex-col justify-between p-10 lg:p-12">
           <div>
-            <Logo size="lg" variant="dark" />
+            <Logo size="lg" variant={theme === 'dark' ? 'dark' : 'light'} />
             <div className="mt-12 space-y-4">
-              <div className="auth-pill">◎ &nbsp; WORKSPACE PRIORITY</div>
+              <div className="auth-pill"><span aria-hidden="true">◎</span> WORKSPACE PRIORITY</div>
               <h2 className="auth-headline text-3xl font-extrabold tracking-tight leading-snug">
-                Join the Intelligent Prioritization Platform
+                Focus on what<br /><span>matters most.</span>
               </h2>
               <p className="auth-description text-sm leading-relaxed">
                 Take the guesswork out of what to do next. Let mathematical multi-factor contextual analysis schedule and organize your tasks.
@@ -77,23 +79,17 @@ export default function Register() {
           </div>
 
           <div className="space-y-3 text-xs auth-features">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>4-Factor Contextual Engine (Imp, Urg, Time, Workload)</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-blue"><FiCpu size={15} /></span>
+              <span>Deterministic mathematical scoring</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>Interactive What-If Simulation Sandbox</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-purple"><FiCalendar size={15} /></span>
+              <span>Automated calendar context derivation</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-zinc-400/20 flex items-center justify-center text-white">
-                <FiCheck size={12} />
-              </span>
-              <span>Automatic weather and deadline risk awareness</span>
+            <div className="auth-feature-row flex items-center gap-2">
+              <span className="auth-feature-icon auth-feature-icon-indigo"><FiMessageSquare size={15} /></span>
+              <span>Explainable AI natural justifications</span>
             </div>
           </div>
         </div>
@@ -101,11 +97,11 @@ export default function Register() {
         {/* Right Form Panel */}
         <div className="auth-form-panel p-8 sm:p-10 lg:p-14 flex flex-col justify-center">
           <div className="mb-6 md:hidden">
-            <Logo size="md" variant="light" className="mb-2" />
+            <Logo size="md" variant={theme === 'dark' ? 'dark' : 'light'} className="mb-2" />
           </div>
 
           <div className="mb-6">
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--app-text)]">
+            <h1 className="auth-form-heading text-3xl font-bold tracking-tight text-[var(--app-text)]">
               Create Account
             </h1>
             <p className="text-xs sm:text-sm text-[var(--app-text-secondary)] mt-1">
@@ -215,14 +211,14 @@ export default function Register() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full py-2.5 text-xs sm:text-sm font-semibold shadow-sm mt-2"
+              className="btn btn-primary auth-submit w-full py-3 text-xs sm:text-sm font-semibold shadow-sm mt-2"
             >
               {loading ? 'Creating Account...' : 'Get Started'}
             </button>
 
             <div className="pt-3 border-t border-[var(--app-border)] text-center text-xs text-[var(--app-text-secondary)]">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#111111] hover:underline font-bold">
+              <Link to="/login" className="auth-link hover:underline font-bold">
                 Sign In
               </Link>
             </div>

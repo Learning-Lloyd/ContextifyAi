@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Services\AuditLogService;
+use App\Services\DeadlineUrgencyService;
 use App\Services\ExplanationService;
 use App\Services\TaskScoringService;
 use App\Services\TaskAnalysisStatusService;
@@ -78,11 +79,13 @@ class TaskController extends Controller
         }
         if ($sort === 'due_date') {
             $query->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
-                ->orderBy('due_date', $direction);
+                ->orderBy('due_date', $direction)
+                ->orderByRaw("COALESCE(due_time, '23:59:59') {$direction}");
         } else {
             $query->orderBy($sort, $direction)
                 ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
-                ->orderBy('due_date');
+                ->orderBy('due_date')
+                ->orderByRaw("COALESCE(due_time, '23:59:59')");
         }
         $query->orderBy('id');
 
@@ -90,8 +93,9 @@ class TaskController extends Controller
         $analysisService = app(TaskAnalysisStatusService::class);
         $analysisStatus = $analysisService->forTasks($request->user(), $taskModels);
         $analysisDetails = $analysisService->analysisDetailsForTasks($request->user(), $taskModels, $this->clientTimezone($request));
-        $tasks = $taskModels->map(function (Task $task) use ($analysisStatus) {
-            return array_merge($this->formatTask($task), [
+        $timezone = $this->clientTimezone($request);
+        $tasks = $taskModels->map(function (Task $task) use ($analysisStatus, $timezone) {
+            return array_merge($this->formatTask($task, false, $timezone), [
                 'analyzed' => $analysisStatus[$task->id] ?? false,
             ]);
         });
@@ -130,7 +134,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task created successfully',
-            'task' => $this->formatTask($task),
+            'task' => $this->formatTask($task, false, $this->clientTimezone($request)),
         ], 201);
     }
 
@@ -140,7 +144,7 @@ class TaskController extends Controller
         $this->refreshWeatherIfStale($task);
 
         $freshTask = $task->fresh();
-        $taskData = $this->formatTask($freshTask, true);
+        $taskData = $this->formatTask($freshTask, true, $this->clientTimezone($request));
         $taskData['analyzed'] = app(TaskAnalysisStatusService::class)
             ->forTasks($request->user(), collect([$freshTask]))[$freshTask->id] ?? false;
         $analysisDetails = app(TaskAnalysisStatusService::class)
@@ -167,7 +171,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task updated successfully',
-            'task' => $this->formatTask($task->fresh(), true),
+            'task' => $this->formatTask($task->fresh(), true, $this->clientTimezone($request)),
         ]);
     }
 
@@ -202,7 +206,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task status updated',
-            'task' => $this->formatTask($task->fresh()),
+            'task' => $this->formatTask($task->fresh(), false, $this->clientTimezone($request)),
         ]);
     }
 
@@ -218,7 +222,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task archived successfully',
-            'task' => $this->formatTask($task->fresh()),
+            'task' => $this->formatTask($task->fresh(), false, $this->clientTimezone($request)),
         ]);
     }
 
@@ -234,7 +238,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task restored successfully',
-            'task' => $this->formatTask($task->fresh()),
+            'task' => $this->formatTask($task->fresh(), false, $this->clientTimezone($request)),
         ]);
     }
 
@@ -255,7 +259,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task duplicated successfully',
-            'task' => $this->formatTask($copy),
+            'task' => $this->formatTask($copy, false, $this->clientTimezone($request)),
         ], 201);
     }
 
@@ -364,7 +368,7 @@ class TaskController extends Controller
         ]);
     }
 
-    private function formatTask(Task $task, bool $withBreakdown = false): array
+    private function formatTask(Task $task, bool $withBreakdown = false, ?string $timezone = null): array
     {
         $data = [
             'id' => $task->id,
@@ -382,8 +386,12 @@ class TaskController extends Controller
             'weather_last_updated' => $task->weather_last_updated,
             'due_date' => $task->due_date?->format('Y-m-d'),
             'due_time' => $task->due_time,
-            'deadline_group' => $task->deadline_group,
-            'countdown' => $task->countdown,
+            'deadline_group' => DeadlineUrgencyService::deadlineGroup(
+                $task->due_date?->format('Y-m-d'), $timezone, $task->due_time
+            ),
+            'countdown' => DeadlineUrgencyService::countdownLabel(
+                $task->due_date?->format('Y-m-d'), $task->due_time, $timezone
+            ),
             'priority_level' => $task->priority_level,
             'importance' => $task->importance,
             'importance_source' => $task->importance_source ?? 'legacy',

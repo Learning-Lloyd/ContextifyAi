@@ -18,6 +18,7 @@ import { useToast } from '../hooks/useToast';
 import { decisionService } from '../services/decisionService';
 import { taskService } from '../services/taskService';
 import PriorityBadge from '../components/PriorityBadge';
+import PriorityGuide from '../components/PriorityGuide';
 import { getCountdownLabel, weatherIcon } from '../utils/taskUtils';
 
 export default function DecisionLab() {
@@ -178,6 +179,8 @@ export default function DecisionLab() {
             )}
           </div>
         </div>
+
+        <PriorityGuide />
 
         {/* Tab Navigation */}
         <div className="decision-lab-tabs" role="tablist" aria-label="Decision Lab tools">

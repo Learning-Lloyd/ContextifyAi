@@ -74,7 +74,8 @@ class DecisionLabController extends Controller
                 ], 422);
             }
 
-            $payload = $pendingTasks->map(fn (Task $task) => $this->taskToArray($task))->all();
+            $timezone = $this->clientTimezone($request);
+            $payload = $pendingTasks->map(fn (Task $task) => $this->taskToArray($task, $timezone))->all();
             $payload = $this->attachScheduledForecasts($payload, $request);
             $weatherContext = $this->resolveUserWeatherContext($request);
             $pendingTaskCount = $request->user()->tasks()->active()->where('status', 'pending')->count();
@@ -141,7 +142,7 @@ class DecisionLabController extends Controller
             if (! empty($scenario['id'])) {
                 $task = Task::find($scenario['id']);
                 if ($task && $task->user_id === $request->user()->id) {
-                    return array_merge($this->taskToArray($task), $scenario);
+                    return array_merge($this->taskToArray($task, $this->clientTimezone($request)), $scenario);
                 }
             }
 
@@ -178,7 +179,7 @@ class DecisionLabController extends Controller
             if (! empty($scenario['id'])) {
                 $task = Task::find($scenario['id']);
                 if ($task && $task->user_id === $request->user()->id) {
-                    return array_merge($this->taskToArray($task), $scenario);
+                    return array_merge($this->taskToArray($task, $this->clientTimezone($request)), $scenario);
                 }
             }
 
@@ -380,13 +381,13 @@ class DecisionLabController extends Controller
                 abort(403, 'Unauthorized task selection.');
             }
 
-            return $this->taskToArray($task);
+            return $this->taskToArray($task, $this->clientTimezone($request));
         }
 
         return $input;
     }
 
-    private function taskToArray(Task $task): array
+    private function taskToArray(Task $task, ?string $timezone = null): array
     {
         return [
             'id' => $task->id,
@@ -410,7 +411,9 @@ class DecisionLabController extends Controller
             'priority_score' => $task->priority_score,
             'status' => $task->status,
             'priority_level' => $task->priority_level,
-            'countdown' => $task->countdown,
+            'countdown' => \App\Services\DeadlineUrgencyService::countdownLabel(
+                $task->due_date?->format('Y-m-d'), $task->due_time, $timezone
+            ),
         ];
     }
 

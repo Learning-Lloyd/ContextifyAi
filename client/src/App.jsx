@@ -50,6 +50,7 @@ export default function App() {
             <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
             <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+            <Route path="/queue" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
@@ -57,6 +58,7 @@ export default function App() {
             <Route path="/research-dataset" element={<ProtectedRoute><ResearchDataset /></ProtectedRoute>} />
             <Route path="/calendar" element={<ProtectedRoute><Calendar /></ProtectedRoute>} />
             <Route path="/tasks/:id" element={<ProtectedRoute><TaskDetail /></ProtectedRoute>} />
+            <Route path="/queue/:id" element={<ProtectedRoute><TaskDetail /></ProtectedRoute>} />
             <Route path="/decision-lab" element={<ProtectedRoute><DecisionLab /></ProtectedRoute>} />
             <Route path="/decision-insights" element={<ProtectedRoute><DecisionInsights /></ProtectedRoute>} />
             <Route path="/decision-history" element={<ProtectedRoute><DecisionHistory /></ProtectedRoute>} />

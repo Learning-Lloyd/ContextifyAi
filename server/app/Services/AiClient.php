@@ -42,9 +42,9 @@ class AiClient
                         ? "{$provider} is temporarily rate-limiting requests. Please try again in about {$wait}."
                         : "{$provider} has reached its current rate or quota limit. Please try again later or review the provider's limits.")),
             'insufficient_credits' => "{$provider} reports insufficient credits for the configured model. Contextify did not switch providers or models.",
-            'provider_error' => "{$provider} is temporarily unavailable. Contextify retried a limited number of times; please try again shortly.",
-            'network_timeout' => 'The AI provider did not respond in time after limited retries. Please try again shortly.',
-            'network_error' => 'Contextify could not connect to the AI provider after limited retries. Check the server internet connection.',
+            'provider_error' => "{$provider} is temporarily unavailable. Please try again shortly.",
+            'network_timeout' => 'The AI provider did not respond in time. Please try again shortly.',
+            'network_error' => 'Contextify could not connect to the AI provider. Check the server internet connection and try again.',
             'malformed_response' => "{$provider} returned an unreadable response. Please try again shortly.",
             default => "{$feature} is unavailable right now. Check the AI provider configuration and try again.",
         };

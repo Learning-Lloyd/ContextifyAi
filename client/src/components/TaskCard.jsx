@@ -1,6 +1,7 @@
 import { FiArchive, FiArrowUpRight, FiCheckCircle, FiCopy, FiEdit2, FiRotateCcw, FiTrash2 } from 'react-icons/fi';
 import PriorityBadge from './PriorityBadge';
 import { getCountdownLabel } from '../utils/taskUtils';
+import { formatMinutesAsHours } from '../utils/duration';
 
 function prettyDate(value, time) {
   if (!value) return 'No deadline';
@@ -45,7 +46,7 @@ export default function TaskCard({ task, onOpen, onToggle, onDelete, onEdit, onA
       <td className="task-board-deadline">{prettyDate(task.due_date, task.due_time)}</td>
       <td><span className={`task-countdown ${overdue ? 'is-overdue' : ''}`}>{countdown || '—'}</span></td>
       <td>{task.category ? <span className={`task-category-tag category-${String(task.category).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{task.category}</span> : <span className="task-board-muted">—</span>}</td>
-      <td>{task.estimated_time_minutes ? `${task.estimated_time_minutes} min` : <span className="task-board-muted">—</span>}</td>
+      <td>{task.estimated_time_minutes ? formatMinutesAsHours(task.estimated_time_minutes, true) : <span className="task-board-muted">—</span>}</td>
       <td>
         <div className="task-board-actions">
           <button type="button" className={`task-action-button ${completed ? 'undo' : ''}`} onClick={() => onToggle(task.id)} aria-label={completed ? `Mark ${task.title} pending` : `Mark ${task.title} complete`} title={completed ? 'Mark pending' : 'Complete task'}><FiCheckCircle /></button>

@@ -11,6 +11,7 @@ import { dashboardService } from '../services/dashboardService';
 import { taskService } from '../services/taskService';
 import { goalsService } from '../services/goalsService';
 import { getCountdownLabel } from '../utils/taskUtils';
+import { formatMinutesAsHours } from '../utils/duration';
 
 const factors = [
   { key: 'importance', label: 'Importance', weight: '40%' },
@@ -214,7 +215,7 @@ export default function Dashboard() {
               <div className="focus-metadata">
                 <span><FiCalendar /> {dateLabel(focusTask.due_date)}{focusTask.due_time ? ` · ${focusTask.due_time.slice(0, 5)}` : ''}</span>
                 {getCountdownLabel(focusTask.due_date, focusTask.due_time) && <span className="task-countdown">{getCountdownLabel(focusTask.due_date, focusTask.due_time)}</span>}
-                {focusTask.estimated_time_minutes && <span><FiClock /> {focusTask.estimated_time_minutes} min</span>}
+                {focusTask.estimated_time_minutes && <span><FiClock /> {formatMinutesAsHours(focusTask.estimated_time_minutes, true)}</span>}
                 {focusTask.category && <span className="category-label">{focusTask.category}</span>}
               </div>
               <div className="focus-actions">
@@ -248,8 +249,8 @@ export default function Dashboard() {
             <div className="time-fit-mark"><FiClock /></div>
             <div className="time-fit-copy">
               <p className="eyebrow">TIME FIT</p>
-              <strong>{timeFit.estimate ? `${timeFit.estimate} min estimated` : 'Add an estimate to check time fit'}</strong>
-              <span>About {Math.floor(timeFit.available / 60)} hours available this week.</span>
+              <strong>{timeFit.estimate ? `${formatMinutesAsHours(timeFit.estimate)} estimated` : 'Add an estimate to check time fit'}</strong>
+              <span>About {formatMinutesAsHours(timeFit.available)} available this week.</span>
             </div>
             {timeFit.estimate && <span className={`time-fit-status ${timeFit.estimate <= timeFit.available ? 'is-fit' : 'is-tight'}`}>
               {timeFit.estimate <= timeFit.available ? 'Fits the estimate' : 'May need more time'}
@@ -259,8 +260,8 @@ export default function Dashboard() {
 
         <div className="workspace-lower-grid">
           <section className="priority-queue" aria-labelledby="queue-heading">
-            <div className="queue-heading-row"><div><p className="eyebrow">UP NEXT</p><h2 id="queue-heading">Priority Queue <span>{queue.length}</span></h2></div><Link to="/tasks" className="text-action">View all <FiArrowRight /></Link></div>
-            {queue.length > (focusTask ? 1 : 0) ? <ol className="queue-list">{queue.slice(focusTask ? 1 : 0, focusTask ? 6 : 5).map((task, index) => <li key={task.id} className="queue-item"><span className="queue-index">{String(index + (focusTask ? 2 : 1)).padStart(2, '0')}</span><div className="queue-copy"><Link to={`/tasks/${task.id}`}>{task.title}</Link><span>{dateLabel(task.due_date)}{task.category ? ` · ${task.category}` : ''}</span></div><button type="button" aria-label={`Mark ${task.title} complete`} className="queue-complete" onClick={() => handleToggle(task.id)}><FiCheckCircle /></button></li>)}</ol> : <div className="queue-empty">{queue.length ? 'One task at a time. You’ve got this.' : 'Add a task to start your queue.'}</div>}
+            <div className="queue-heading-row"><div><p className="eyebrow">UP NEXT</p><h2 id="queue-heading">Priority tasks <span>{queue.length}</span></h2></div><Link to="/tasks" className="text-action">View all <FiArrowRight /></Link></div>
+            {queue.length > (focusTask ? 1 : 0) ? <ol className="queue-list">{queue.slice(focusTask ? 1 : 0, focusTask ? 6 : 5).map((task, index) => <li key={task.id} className="queue-item"><span className="queue-index">{String(index + (focusTask ? 2 : 1)).padStart(2, '0')}</span><div className="queue-copy"><Link to={`/tasks/${task.id}`}>{task.title}</Link><span>{dateLabel(task.due_date)}{task.category ? ` · ${task.category}` : ''}</span></div><button type="button" aria-label={`Mark ${task.title} complete`} className="queue-complete" onClick={() => handleToggle(task.id)}><FiCheckCircle /></button></li>)}</ol> : <div className="queue-empty">{queue.length ? 'One task at a time. You’ve got this.' : 'Add a task to start your task list.'}</div>}
           </section>
 
           <aside className="day-context">
@@ -276,7 +277,7 @@ export default function Dashboard() {
         </div>
 
         <section className="card p-5 space-y-3" aria-labelledby="recent-activity-heading">
-          <div className="flex items-center justify-between"><div><p className="eyebrow">YOUR WORKSPACE</p><h2 id="recent-activity-heading" className="text-lg font-bold text-[var(--app-text)] mt-1">Recent activity</h2></div><Link to="/tasks" className="text-action">Task queue <FiArrowRight /></Link></div>
+          <div className="flex items-center justify-between"><div><p className="eyebrow">YOUR WORKSPACE</p><h2 id="recent-activity-heading" className="text-lg font-bold text-[var(--app-text)] mt-1">Recent activity</h2></div><Link to="/tasks" className="text-action">Tasks <FiArrowRight /></Link></div>
           {widgets.recent_activity?.length ? <ul className="divide-y divide-[var(--app-border)]">{widgets.recent_activity.map((activity) => <li key={activity.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"><span className="font-medium text-[var(--app-text-secondary)]">{activity.label}</span><time className="text-xs text-[var(--app-text-muted)] shrink-0">{new Date(activity.created_at).toLocaleString()}</time></li>)}</ul> : <p className="text-sm text-[var(--app-text-muted)] py-3">Your task updates will appear here.</p>}
         </section>
 

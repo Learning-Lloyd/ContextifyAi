@@ -5,5 +5,6 @@ export const goalsService = {
   async create(data) { return (await api.post('/goals', data)).data.goal; },
   async update(id, data) { return (await api.put(`/goals/${id}`, data)).data.goal; },
   async remove(id) { return api.delete(`/goals/${id}`); },
-  async report(period) { return api.get('/user/report', { params: { period }, responseType: 'blob' }); },
+  async report(params) { return api.get('/user/report', { params, responseType: 'blob' }); },
+  async reportSummary(params) { return (await api.get('/user/report/summary', { params })).data; },
 };

@@ -136,7 +136,7 @@ export default function Home() {
           <div className="home-weight-row"><span>Urgency</span><strong>30</strong></div>
           <div className="home-weight-row"><span>Time available</span><strong>20</strong></div>
           <div className="home-weight-row"><span>Workload</span><strong>10</strong></div>
-          <Link to="/register" className="home-note-link">Build your first queue <FiArrowRight /></Link>
+          <Link to="/register" className="home-note-link">Build your first task list <FiArrowRight /></Link>
         </aside>
         </section>
 

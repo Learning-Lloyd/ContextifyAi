@@ -170,4 +170,24 @@ class ImportanceAnalysisTest extends TestCase
             ->assertStatus(503)
             ->assertJsonStructure(['message']);
     }
+
+    public function test_generate_description_returns_clear_message_for_temporary_provider_503(): void
+    {
+        config(['ai.retry_attempts' => 1]);
+        Http::fake([
+            'https://gemini.test/*' => Http::response(
+                ['error' => ['message' => 'Temporary upstream overload']],
+                503
+            ),
+        ]);
+        Sanctum::actingAs(User::factory()->create());
+
+        $this->postJson('/api/tasks/generate-description', ['title' => 'Prepare for study group'])
+            ->assertStatus(503)
+            ->assertExactJson([
+                'message' => 'Google Gemini is temporarily unavailable. Please try again shortly.',
+            ]);
+
+        Http::assertSentCount(1);
+    }
 }

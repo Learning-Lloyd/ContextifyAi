@@ -5,7 +5,7 @@ import { taskService } from '../services/taskService';
 
 const pages = [
   { label: 'Daily workspace', description: 'See what deserves attention now', to: '/dashboard', group: 'Workspace' },
-  { label: 'Task queue', description: 'Search, sort, and manage tasks', to: '/tasks', group: 'Workspace' },
+  { label: 'Tasks', description: 'Search, sort, and manage tasks', to: '/tasks', group: 'Workspace' },
   { label: 'Calendar', description: 'Review deadlines and availability', to: '/calendar', group: 'Workspace' },
   { label: 'Analytics', description: 'Explore task and completion trends', to: '/analytics', group: 'Explore' },
   { label: 'Decision Lab', description: 'Compare tasks and run simulations', to: '/decision-lab', group: 'Explore' },
@@ -135,7 +135,7 @@ export default function CommandPalette({ open, onClose, isAdmin }) {
             </button>
           ))}
           {query.trim().length >= 2 && options.length === 0 && <p className="command-empty">No matching pages or tasks.</p>}
-          {query.trim().length >= 2 && taskMatches.length === 0 && <p className="command-hint">Searching your task queue…</p>}
+          {query.trim().length >= 2 && taskMatches.length === 0 && <p className="command-hint">Searching your tasks…</p>}
         </div>
         <footer className="command-footer">
           <span><FiArrowUp aria-hidden="true" /> <span>Navigate</span></span>
