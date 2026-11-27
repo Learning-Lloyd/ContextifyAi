@@ -66,7 +66,6 @@ export default function DecisionLab() {
   // The API returns tasks ordered by the existing fixed weighted score. This
   // preview rank is informational; it does not save an analysis or alter scores.
   const pendingRankById = new Map(pendingTasks.map((task, index) => [Number(task.id), index + 1]));
-  const unanalyzedTaskCount = pendingTasks.filter((task) => !task.analyzed).length;
   const clearAll = () => {
     setSelectedIds([]);
     setAnalysis(null);
@@ -96,6 +95,7 @@ export default function DecisionLab() {
   };
 
   const handleAnalyze = async () => {
+    if (analyzing || analysis) return;
     if (selectedIds.length === 0) {
       showToast('Select at least one task to analyze', 'error');
       return;
@@ -158,11 +158,11 @@ export default function DecisionLab() {
                 <button
                   type="button"
                   onClick={handleAnalyze}
-                  disabled={analyzing || selectedIds.length === 0}
+                  disabled={analyzing || Boolean(analysis) || selectedIds.length === 0}
                   className="btn btn-primary text-sm shadow-sm w-full sm:w-auto"
                 >
                   <FiZap size={15} />
-                  {analyzing ? 'Analyzing…' : selectedIds.length ? `Analyze ${selectedIds.length} tasks` : 'Analyze tasks'}
+                  {analyzing ? 'Comparing…' : analysis ? 'Analysis complete' : selectedIds.length ? `Analyze selected tasks (${selectedIds.length})` : 'Analyze selected tasks'}
                 </button>
                 {analysis && (
                   <button
@@ -254,11 +254,9 @@ export default function DecisionLab() {
                 />
               ) : (
                 <>
-                {unanalyzedTaskCount > 0 && (
-                  <p className="mt-4 rounded-lg border border-zinc-500/20 bg-zinc-500/[0.05] px-3 py-2 text-xs text-[var(--app-text-secondary)]">
-                    {unanalyzedTaskCount} task{unanalyzedTaskCount === 1 ? '' : 's'} not analyzed yet. Preliminary ranks use the existing 40/30/20/10 formula; analyze a task to save its result and explanation.
-                  </p>
-                )}
+                <p className="mt-4 rounded-lg border border-[var(--app-border)] bg-[var(--app-muted)]/40 px-3 py-2 text-xs text-[var(--app-text-secondary)]">
+                  Every saved task already has an official score and rank. Analyze Selected Tasks runs a deeper comparison and saves it to Decision Lab history.
+                </p>
                 <div className="decision-selection-scroll mt-3">
                   <table className="decision-selection-board" aria-label="Tasks available for analysis">
                     <thead>
@@ -294,12 +292,12 @@ export default function DecisionLab() {
                         </td>
                         <td>{task.due_date ? new Date(`${task.due_date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'No deadline'}{task.due_time ? ` · ${task.due_time.slice(0, 5)}` : ''}</td>
                         <td><span className={`task-countdown ${overdue ? 'is-overdue' : ''}`}>{countdown || '—'}</span></td>
-                        <td><span className={`task-status-tag ${task.status === 'completed' ? 'is-complete' : overdue ? 'is-overdue' : 'is-pending'}`}>{task.status === 'completed' ? 'Completed' : overdue ? 'Overdue' : 'Pending'}</span><span className="decision-selection-analysis-state">{task.status === 'completed' ? 'Not included' : task.analyzed ? 'Analyzed' : 'Needs analysis'}</span></td>
+                        <td><span className={`task-status-tag ${task.status === 'completed' ? 'is-complete' : overdue ? 'is-overdue' : 'is-pending'}`}>{task.status === 'completed' ? 'Completed' : overdue ? 'Overdue' : 'Pending'}</span><span className="decision-selection-analysis-state">{task.status === 'completed' ? 'Not included' : task.analyzed ? 'In comparison history' : 'Ready to compare'}</span></td>
                         <td>
                           {task.status === 'pending' && pendingRankById.has(Number(task.id)) && (
                             <span className="mr-2 font-semibold text-[var(--app-text-secondary)]">#{pendingRankById.get(Number(task.id))}</span>
                           )}
-                          {task.analyzed ? <PriorityBadge level={task.priority_level} /> : task.status === 'pending' ? <span className="text-xs text-[var(--app-text-muted)]">Preliminary</span> : '—'}
+                          {task.priority_score != null ? <PriorityBadge level={task.priority_level} score={Number(task.priority_score).toFixed(1)} /> : 'Score unavailable'}
                         </td>
                         <td>{task.weather_condition ? <span>{weatherIcon(task.weather_condition)} {task.weather_condition}</span> : null}{context && <span className="decision-selection-context">{context}</span>}{!context && !task.weather_condition ? '—' : null}</td>
                       </tr>
@@ -359,7 +357,7 @@ export default function DecisionLab() {
                             return (
                               <tr key={prediction.task_id} className="border-b border-[var(--app-border)] last:border-0">
                                 <td className="py-3 pr-4 font-medium text-[var(--app-text)]">{prediction.title}</td>
-                                <td className="py-3 pr-4">{rank ? `#${rank}${official ? ` · ${official.priority_score}/10 · ${officialCategory}` : ' · preliminary rank; analyze to save the score'}` : '—'}</td>
+                                <td className="py-3 pr-4">{rank ? `#${rank}${(official?.priority_score ?? task?.priority_score) != null ? ` · ${Number(official?.priority_score ?? task?.priority_score).toFixed(1)}/10 · ${officialCategory}` : ''}` : '—'}</td>
                                 <td className="py-3 pr-4 font-semibold text-amber-700 dark:text-amber-300">
                                   {!hasPrediction ? (
                                     <span className="text-[var(--app-text-muted)]">{prediction.prediction_status === 'insufficient_inputs' ? 'Not predicted' : 'No result'}</span>
@@ -404,7 +402,11 @@ export default function DecisionLab() {
                     </div>
                     <div className="space-y-2">
                       {analysis.ranked_tasks.map((task) => (
-                        <RankedTaskCard key={task.id || task.title} task={task} />
+                        <RankedTaskCard
+                          key={task.id || task.title}
+                          task={task}
+                          confidence={task.rank === 1 ? analysis.confidence : task.rank_confidence}
+                        />
                       ))}
                     </div>
                   </section>

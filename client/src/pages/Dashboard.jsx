@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { FiArrowRight, FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiCpu, FiPlus, FiTarget, FiZap } from 'react-icons/fi';
+import { FiArrowRight, FiArrowUpRight, FiCalendar, FiCheckCircle, FiClock, FiPlus, FiZap } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
@@ -12,6 +12,8 @@ import { taskService } from '../services/taskService';
 import { goalsService } from '../services/goalsService';
 import { getCountdownLabel } from '../utils/taskUtils';
 import { formatMinutesAsHours } from '../utils/duration';
+import { createTaskSuggestions } from '../utils/taskSuggestions';
+
 
 const factors = [
   { key: 'importance', label: 'Importance', weight: '40%' },
@@ -62,11 +64,16 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
+  const [selectedTaskSuggestion, setSelectedTaskSuggestion] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
   const [goals, setGoals] = useState([]);
   const [goalsLoading, setGoalsLoading] = useState(true);
   const [goalsUnavailable, setGoalsUnavailable] = useState(false);
   const { showToast } = useToast();
+  const taskSuggestions = useMemo(
+    () => createTaskSuggestions(authUser?.workspace_preferences),
+    [authUser?.workspace_preferences],
+  );
 
   const fetchDashboard = useCallback(async () => {
     try {
@@ -81,14 +88,18 @@ export default function Dashboard() {
 
   useEffect(() => { fetchDashboard(); }, [fetchDashboard]);
 
-  useEffect(() => {
-    let active = true;
-    goalsService.list()
-      .then((result) => { if (active) setGoals(result || []); })
-      .catch(() => { if (active) setGoalsUnavailable(true); })
-      .finally(() => { if (active) setGoalsLoading(false); });
-    return () => { active = false; };
+  const fetchGoals = useCallback(async () => {
+    setGoalsUnavailable(false);
+    try {
+      setGoals(await goalsService.list() || []);
+    } catch {
+      setGoalsUnavailable(true);
+    } finally {
+      setGoalsLoading(false);
+    }
   }, []);
+
+  useEffect(() => { fetchGoals(); }, [fetchGoals]);
 
   useEffect(() => {
     if (!isAdmin && authUser && !authUser.onboarding_completed_at) navigate('/onboarding', { replace: true });
@@ -97,12 +108,14 @@ export default function Dashboard() {
   const handleSave = async (formData) => {
     setFormLoading(true);
     try {
-      await taskService.create(formData);
-      showToast('Task created and prioritized', 'success');
-      setFormOpen(false);
+      const created = await taskService.create(formData);
+      showToast('Task saved successfully', 'success');
+      setSelectedTaskSuggestion(null);
       await fetchDashboard();
-    } catch {
+      return created;
+    } catch (error) {
       showToast('Could not save this task', 'error');
+      throw error;
     } finally {
       setFormLoading(false);
     }
@@ -111,30 +124,28 @@ export default function Dashboard() {
   const handleToggle = async (id) => {
     try {
       await taskService.toggleComplete(id);
-      await fetchDashboard();
+      await Promise.all([fetchDashboard(), fetchGoals()]);
     } catch {
       showToast('Could not update task status', 'error');
     }
   };
 
+  const openSuggestedTask = (suggestion) => {
+    setSelectedTaskSuggestion(suggestion);
+    setFormOpen(true);
+  };
+
   const queue = useMemo(() => {
     const groups = data?.grouped_tasks || {};
     const allTasks = data?.tasks?.length ? data.tasks : Object.values(groups).flat();
-    const pending = allTasks.filter((task) => task.status !== 'completed');
-    if (Number(data?.unanalyzed_pending_count || 0) > 0) {
-      return pending.sort((a, b) => (a.due_date || '9999-12-31').localeCompare(b.due_date || '9999-12-31'));
-    }
-    // The API has already ranked tasks; keep its order without exposing scores to this view.
-    return pending;
+    return allTasks.filter((task) => task.status !== 'completed');
   }, [data]);
 
   if (loading) return <Layout><div className="workspace-loading"><p className="eyebrow">Preparing your day</p><LoadingSkeleton variant="task-card" count={3} /></div></Layout>;
   if (!data) return <Layout><div className="workspace-error"><p className="eyebrow">Workspace unavailable</p><h1 className="page-title">We couldn’t load your day.</h1><button type="button" className="btn btn-primary" onClick={fetchDashboard}>Try again</button></div></Layout>;
 
   const { user, stats = {}, highest_priority_task: highestPriorityTask, widgets = {} } = data;
-  const unanalyzedCount = Number(data.unanalyzed_pending_count || 0);
-  const needsAnalysis = unanalyzedCount > 0;
-  const focusTask = needsAnalysis ? null : queue.find((task) => task.id === highestPriorityTask?.id) || queue[0] || null;
+  const focusTask = queue.find((task) => task.id === highestPriorityTask?.id) || queue[0] || null;
   const timeFit = focusTask ? getTimeFit(focusTask, queue) : null;
   const topReasonLabels = focusTask
     ? [...factors]
@@ -155,18 +166,20 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <section className="card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4" aria-label="Task progress">
-          <div className="min-w-0 flex-1">
-            <div className="flex justify-between gap-3 text-sm"><strong className="text-[var(--app-text)]">Task Progress</strong><span className="text-[var(--app-text-muted)]">{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining</span></div>
-            <div className="daily-progress-track h-2 rounded-full bg-[var(--app-muted)] mt-2 overflow-hidden"><span className="daily-progress-fill block h-full rounded-full transition-all" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} /></div>
+        <section className="dashboard-task-progress card" aria-label="Task progress">
+          <div className="dashboard-task-progress-heading">
+            <strong>Task Progress</strong>
+            <span>{stats.completed_tasks ?? 0} done · {stats.pending_tasks ?? 0} remaining · <b>{stats.completion_percent || 0}%</b></span>
+            {stats.unread_notifications > 0 && <Link to="/notifications" className="dashboard-task-reminders">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
           </div>
-          <span className="daily-progress-percent text-sm font-bold">{stats.completion_percent || 0}%</span>
-          {stats.unread_notifications > 0 && <Link to="/notifications" className="text-xs font-semibold text-[#111111]">{stats.unread_notifications} reminder{stats.unread_notifications === 1 ? '' : 's'} <FiArrowRight className="inline" /></Link>}
+          <div className="dashboard-task-progress-track" role="progressbar" aria-label="Task completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.max(0, Math.min(100, stats.completion_percent || 0))}>
+            <span className="daily-progress-fill" style={{ width: `${Math.max(0, Math.min(100, stats.completion_percent || 0))}%` }} />
+          </div>
         </section>
 
         <section className="dashboard-goal-progress" aria-labelledby="weekly-goals-heading">
           <div className="dashboard-goal-heading">
-            <div><p className="eyebrow">THIS WEEK</p><h2 id="weekly-goals-heading">Weekly progress</h2></div>
+            <h2 id="weekly-goals-heading">Weekly Goal</h2>
             <Link to="/profile" state={{ openGoals: true }} className="dashboard-goal-manage">Manage goals <FiArrowUpRight /></Link>
           </div>
           {goalsLoading ? <p className="dashboard-goal-loading">Loading your goals…</p> : goalsUnavailable ? (
@@ -175,43 +188,46 @@ export default function Dashboard() {
             <div className="dashboard-goal-list">
               {weeklyGoals.map((goal) => (
                 <article className="dashboard-goal-item" key={goal.id}>
-                  <div className="dashboard-goal-item-heading"><strong>{goal.title}</strong><span>{goal.completed_count} of {goal.target_count} tasks · {goal.progress}% · {goal.status.replace('_', ' ')}</span></div>
-                  <div className="dashboard-goal-track" role="progressbar" aria-label={`${goal.title} progress`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={goal.progress}>
+                  <div className="dashboard-goal-item-heading"><strong>{goal.title}</strong><span>{goal.completed_count} / {goal.target_count} · {goal.progress}%</span></div>
+                  <div className="dashboard-goal-track" role="progressbar" aria-label={`${goal.title} progress`} aria-valuemin="0" aria-valuemax="100" aria-valuenow={Math.max(0, Math.min(100, goal.progress || 0))}>
                     <span style={{ width: `${Math.max(0, Math.min(100, goal.progress || 0))}%` }} />
                   </div>
+                  <p className="dashboard-goal-interpretation" role="status">{goal.feedback_message || goal.summary}</p>
                 </article>
               ))}
             </div>
           ) : (
             <div className="dashboard-goal-empty">
-              <span className="dashboard-goal-icon"><FiTarget /></span>
-              <div><strong>No weekly goal set</strong><p>Choose a small task target to track your progress this week.</p></div>
-              <Link to="/profile" state={{ openGoals: true }} className="btn btn-secondary btn-sm">Set a goal <FiArrowRight /></Link>
+              <p>No weekly goal set. Set a small target to start tracking your progress.</p>
+              <Link to="/profile" state={{ openGoals: true }} className="btn btn-secondary btn-sm">Set goal <FiArrowRight /></Link>
             </div>
           )}
         </section>
 
-        {needsAnalysis ? (
-          <section className="analysis-needed-prompt" aria-label="Task analysis needed">
-            <span className="analysis-needed-icon"><FiCpu /></span>
-            <div className="analysis-needed-copy"><strong>Analyze tasks to get your next recommendation</strong><span>{unanalyzedCount} pending task{unanalyzedCount === 1 ? '' : 's'} need analysis.</span></div>
-            <Link to="/decision-lab" className="btn btn-primary btn-sm"><FiCpu /> Analyze tasks <FiArrowRight /></Link>
+        {!isAdmin && (
+          <section className="card p-5 space-y-4" aria-labelledby="suggested-tasks-heading">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div><p className="eyebrow">A PLACE TO START</p><h2 id="suggested-tasks-heading" className="mt-1 text-lg font-bold text-[var(--app-text)]">Suggested tasks for you</h2><p className="mt-1 text-sm text-[var(--app-text-muted)]">Ideas based on your workspace preferences. They do not affect priority scores.</p></div>
+              <Link to="/onboarding" className="text-action">{authUser?.workspace_preferences?.focus?.length || authUser?.workspace_preferences?.categories?.length ? 'Manage preferences' : 'Personalize ideas'} <FiArrowUpRight /></Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {taskSuggestions.slice(0, 4).map((suggestion) => (
+                <article key={`${suggestion.title}-${suggestion.category}`} className="rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/30 p-3">
+                  <div className="flex items-start justify-between gap-2"><h3 className="text-sm font-semibold text-[var(--app-text)]">{suggestion.title}</h3>{suggestion.category && <span className="task-category-tag shrink-0">{suggestion.category}</span>}</div>
+                  <p className="mt-2 line-clamp-2 text-xs text-[var(--app-text-muted)]">{suggestion.description}</p>
+                  <button type="button" className="btn btn-secondary btn-sm mt-3" onClick={() => openSuggestedTask(suggestion)}><FiPlus size={13} /> Use idea</button>
+                </article>
+              ))}
+            </div>
           </section>
-        ) : focusTask ? (
+        )}
+
+        {focusTask ? (
           <section className="focus-workspace" aria-labelledby="focus-heading">
             <div className="focus-main">
-              <div className="focus-label"><FiZap size={14} /> CONTEXTIFY RECOMMENDS <span>01 / {String(queue.length).padStart(2, '0')}</span></div>
+              <div className="focus-label"><FiZap size={14} /> CONTEXTIFY RECOMMENDS <span>#{focusTask.rank || 1} · {focusTask.priority_level} · {focusTask.priority_score != null ? `${Number(focusTask.priority_score).toFixed(1)}/10` : 'score unavailable'}</span></div>
               <Link to={`/tasks/${focusTask.id}`} className="focus-title-link"><h2 id="focus-heading">{focusTask.title}</h2></Link>
               {focusTask.description && <p className="focus-description">{focusTask.description}</p>}
-              {focusTask.analyzed && focusTask.analysis_explanation && (
-                <div className="task-analysis-explanation focus-analysis-explanation">
-                  <div className="flex items-center justify-between gap-2">
-                    <strong>Why this is your priority</strong>
-                    {focusTask.analysis_explanation_source && <span className="task-explanation-source">{focusTask.analysis_explanation_source === 'ai' ? 'Gemini explanation' : 'Basic guidance'}</span>}
-                  </div>
-                  <p>{focusTask.analysis_explanation}</p>
-                </div>
-              )}
               <div className="focus-metadata">
                 <span><FiCalendar /> {dateLabel(focusTask.due_date)}{focusTask.due_time ? ` · ${focusTask.due_time.slice(0, 5)}` : ''}</span>
                 {getCountdownLabel(focusTask.due_date, focusTask.due_time) && <span className="task-countdown">{getCountdownLabel(focusTask.due_date, focusTask.due_time)}</span>}
@@ -240,7 +256,7 @@ export default function Dashboard() {
         ) : (
           <section className="first-task-prompt">
             <div className="first-task-mark">01</div>
-            <div><p className="eyebrow">START WITH ONE THING</p><h2>Your day is still unwritten.</h2><p>Add a task and Contextify will weigh its importance, deadline, available time, and current workload.</p><button type="button" className="btn btn-primary" onClick={() => setFormOpen(true)}><FiPlus /> Create your first task</button></div>
+            <div><p className="eyebrow">START WITH ONE THING</p><h2>Your day is still unwritten.</h2><p>Add a task and Contextify will weigh its importance, deadline, available time, and current workload.</p><button type="button" className="btn btn-primary" onClick={() => { setSelectedTaskSuggestion(null); setFormOpen(true); }}><FiPlus /> Create your first task</button></div>
           </section>
         )}
 
@@ -284,7 +300,7 @@ export default function Dashboard() {
         <div className="daily-footer-note"><Link to="/help">How priorities work <FiArrowUpRight /></Link></div>
       </div>
 
-      <TaskForm isOpen={formOpen} onClose={() => setFormOpen(false)} onSubmit={handleSave} loading={formLoading} />
+      <TaskForm isOpen={formOpen} onClose={() => { setFormOpen(false); setSelectedTaskSuggestion(null); }} onSubmit={handleSave} loading={formLoading} suggestions={taskSuggestions} initialSuggestion={selectedTaskSuggestion} />
     </Layout>
   );
 }

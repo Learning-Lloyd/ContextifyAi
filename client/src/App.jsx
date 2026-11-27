@@ -33,6 +33,9 @@ import ResearchDataset from './pages/ResearchDataset';
 import Goals from './pages/Goals';
 import Reports from './pages/Reports';
 import Onboarding from './pages/Onboarding';
+import AdminSystemSettings from './pages/admin/AdminSystemSettings';
+import AdminAnnouncements from './pages/admin/AdminAnnouncements';
+import AdminHealth from './pages/admin/AdminHealth';
 
 export default function App() {
   return (
@@ -71,6 +74,9 @@ export default function App() {
             <Route path="/admin/audit-logs" element={<AdminProtectedRoute><AdminAuditLogs /></AdminProtectedRoute>} />
             <Route path="/admin/reports" element={<AdminProtectedRoute><AdminReports /></AdminProtectedRoute>} />
             <Route path="/admin/notifications" element={<AdminProtectedRoute><AdminNotifications /></AdminProtectedRoute>} />
+            <Route path="/admin/settings" element={<AdminProtectedRoute><AdminSystemSettings /></AdminProtectedRoute>} />
+            <Route path="/admin/announcements" element={<AdminProtectedRoute><AdminAnnouncements /></AdminProtectedRoute>} />
+            <Route path="/admin/health" element={<AdminProtectedRoute><AdminHealth /></AdminProtectedRoute>} />
             <Route path="/admin/feedback" element={<AdminProtectedRoute><AdminFeedback /></AdminProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

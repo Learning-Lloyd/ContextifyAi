@@ -90,13 +90,15 @@ class TaskController extends Controller
         $query->orderBy('id');
 
         $taskModels = $query->get();
+        $pendingRankById = $this->pendingRankMap($request->user());
         $analysisService = app(TaskAnalysisStatusService::class);
         $analysisStatus = $analysisService->forTasks($request->user(), $taskModels);
         $analysisDetails = $analysisService->analysisDetailsForTasks($request->user(), $taskModels, $this->clientTimezone($request));
         $timezone = $this->clientTimezone($request);
-        $tasks = $taskModels->map(function (Task $task) use ($analysisStatus, $timezone) {
+        $tasks = $taskModels->map(function (Task $task) use ($analysisStatus, $timezone, $pendingRankById) {
             return array_merge($this->formatTask($task, false, $timezone), [
                 'analyzed' => $analysisStatus[$task->id] ?? false,
+                'rank' => $pendingRankById[$task->id] ?? null,
             ]);
         });
         $tasks = $tasks->map(function (array $task) use ($analysisDetails) {
@@ -126,6 +128,9 @@ class TaskController extends Controller
         $validated = $this->weatherService->applyWeatherToTaskData($validated);
 
         $task = $request->user()->tasks()->create($validated);
+        $pendingRankById = $this->pendingRankMap($request->user());
+        $taskData = $this->formatTask($task, false, $this->clientTimezone($request));
+        unset($taskData['priority_score']);
 
         $this->auditLogService->log($request->user()->id, 'task_create', $request, [
             'task_id' => $task->id,
@@ -134,7 +139,10 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task created successfully',
-            'task' => $this->formatTask($task, false, $this->clientTimezone($request)),
+            'task' => array_merge(
+                $taskData,
+                ['rank' => $pendingRankById[$task->id] ?? null]
+            ),
         ], 201);
     }
 
@@ -155,6 +163,15 @@ class TaskController extends Controller
         return response()->json(['task' => $taskData]);
     }
 
+    public function analysisSummary(Request $request, Task $task): JsonResponse
+    {
+        $this->authorizeTask($request, $task);
+
+        return response()->json([
+            'task' => $this->formatTask($task, true, $this->clientTimezone($request)),
+        ]);
+    }
+
     public function update(Request $request, Task $task): JsonResponse
     {
         $this->authorizeTask($request, $task);
@@ -163,6 +180,7 @@ class TaskController extends Controller
         $validated = $this->applyAutomaticScoringFactors($request, $validated, $task);
         $validated = $this->weatherService->applyWeatherToTaskData($validated);
         $task->update($validated);
+        $pendingRankById = $this->pendingRankMap($request->user());
 
         $this->auditLogService->log($request->user()->id, 'task_update', $request, [
             'task_id' => $task->id,
@@ -171,7 +189,10 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Task updated successfully',
-            'task' => $this->formatTask($task->fresh(), true, $this->clientTimezone($request)),
+            'task' => array_merge(
+                $this->formatTask($task->fresh(), true, $this->clientTimezone($request)),
+                ['rank' => $pendingRankById[$task->id] ?? null]
+            ),
         ]);
     }
 
@@ -276,6 +297,8 @@ class TaskController extends Controller
             'longitude' => 'nullable|numeric|between:-180,180',
             'due_date' => ($requireTitle ? 'required' : 'sometimes') . '|date',
             'due_time' => 'nullable|date_format:H:i',
+            'scheduled_start_date' => 'nullable|required_with:scheduled_start_time|date',
+            'scheduled_start_time' => 'nullable|date_format:H:i',
             'status' => 'sometimes|in:pending,completed',
             'importance' => 'sometimes|required|integer|min:1|max:10',
         ];
@@ -335,6 +358,21 @@ class TaskController extends Controller
         }
     }
 
+    /** @return array<int, int> Current rank among this user's active unfinished tasks. */
+    private function pendingRankMap($user): array
+    {
+        return $user->tasks()->active()->where('status', 'pending')
+            ->orderByDesc('priority_score')
+            ->orderByRaw('CASE WHEN due_date IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('due_date')
+            ->orderByRaw("COALESCE(due_time, '23:59:59')")
+            ->orderBy('id')
+            ->pluck('id')
+            ->values()
+            ->mapWithKeys(fn ($id, $index) => [(int) $id => $index + 1])
+            ->all();
+    }
+
     private function clientTimezone(Request $request): ?string
     {
         $timezone = $request->header('X-Client-Timezone');
@@ -386,6 +424,8 @@ class TaskController extends Controller
             'weather_last_updated' => $task->weather_last_updated,
             'due_date' => $task->due_date?->format('Y-m-d'),
             'due_time' => $task->due_time,
+            'scheduled_start_date' => $task->scheduled_start_date?->format('Y-m-d'),
+            'scheduled_start_time' => $task->scheduled_start_time,
             'deadline_group' => DeadlineUrgencyService::deadlineGroup(
                 $task->due_date?->format('Y-m-d'), $timezone, $task->due_time
             ),
@@ -393,6 +433,7 @@ class TaskController extends Controller
                 $task->due_date?->format('Y-m-d'), $task->due_time, $timezone
             ),
             'priority_level' => $task->priority_level,
+            'priority_score' => $task->priority_score,
             'importance' => $task->importance,
             'importance_source' => $task->importance_source ?? 'legacy',
             'urgency' => $task->urgency,

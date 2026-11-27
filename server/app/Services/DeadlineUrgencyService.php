@@ -27,8 +27,10 @@ class DeadlineUrgencyService
 
         return match (true) {
             $daysUntil < 0 => 10,
-            $daysUntil === 0 => 10,
-            $daysUntil === 1 => 8,
+            // Carbon 3 returns a float from diffInDays(), so strict integer
+            // comparisons miss same-day and next-day deadlines.
+            $daysUntil <= 0 => 10,
+            $daysUntil <= 1 => 8,
             $daysUntil <= 3 => 6,
             $daysUntil <= 7 => 4,
             default => 3,

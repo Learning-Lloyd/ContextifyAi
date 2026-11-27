@@ -9,34 +9,26 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class AdminAnalyticsController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
         $year = $request->integer('year', now()->year);
+        $monthlyTasks = $this->monthlyCounts(Task::class, $year);
+        $monthlyUsers = $this->monthlyCounts(User::class, $year);
+        $monthlyDecisions = $this->monthlyCounts(DecisionAnalysis::class, $year);
 
         return response()->json([
-            'tasks_per_month' => Task::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                ->whereYear('created_at', $year)
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get(),
-            'users_registered' => User::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                ->whereYear('created_at', $year)
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get(),
+            'tasks_per_month' => $monthlyTasks,
+            'users_registered' => $monthlyUsers,
             'priority_distribution' => [
                 ['level' => 'high', 'count' => Task::where('priority_score', '>=', 8)->count()],
                 ['level' => 'medium', 'count' => Task::whereBetween('priority_score', [5, 7.99])->count()],
                 ['level' => 'low', 'count' => Task::where('priority_score', '<', 5)->count()],
             ],
-            'decision_frequency' => DecisionAnalysis::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-                ->whereYear('created_at', $year)
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get(),
+            'decision_frequency' => $monthlyDecisions,
             'completed_vs_pending' => [
                 ['status' => 'completed', 'count' => Task::where('status', 'completed')->count()],
                 ['status' => 'pending', 'count' => Task::where('status', 'pending')->count()],
@@ -51,5 +43,25 @@ class AdminAnalyticsController extends Controller
                 ->take(10)
                 ->get(['id', 'name', 'email']),
         ]);
+    }
+
+    /**
+     * Keep monthly grouping compatible with the SQLite test/local driver and
+     * MySQL production driver without loading timestamp rows into PHP.
+     */
+    private function monthlyCounts(string $model, int $year)
+    {
+        $monthExpression = match (DB::connection()->getDriverName()) {
+            'mysql' => 'MONTH(created_at)',
+            'sqlite' => "CAST(strftime('%m', created_at) AS INTEGER)",
+            default => throw new InvalidArgumentException('Admin analytics monthly grouping does not support the configured database driver.'),
+        };
+
+        return $model::query()
+            ->selectRaw("{$monthExpression} as month, COUNT(*) as count")
+            ->whereYear('created_at', $year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
     }
 }

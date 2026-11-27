@@ -13,6 +13,8 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import { useToast } from '../hooks/useToast';
 import { taskService } from '../services/taskService';
 import { getCountdownLabel } from '../utils/taskUtils';
+import { minutesToHours } from '../utils/duration';
+import { buildTimelineWeek } from '../utils/taskTimeline';
 
 export default function Tasks() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -29,6 +31,12 @@ export default function Tasks() {
   const [groupBy, setGroupBy] = useState('status');
   const [collapsedGroups, setCollapsedGroups] = useState({});
   const [calendarMonth, setCalendarMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [timelineWeek, setTimelineWeek] = useState(() => {
+    const today = new Date();
+    const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+    return monday;
+  });
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
     sort: 'priority_score',
@@ -83,11 +91,13 @@ export default function Tasks() {
   const handleCreate = async (formData) => {
     setFormLoading(true);
     try {
-      await taskService.create(formData);
-      showToast('Task created successfully', 'success');
+      const created = await taskService.create(formData);
+      showToast('Task saved successfully', 'success');
       await fetchTasks();
-    } catch {
+      return created;
+    } catch (error) {
       showToast('Failed to create task', 'error');
+      throw error;
     } finally {
       setFormLoading(false);
     }
@@ -168,7 +178,7 @@ export default function Tasks() {
 
   const taskGroup = (task) => {
     if (groupBy === 'priority') {
-      if (!task.analyzed) return 'Needs analysis';
+      if (!task.priority_level) return 'Score unavailable';
       return `${task.priority_level?.charAt(0).toUpperCase()}${task.priority_level?.slice(1)} priority`;
     }
     const countdown = getCountdownLabel(task.due_date, task.due_time);
@@ -183,7 +193,7 @@ export default function Tasks() {
   }, {});
   const groupOrder = groupBy === 'status'
     ? ['Overdue', 'Pending', 'Completed']
-    : ['High priority', 'Medium priority', 'Low priority', 'Needs analysis'];
+    : ['High priority', 'Medium priority', 'Low priority', 'Score unavailable'];
   const orderedGroups = [...groupOrder.filter((label) => groupedTasks[label]?.length), ...Object.keys(groupedTasks).filter((label) => !groupOrder.includes(label))];
 
   const tasksByDate = tasks.reduce((byDate, task) => {
@@ -198,6 +208,7 @@ export default function Tasks() {
     const day = index - new Date(monthYear, monthIndex, 1).getDay() + 1;
     return day >= 1 && day <= monthDays ? day : null;
   });
+  const { days: timelineDays, unscheduled: unscheduledTasks } = buildTimelineWeek(timelineWeek, tasks);
 
   return (
     <Layout>
@@ -318,7 +329,7 @@ export default function Tasks() {
         {/* Task List Content */}
         {loading ? (
           <LoadingSkeleton variant="task-card" count={4} />
-        ) : tasks.length === 0 ? (
+        ) : tasks.length === 0 && viewMode !== 'timeline' ? (
           <div className="queue-empty-state">
             <EmptyState
               title="No tasks match your criteria"
@@ -387,7 +398,7 @@ export default function Tasks() {
                   const countdown = getCountdownLabel(task.due_date, task.due_time);
                   const overdue = column.key === 'pending' && countdown?.startsWith('Overdue');
                   return <article className="task-kanban-card" key={task.id}>
-                    <div className="task-kanban-card-top"><span className={`task-status-tag ${overdue ? 'is-overdue' : column.key === 'completed' ? 'is-complete' : 'is-pending'}`}>{overdue ? 'Overdue' : column.label}</span>{task.analyzed && <PriorityBadge level={task.priority_level} />}</div>
+                    <div className="task-kanban-card-top"><span className={`task-status-tag ${overdue ? 'is-overdue' : column.key === 'completed' ? 'is-complete' : 'is-pending'}`}>{overdue ? 'Overdue' : column.label}</span>{task.priority_score != null && <PriorityBadge level={task.priority_level} score={Number(task.priority_score).toFixed(1)} />}</div>
                     <button type="button" className="task-kanban-title" onClick={() => setSelectedTask(task)}>{task.title}</button>
                     {task.description && <p>{task.description}</p>}
                     <div className="task-kanban-meta">{task.due_date ? new Date(`${task.due_date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'No deadline'}{countdown && <span className={overdue ? 'is-overdue' : ''}>{countdown}</span>}</div>
@@ -417,11 +428,10 @@ export default function Tasks() {
             <p className="task-calendar-note">Calendar placement uses each task’s actual due date. Select a task to see its details.</p>
           </section>
         ) : (
-          <section className="task-timeline-unavailable">
-            <p className="eyebrow">TIMELINE VIEW</p>
-            <h2>Start dates are not available</h2>
-            <p>Tasks currently store due dates but no start dates or durations as date ranges. A timeline cannot place task spans accurately without that information, so this view is unavailable. Use Calendar to see tasks by their actual deadlines.</p>
-            <button type="button" className="btn btn-secondary" onClick={() => setViewMode('calendar')}><FiCalendar /> Open Calendar</button>
+          <section className="task-timeline-view" aria-label="Scheduled task timeline">
+            <header className="task-timeline-header"><div><p className="eyebrow">SCHEDULED TASKS</p><h2>{timelineDays[0].date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} – {timelineDays[6].date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</h2><p>Only tasks with a start date appear in the schedule. Tasks are never assigned an estimated start automatically.</p></div><div className="task-calendar-nav"><button type="button" className="btn btn-secondary btn-sm" onClick={() => setTimelineWeek(new Date(timelineWeek.getFullYear(), timelineWeek.getMonth(), timelineWeek.getDate() - 7))} aria-label="Previous week"><FiChevronLeft /></button><button type="button" className="btn btn-secondary btn-sm" onClick={() => { const today = new Date(); const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7)); setTimelineWeek(monday); }}>This week</button><button type="button" className="btn btn-secondary btn-sm" onClick={() => setTimelineWeek(new Date(timelineWeek.getFullYear(), timelineWeek.getMonth(), timelineWeek.getDate() + 7))} aria-label="Next week"><FiChevronRight /></button></div></header>
+            <div className="task-timeline-grid">{timelineDays.map((day) => <section className="task-timeline-day" key={day.key}><h3>{day.date.toLocaleDateString(undefined, { weekday: 'short' })}<span>{day.date.getDate()}</span></h3>{day.withoutTime.map((task) => <button type="button" key={task.id} className="task-timeline-unspecified" onClick={() => setSelectedTask(task)}><strong>{task.title}</strong><span>Start time not set{task.estimated_time_minutes ? ` · ${minutesToHours(task.estimated_time_minutes)} hr` : ' · duration not set'}</span></button>)}<div className="task-timeline-day-track" aria-label={`${day.date.toLocaleDateString()} 24-hour schedule`}>{['00:00', '06:00', '12:00', '18:00'].map((time) => <span className="task-timeline-hour" key={time} style={{ top: `${Number(time.slice(0, 2)) / 24 * 100}%` }}>{time}</span>)}{day.placed.map((item) => { const laneWidth = 100 / item.laneCount; const timeLabel = `${String(Math.floor(item.startMinutes / 60)).padStart(2, '0')}:${String(item.startMinutes % 60).padStart(2, '0')}`; return <button type="button" key={item.task.id} className={`task-timeline-item ${item.task.status === 'completed' ? 'is-complete' : ''} ${item.durationMinutes === null ? 'is-point' : ''}`} style={{ top: `${item.topPercent}%`, height: `${Math.max(3.5, item.heightPercent)}%`, left: `calc(${item.lane * laneWidth}% + 4px)`, width: `calc(${laneWidth}% - 8px)` }} onClick={() => setSelectedTask(item.task)} title={`${item.task.title} · ${timeLabel}${item.endTime ? ` to ${item.endTime}${item.continuesNextDay ? ' next day' : ''}` : ' · duration not set'}`}><strong>{item.task.title}</strong><span>{timeLabel}{item.durationMinutes === null ? ' · duration not set' : `–${item.endTime}${item.continuesNextDay ? ' +1d' : ''}`}</span>{item.task.due_date && <small>Due {new Date(`${item.task.due_date}T00:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</small>}</button>; })}{day.placed.length === 0 && day.withoutTime.length === 0 && <p className="task-timeline-empty">No scheduled tasks</p>}</div></section>)}</div>
+            <section className="task-timeline-unscheduled"><h3>Not scheduled <span>{unscheduledTasks.length}</span></h3>{unscheduledTasks.length ? <div>{unscheduledTasks.map((task) => <button type="button" key={task.id} onClick={() => openEdit(task)}>{task.title} <small>Set a start date</small></button>)}</div> : <p>All tasks have a scheduled start date.</p>}</section>
           </section>
         )}
       </div>

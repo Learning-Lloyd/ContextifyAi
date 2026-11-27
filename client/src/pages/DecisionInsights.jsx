@@ -17,14 +17,14 @@ import LoadingSkeleton from '../components/LoadingSkeleton';
 import EmptyState from '../components/EmptyState';
 import { decisionService } from '../services/decisionService';
 
-const COLORS = ['#333333', '#777777', '#AAAAAA'];
+const COLORS = ['#2563eb', '#7c3aed', '#94a3b8'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
       <div className="card p-2.5 shadow-xl text-xs border border-[var(--app-border)]">
         <p className="font-bold text-[var(--app-text)]">{label || payload[0].name}</p>
-        <p className="text-[#111111] font-mono font-semibold">{payload[0].value}</p>
+        <p className="text-[var(--app-text)] font-mono font-semibold">{payload[0].value}</p>
       </div>
     );
   }
@@ -79,17 +79,18 @@ export default function DecisionInsights() {
       <div className="max-w-5xl mx-auto space-y-8 animate-fade-in">
         <div className="pb-2 border-b border-[var(--app-border)]">
           <h1 className="page-title">Decision Insights & Patterns</h1>
-          <p className="page-subtitle text-sm">Patterns from your saved decisions.</p>
+          <p className="page-subtitle text-sm">Plain-language context for decisions you chose to save. Automatic task scores are not counted as saved analyses.</p>
         </div>
 
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard title="Total Analyses" value={insights.total_analyses} type="total" accent />
-          <StatCard title="Comparisons" value={insights.total_comparisons} type="average" />
-          <StatCard title="Tasks per analysis" value={insights.avg_tasks_per_analysis} type="pending" />
+          <StatCard title="Saved analyses" value={insights.total_analyses} subtitle="Multi-task comparisons saved in Decision Lab" type="total" accent />
+          <StatCard title="Saved comparisons" value={insights.total_comparisons} subtitle="Pairwise decisions in your history" type="average" />
+          <StatCard title="Tasks per analysis" value={insights.avg_tasks_per_analysis} subtitle="Average tasks in each saved analysis" type="pending" />
           <StatCard
             title="Deadline conflicts"
             value={insights.total_conflicts_detected}
+            subtitle="Conflict entries across saved analyses; a date may recur"
             type={insights.total_conflicts_detected > 0 ? 'highest' : 'completed'}
           />
         </div>
@@ -97,20 +98,32 @@ export default function DecisionInsights() {
         {insights.total_analyses === 0 && insights.total_comparisons === 0 ? (
           <EmptyState
             title="No decision history yet"
-            description="Analyze or compare tasks in Decision Lab to see your patterns here."
+            description="Your tasks still receive automatic official scores and ranks. Save a multi-task analysis or pairwise comparison in Decision Lab to build this optional history."
           />
         ) : (
           <>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="card p-5">
-                <p className="text-xs font-semibold text-[var(--app-text-muted)]">Most influential factor</p>
+                <p className="text-xs font-semibold text-[var(--app-text-muted)]">Largest weighted factor on first-ranked tasks</p>
                 <p className="text-lg font-bold text-[var(--app-text)] mt-2 capitalize">{insights.most_influential_factor?.replaceAll('_', ' ') || 'Not enough history'}</p>
+                <p className="mt-1 text-xs text-[var(--app-text-secondary)]">This factor had the largest weighted contribution in {insights.most_influential_factor_count || 0} of {insights.factor_analysis_count || 0} saved analyses with a usable score breakdown.</p>
               </div>
               <div className="card p-5">
                 <p className="text-xs font-semibold text-[var(--app-text-muted)]">Most often ranked first</p>
                 <p className="text-lg font-bold text-[var(--app-text)] mt-2">{insights.most_frequent_top_task || 'Not enough history'}</p>
+                <p className="mt-1 text-xs text-[var(--app-text-secondary)]">Appeared first in {insights.most_frequent_top_task_count || 0} of {insights.top_task_analysis_count || 0} saved analyses that had a ranked task.</p>
               </div>
             </div>
+
+            {insights.personalized_guidance?.length > 0 && (
+              <section className="card p-5" aria-labelledby="history-guidance-title">
+                <h2 id="history-guidance-title" className="text-sm font-bold text-[var(--app-text)]">Guidance from your saved task history</h2>
+                <p className="mt-1 text-xs text-[var(--app-text-secondary)]">{insights.personalized_guidance_basis}</p>
+                <ul className="mt-3 space-y-2 text-sm text-[var(--app-text)]">
+                  {insights.personalized_guidance.map((guidance) => <li key={guidance}>{guidance}</li>)}
+                </ul>
+              </section>
+            )}
 
         {/* Charts Grid */}
         <div className="grid lg:grid-cols-2 gap-6">
@@ -119,6 +132,7 @@ export default function DecisionInsights() {
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
                 Analyses by Month
               </h3>
+              <p className="mt-1 text-xs text-[var(--app-text-secondary)]">Counts saved multi-task analyses by the month they were created. Pairwise comparisons and What-if scenarios are excluded.</p>
             </div>
             <div className="pt-2">
               <ResponsiveContainer width="100%" height={220}>
@@ -138,6 +152,7 @@ export default function DecisionInsights() {
               <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--app-text)]">
                 Comparison confidence
               </h3>
+              <p className="mt-1 text-xs text-[var(--app-text-secondary)]">{insights.comparison_confidence_basis || 'These labels describe score-gap bands between compared tasks; they are not statistical confidence estimates.'}</p>
             </div>
             {confidenceData.length > 0 ? (
               <div className="pt-2">

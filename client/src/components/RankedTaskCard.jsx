@@ -3,13 +3,14 @@ import PriorityBadge from './PriorityBadge';
 import FactorBar from './FactorBar';
 import WhyNotPanel from './WhyNotPanel';
 import { weatherIcon } from '../utils/taskUtils';
+import DecisionConfidenceBadge from './DecisionConfidenceBadge';
 
 function ordinal(value) {
   if (value % 100 >= 11 && value % 100 <= 13) return `${value}th`;
   return `${value}${({ 1: 'st', 2: 'nd', 3: 'rd' })[value % 10] || 'th'}`;
 }
 
-export default function RankedTaskCard({ task }) {
+export default function RankedTaskCard({ task, confidence }) {
   const factors = task.factor_breakdown?.factors || [];
 
   return (
@@ -22,6 +23,7 @@ export default function RankedTaskCard({ task }) {
         </div>
         <div className="ranked-result-meta">
           <span>{ordinal(task.rank)} priority</span>
+          {confidence && <DecisionConfidenceBadge confidence={confidence} showGap={confidence.score_gap != null} />}
           {task.due_date && <span>Due {task.due_date}{task.due_time ? ` · ${task.due_time.slice(0, 5)}` : ''}</span>}
           {task.countdown && <span className={task.countdown.startsWith('Overdue') ? 'is-overdue' : ''}>{task.countdown}</span>}
           {task.location && <span>📍 {task.location}</span>}

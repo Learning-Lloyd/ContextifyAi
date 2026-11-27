@@ -35,4 +35,14 @@ class UserNotification extends Model
     {
         return $this->belongsTo(Task::class);
     }
+
+    public function scopeVisibleToUsers($query, array $activeAnnouncementKeys)
+    {
+        return $query->where(function ($notifications) use ($activeAnnouncementKeys) {
+            $notifications->where('type', '!=', 'announcement');
+            if ($activeAnnouncementKeys !== []) {
+                $notifications->orWhereIn('dedupe_key', $activeAnnouncementKeys);
+            }
+        });
+    }
 }

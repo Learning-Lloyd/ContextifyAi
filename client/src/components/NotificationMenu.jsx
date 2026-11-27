@@ -7,6 +7,7 @@ export default function NotificationMenu() {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [expandedId, setExpandedId] = useState(null);
   const containerRef = useRef(null);
 
   const refresh = async () => {
@@ -22,12 +23,15 @@ export default function NotificationMenu() {
   useEffect(() => {
     refresh();
     const timer = window.setInterval(refresh, 60000);
+    const refreshAfterGoalUpdate = () => { refresh(); };
+    window.addEventListener('contextify:notifications-refresh', refreshAfterGoalUpdate);
     const close = (event) => {
       if (!containerRef.current?.contains(event.target)) setOpen(false);
     };
     document.addEventListener('pointerdown', close);
     return () => {
       window.clearInterval(timer);
+      window.removeEventListener('contextify:notifications-refresh', refreshAfterGoalUpdate);
       document.removeEventListener('pointerdown', close);
     };
   }, []);
@@ -60,7 +64,14 @@ export default function NotificationMenu() {
             <div className="notification-items">
               {notifications.map((item) => (
                 <div key={item.id} className={`notification-item ${item.read_at ? '' : 'is-unread'}`}>
-                  <div><strong>{item.title}</strong><p>{item.message}</p><small>{new Date(item.created_at).toLocaleString()}</small></div>
+                  <div className="min-w-0">
+                    {item.type === 'announcement' ? (
+                      <button type="button" className="notification-announcement-title" aria-expanded={expandedId === item.id} onClick={() => setExpandedId((current) => current === item.id ? null : item.id)}>{item.title}</button>
+                    ) : <strong>{item.title}</strong>}
+                    <p className={item.type === 'announcement' && expandedId !== item.id ? 'line-clamp-2' : 'whitespace-pre-wrap'}>{item.message}</p>
+                    {item.type === 'announcement' && <><small className="notification-announcement-category">Announcement</small><button type="button" className="notification-announcement-toggle" aria-expanded={expandedId === item.id} onClick={() => setExpandedId((current) => current === item.id ? null : item.id)}>{expandedId === item.id ? 'Show less' : 'Read announcement'}</button></>}
+                    <small>{new Date(item.type === 'announcement' ? (item.metadata?.published_at || item.created_at) : item.created_at).toLocaleString()}</small>
+                  </div>
                   {!item.read_at && <button type="button" onClick={() => markRead(item.id)} aria-label="Mark notification as read"><FiCheck /></button>}
                 </div>
               ))}

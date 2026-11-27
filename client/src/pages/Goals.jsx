@@ -32,6 +32,13 @@ export default function Goals({ embedded = false, titleId }) {
     {goals.length ? <div className="grid gap-4 md:grid-cols-2">{goals.map((goal) => <article key={goal.id} className="card p-5 space-y-4">
       <div className="flex justify-between gap-3"><div className="flex gap-3"><span className="rounded-xl bg-emerald-50 text-emerald-700 p-3 h-fit"><FiTarget /></span><div><h2 className="font-semibold">{goal.title}</h2><p className="text-xs text-[var(--app-text-muted)]">{goal.category || 'All categories'} · Due {goal.ends_on}</p></div></div><div className="flex"><button className="btn btn-ghost text-xs" onClick={() => { setEditingId(goal.id); setForm({ title: goal.title, target_count: goal.target_count, starts_on: goal.starts_on, ends_on: goal.ends_on, category: goal.category || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Edit</button><button className="btn btn-ghost btn-icon" aria-label="Delete goal" onClick={() => remove(goal.id)}><FiTrash2 /></button></div></div>
       <div><div className="flex justify-between text-sm mb-2"><span>{goal.completed_count} of {goal.target_count} completed</span><span>{goal.progress}%</span></div><div className="h-2 rounded-full bg-[var(--app-muted)] overflow-hidden"><div className="h-full bg-emerald-600 rounded-full transition-all" style={{ width: `${goal.progress}%` }} /></div></div>
+      <p className="text-sm font-medium text-[var(--app-text)]">{goal.summary}</p>
+      <div className="grid grid-cols-2 gap-3 text-xs text-[var(--app-text-secondary)]">
+        <p><strong className="block text-[var(--app-text)]">{goal.remaining_count} remaining</strong>to reach this target</p>
+        <p><strong className="block text-[var(--app-text)]">{goal.scheduled_outstanding_count} scheduled</strong>unfinished tasks due during this goal</p>
+      </div>
+      <p className="text-xs text-[var(--app-text-muted)]">{goal.next_task_deadline ? `Next task deadline: ${goal.next_task_deadline.date}${goal.next_task_deadline.time ? ` · ${goal.next_task_deadline.time.slice(0, 5)}` : ''}` : `Goal deadline: ${goal.ends_on} · no matching pending task has a deadline in this period.`}</p>
+      <p className="text-[11px] text-[var(--app-text-muted)]">Progress counts tasks marked completed by their last-updated date; exact completion dates are not stored.</p>
       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${goal.status === 'completed' ? 'bg-emerald-100 text-emerald-800' : goal.status === 'overdue' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-800'}`}>{goal.status.replace('_', ' ')}</span>
     </article>)}</div> : <div className="card p-10 text-center text-[var(--app-text-muted)]">No goals yet. Add a small, measurable goal to get started.</div>}
   </div>;

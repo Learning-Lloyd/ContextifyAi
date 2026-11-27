@@ -3,21 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Announcement;
 use App\Models\UserNotification;
+use App\Services\AnnouncementNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, AnnouncementNotificationService $announcementNotifications): JsonResponse
     {
-        $notifications = $request->user()->inAppNotifications()
+        $user = $request->user();
+        $activeAnnouncementKeys = $announcementNotifications->syncForUser($user);
+        $visibleNotifications = fn () => $user->inAppNotifications()->visibleToUsers($activeAnnouncementKeys);
+        $notifications = $visibleNotifications()
             ->latest()
             ->paginate(min(50, max(1, $request->integer('per_page', 20))));
 
         return response()->json([
             'notifications' => $notifications,
-            'unread_count' => $request->user()->inAppNotifications()->whereNull('read_at')->count(),
+            'unread_count' => $visibleNotifications()->whereNull('read_at')->count(),
         ]);
     }
 
@@ -29,9 +34,11 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Notification marked as read.']);
     }
 
-    public function markAllAsRead(Request $request): JsonResponse
+    public function markAllAsRead(Request $request, AnnouncementNotificationService $announcementNotifications): JsonResponse
     {
-        $request->user()->inAppNotifications()->whereNull('read_at')->update(['read_at' => now()]);
+        $user = $request->user();
+        $activeAnnouncementKeys = $announcementNotifications->syncForUser($user);
+        $user->inAppNotifications()->visibleToUsers($activeAnnouncementKeys)->whereNull('read_at')->update(['read_at' => now()]);
 
         return response()->json(['message' => 'All notifications marked as read.']);
     }

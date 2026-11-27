@@ -5,6 +5,9 @@ use App\Http\Controllers\Api\Admin\AdminAuditController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminDecisionController;
 use App\Http\Controllers\Api\Admin\AdminNotificationController;
+use App\Http\Controllers\Api\Admin\AdminAnnouncementController;
+use App\Http\Controllers\Api\Admin\AdminHealthController;
+use App\Http\Controllers\Api\Admin\AdminSystemSettingsController;
 use App\Http\Controllers\Api\Admin\AdminReportController;
 use App\Http\Controllers\Api\Admin\AdminTaskController;
 use App\Http\Controllers\Api\Admin\AdminUserController;
@@ -60,8 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tasks/analyze-importance', [ImportanceAnalysisController::class, 'analyze'])->middleware('throttle:ai');
     Route::post('/tasks/generate-description', [TaskDescriptionController::class, 'generate'])->middleware('throttle:ai');
     Route::post('/tasks/breakdown', [TaskBreakdownController::class, 'generate'])->middleware('throttle:ai');
+    Route::post('/tasks/{task}/breakdown-steps', [TaskBreakdownController::class, 'storeReviewed'])->middleware('throttle:30,1');
     Route::post('/tasks/scoring-preview', [TaskScoringController::class, 'preview']);
     Route::get('/tasks/calendar-context', [TaskScoringController::class, 'calendarContext']);
+    Route::get('/tasks/{task}/analysis-summary', [TaskController::class, 'analysisSummary']);
     Route::get('/tasks/{task}', [TaskController::class, 'show']);
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->middleware('throttle:ai');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
@@ -85,6 +90,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/feedback', [FeedbackController::class, 'store']);
 
     Route::prefix('admin')->middleware('admin')->group(function () {
+        Route::get('/settings', [AdminSystemSettingsController::class, 'index']);
+        Route::put('/settings/{key}', [AdminSystemSettingsController::class, 'update']);
+        Route::get('/health', AdminHealthController::class);
+        Route::get('/announcements', [AdminAnnouncementController::class, 'index']);
+        Route::post('/announcements', [AdminAnnouncementController::class, 'store']);
+        Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update']);
+        Route::delete('/announcements/{announcement}', [AdminAnnouncementController::class, 'destroy']);
         Route::get('/dashboard', [AdminDashboardController::class, 'index']);
         Route::get('/users', [AdminUserController::class, 'index']);
         Route::get('/users/{user}', [AdminUserController::class, 'show']);

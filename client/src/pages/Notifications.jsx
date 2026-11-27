@@ -44,12 +44,12 @@ export default function Notifications() {
           {(result?.unread_count || 0) > 0 && <button type="button" onClick={markAllRead} className="btn btn-secondary text-sm"><FiCheckCircle /> Mark all read</button>}
         </div>
         {loading ? <LoadingSkeleton variant="task-card" count={3} /> : notifications.length === 0 ? (
-          <EmptyState title="No reminders yet" description="Deadline reminders will appear here." />
+          <EmptyState title="No notifications yet" description="Deadline reminders and active workspace announcements will appear here." />
         ) : (
           <div className="space-y-3">
             {notifications.map((item) => (
               <article key={item.id} className={`card p-5 flex flex-col sm:flex-row items-start justify-between gap-3 ${item.read_at ? 'opacity-75' : 'border-l-4 border-l-[#111111]'}`}>
-                <div className="min-w-0"><h2 className="font-bold text-base text-[var(--app-text)]">{item.title}</h2><p className="text-sm text-[var(--app-text-secondary)] mt-1">{item.message}</p><time className="text-xs text-[var(--app-text-muted)] mt-2 block">{new Date(item.created_at).toLocaleString()}</time></div>
+                <div className="min-w-0">{item.type === 'announcement' && <span className="text-xs font-semibold uppercase tracking-wide text-[var(--app-text-muted)]">Announcement</span>}<h2 className="font-bold text-base text-[var(--app-text)]">{item.title}</h2><p className="text-sm text-[var(--app-text-secondary)] mt-1 whitespace-pre-wrap">{item.message}</p><time className="text-xs text-[var(--app-text-muted)] mt-2 block">{new Date(item.type === 'announcement' ? (item.metadata?.published_at || item.created_at) : item.created_at).toLocaleString()}</time></div>
                 {!item.read_at && <button type="button" className="btn btn-secondary btn-sm text-sm shrink-0" onClick={() => markRead(item.id)}><FiCheck /> Mark read</button>}
               </article>
             ))}

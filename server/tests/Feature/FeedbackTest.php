@@ -155,6 +155,10 @@ class FeedbackTest extends TestCase
         $this->assertEquals(2, $response->json('stats.total'));
         $this->assertEquals(1, $response->json('stats.pending'));
         $this->assertEquals(1, $response->json('stats.reviewed'));
+
+        $category = $this->getJson('/api/admin/feedback?type=bug')->assertOk();
+        $this->assertCount(1, $category->json('feedbacks.data'));
+        $this->assertSame('bug', $category->json('feedbacks.data.0.type'));
     }
 
     public function test_admin_can_update_status_and_respond(): void

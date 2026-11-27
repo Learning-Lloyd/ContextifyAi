@@ -27,6 +27,9 @@ class DashboardController extends Controller
             ->orderByRaw("COALESCE(due_time, '23:59:59')")
             ->orderBy('id')
             ->get();
+        $pendingRankById = $tasks->where('status', 'pending')->values()
+            ->mapWithKeys(fn (Task $task, int $index) => [$task->id => $index + 1])
+            ->all();
         $analysisService = app(TaskAnalysisStatusService::class);
         $analysisStatus = $analysisService->forTasks($user, $tasks);
         $timezone = $this->clientTimezone($request);
@@ -50,6 +53,7 @@ class DashboardController extends Controller
         foreach ($tasks as $task) {
             $group = DeadlineUrgencyService::deadlineGroup($task->due_date?->format('Y-m-d'), $timezone, $task->due_time);
             $formatted = $this->formatTask($task);
+            $formatted['rank'] = $pendingRankById[$task->id] ?? null;
             $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
             $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
             $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
@@ -67,8 +71,9 @@ class DashboardController extends Controller
             ->filter(fn (Task $task) => $task->due_date)
             ->sortBy('due_date')
             ->take(5)
-            ->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
+            ->map(function (Task $task) use ($analysisStatus, $analysisDetails, $pendingRankById) {
                 $formatted = $this->formatTask($task);
+                $formatted['rank'] = $pendingRankById[$task->id] ?? null;
                 $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
                 $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
                 $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
@@ -79,8 +84,9 @@ class DashboardController extends Controller
         $highestPriorityTasks = $tasks
             ->where('status', 'pending')
             ->take(5)
-            ->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
+            ->map(function (Task $task) use ($analysisStatus, $analysisDetails, $pendingRankById) {
                 $formatted = $this->formatTask($task);
+                $formatted['rank'] = $pendingRankById[$task->id] ?? null;
                 $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
                 $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
                 $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
@@ -126,19 +132,15 @@ class DashboardController extends Controller
                 return ['id' => $event->id, 'label' => $label, 'created_at' => $event->created_at];
             });
 
-        $allTasks = $tasks->map(function (Task $task) use ($analysisStatus, $analysisDetails) {
+        $allTasks = $tasks->map(function (Task $task) use ($analysisStatus, $analysisDetails, $pendingRankById) {
             $formatted = $this->formatTask($task);
+            $formatted['rank'] = $pendingRankById[$task->id] ?? null;
             $formatted['analyzed'] = $analysisStatus[$task->id] ?? false;
             $formatted['analysis_explanation'] = $analysisDetails[$task->id]['explanation'] ?? null;
             $formatted['analysis_explanation_source'] = $analysisDetails[$task->id]['source'] ?? null;
 
             return $formatted;
         });
-        $unanalyzedPendingCount = $tasks
-            ->where('status', 'pending')
-            ->filter(fn (Task $task) => ! ($analysisStatus[$task->id] ?? false))
-            ->count();
-
         return response()->json([
             'user' => $user->only(['id', 'name', 'email', 'city', 'city_latitude', 'city_longitude']),
             'stats' => [
@@ -166,9 +168,11 @@ class DashboardController extends Controller
                 'id' => $highestPriorityTask->id,
                 'title' => $highestPriorityTask->title,
                 'status' => $highestPriorityTask->status,
+                'priority_score' => $highestPriorityTask->priority_score,
+                'priority_level' => $highestPriorityTask->priority_level,
+                'rank' => $pendingRankById[$highestPriorityTask->id] ?? null,
             ] : null,
             'tasks' => $allTasks,
-            'unanalyzed_pending_count' => $unanalyzedPendingCount,
         ]);
     }
 
@@ -236,7 +240,7 @@ class DashboardController extends Controller
 
     private function formatTask(Task $task): array
     {
-        return [
+        $data = [
             'id' => $task->id,
             'title' => $task->title,
             'description' => $task->description,
@@ -252,8 +256,10 @@ class DashboardController extends Controller
             'deadline_group' => $task->deadline_group,
             'countdown' => $task->countdown,
             'priority_level' => $task->priority_level,
+            'priority_score' => $task->priority_score,
             'importance' => $task->importance,
             'urgency' => $task->urgency,
+            'urgency_manual' => $task->urgency_manual,
             'time_availability' => $task->time_availability,
             'current_workload' => $task->current_workload,
             'status' => $task->status,
@@ -261,5 +267,9 @@ class DashboardController extends Controller
             'created_at' => $task->created_at,
             'updated_at' => $task->updated_at,
         ];
+        $data['priority_explanation'] = app(\App\Services\ExplanationService::class)
+            ->forOfficialScore($data);
+
+        return $data;
     }
 }

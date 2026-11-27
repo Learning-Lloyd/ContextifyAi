@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Services\ReportTimestampFormatter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\Sanctum;
@@ -12,6 +13,17 @@ use Tests\TestCase;
 class UserReportTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_report_timestamps_use_the_requested_timezone(): void
+    {
+        $timestamp = Carbon::parse('2026-11-24 22:30:00', 'UTC');
+
+        $this->assertSame(
+            'Nov 25, 2026 06:30',
+            ReportTimestampFormatter::format($timestamp, 'Asia/Manila')
+        );
+        $this->assertSame('2026-11-24 22:30:00', $timestamp->format('Y-m-d H:i:s'));
+    }
 
     public function test_report_requires_authentication(): void
     {

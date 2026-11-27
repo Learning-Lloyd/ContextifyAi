@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FiArrowRight, FiBell, FiCheckCircle, FiCloud, FiFileText, FiShield, FiUsers } from 'react-icons/fi';
+import { FiActivity, FiArrowRight, FiBell, FiCheckCircle, FiCloud, FiFileText, FiMessageSquare, FiSettings, FiShield, FiUsers } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/AdminLayout';
 import { adminService } from '../../services/adminService';
@@ -10,6 +10,9 @@ const routes = [
   { to: '/admin/decisions', label: 'Decision records', note: 'Prioritization and comparisons', icon: FiShield },
   { to: '/admin/feedback', label: 'Feedback inbox', note: 'Triage and respond to reports', icon: FiBell },
   { to: '/admin/reports', label: 'Report exports', note: 'Download supported datasets', icon: FiFileText },
+  { to: '/admin/settings', label: 'System settings', note: 'Manage supported application options', icon: FiSettings },
+  { to: '/admin/announcements', label: 'Announcements', note: 'Publish workspace updates', icon: FiMessageSquare },
+  { to: '/admin/health', label: 'System health', note: 'Review live service checks', icon: FiActivity },
 ];
 
 export default function AdminDashboard() {

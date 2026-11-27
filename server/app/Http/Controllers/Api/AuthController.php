@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\SystemSetting;
 use App\Services\AuditLogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,6 +23,10 @@ class AuthController extends Controller
 
     public function register(Request $request): JsonResponse
     {
+        if (! SystemSetting::boolean('registration_enabled', true)) {
+            return response()->json(['message' => 'New registrations are currently closed.'], 403);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

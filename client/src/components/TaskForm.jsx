@@ -3,6 +3,9 @@ import { FiCalendar, FiCheckSquare, FiClock, FiFileText, FiMapPin, FiTag, FiX, F
 import LocationSearch from './LocationSearch';
 import { suggestUrgencyFromDueDate } from '../utils/taskUtils';
 import { hoursToMinutes, minutesToHours } from '../utils/duration';
+import { applyTaskSuggestion } from '../utils/taskSuggestions';
+import { saveTaskWithoutAnalysis } from '../utils/taskCreationFlow';
+
 import { taskService } from '../services/taskService';
 
 const defaultValues = {
@@ -13,6 +16,8 @@ const defaultValues = {
   estimated_duration_hours: '',
   due_date: '',
   due_time: '',
+  scheduled_start_date: '',
+  scheduled_start_time: '',
   location: '',
   latitude: null,
   longitude: null,
@@ -55,7 +60,7 @@ function AutoFactorRow({ label, value, source, reason, loading }) {
   );
 }
 
-export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loading = false }) {
+export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loading = false, suggestions = [], initialSuggestion = null }) {
   const [form, setForm] = useState(defaultValues);
   const [factors, setFactors] = useState(defaultFactors);
   const [importanceOverride, setImportanceOverride] = useState(null);
@@ -66,9 +71,12 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
   const [analysisError, setAnalysisError] = useState(null);
   const [generatingDescription, setGeneratingDescription] = useState(false);
   const [descriptionError, setDescriptionError] = useState(null);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState('');
+  const [pendingSuggestion, setPendingSuggestion] = useState(null);
   const previewTimerRef = useRef(null);
   const previewRequestIdRef = useRef(0);
   const descriptionRequestInFlightRef = useRef(false);
+  const submitRequestInFlightRef = useRef(false);
 
   useEffect(() => {
     if (task) {
@@ -80,6 +88,8 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         estimated_duration_hours: minutesToHours(task.estimated_time_minutes),
         due_date: task.due_date || '',
         due_time: task.due_time?.slice(0, 5) || '',
+        scheduled_start_date: task.scheduled_start_date || '',
+        scheduled_start_time: task.scheduled_start_time?.slice(0, 5) || '',
         location: task.location || '',
         latitude: task.latitude ?? null,
         longitude: task.longitude ?? null,
@@ -92,17 +102,19 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
       });
       setImportanceOverride(task.importance_source === 'user' ? Number(task.importance) : null);
     } else {
-      setForm(defaultValues);
+      setForm(initialSuggestion ? applyTaskSuggestion(defaultValues, initialSuggestion, true).form : defaultValues);
       setFactors(defaultFactors);
       setImportanceOverride(null);
     }
+    setSelectedSuggestionIndex('');
+    setPendingSuggestion(null);
     setErrors({});
     setImportanceAnalysis(null);
     setCalendarContext(null);
     setAnalysisError(null);
     setDescriptionError(null);
     setGeneratingDescription(false);
-  }, [task, isOpen]);
+  }, [task, isOpen, initialSuggestion]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -181,6 +193,34 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     }
   };
 
+  const handleUseSuggestion = () => {
+    const suggestion = suggestions[Number(selectedSuggestionIndex)];
+    if (!suggestion) return;
+    const result = applyTaskSuggestion(form, suggestion);
+    if (result.requiresConfirmation) {
+      setPendingSuggestion(suggestion);
+      return;
+    }
+    setForm(result.form);
+    setPendingSuggestion(null);
+    setErrors((previous) => {
+      const next = { ...previous };
+      ['title', 'estimated_duration_hours'].forEach((field) => delete next[field]);
+      return next;
+    });
+  };
+
+  const confirmUseSuggestion = () => {
+    if (!pendingSuggestion) return;
+    setForm(applyTaskSuggestion(form, pendingSuggestion, true).form);
+    setPendingSuggestion(null);
+    setErrors((previous) => {
+      const next = { ...previous };
+      ['title', 'estimated_duration_hours'].forEach((field) => delete next[field]);
+      return next;
+    });
+  };
+
   const handleLocationChange = (locationData) => {
     setForm((prev) => ({
       ...prev,
@@ -212,9 +252,11 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitRequestInFlightRef.current) return;
     const newErrors = {};
     if (!form.title.trim()) newErrors.title = 'Title is required';
     if (!form.due_date) newErrors.due_date = 'Due date is required';
+    if (!form.scheduled_start_date && form.scheduled_start_time) newErrors.scheduled_start_date = 'Choose a start date before entering a start time.';
     if (form.estimated_duration_hours !== '') {
       const hours = Number(form.estimated_duration_hours);
       const minutes = hoursToMinutes(hours);
@@ -235,8 +277,9 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
     };
     if (importanceOverride !== null) payload.importance = Number(importanceOverride);
 
+    submitRequestInFlightRef.current = true;
     try {
-      await onSubmit(payload);
+      await saveTaskWithoutAnalysis({ saveTask: onSubmit, taskData: payload });
       onClose();
     } catch (err) {
       const apiErrors = err.response?.data?.errors;
@@ -251,12 +294,15 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
         }
         setErrors(mapped);
       }
+    } finally {
+      submitRequestInFlightRef.current = false;
     }
   };
 
   return (
     <div className="task-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
-      <div className="absolute inset-0 modal-overlay" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 modal-overlay" onClick={loading ? undefined : onClose} aria-hidden="true" />
+
       <section className="task-modal-shell relative w-full animate-fade-in" role="dialog" aria-modal="true" aria-labelledby="task-modal-title" aria-describedby="task-modal-subtitle">
         <header className="task-modal-header">
           <div className="task-modal-heading-group">
@@ -267,13 +313,36 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               <p id="task-modal-subtitle">{task ? 'Update the details and context for this task.' : 'Add the details and context needed to prioritize your task.'}</p>
             </div>
           </div>
-          <button type="button" onClick={onClose} className="task-modal-close" aria-label="Close task form">
+          <button type="button" onClick={onClose} className="task-modal-close" aria-label="Close task form" disabled={loading}>
+
             <FiX size={18} />
           </button>
         </header>
 
         <form onSubmit={handleSubmit} noValidate className="task-modal-form">
           <div className="task-modal-scroll">
+            {!task && suggestions.length > 0 && (
+              <details className="mb-4 rounded-xl border border-[var(--app-border)] bg-[var(--app-muted)]/40 p-3">
+                <summary className="cursor-pointer text-sm font-semibold text-[var(--app-text)]">Suggested task ideas <span className="font-normal text-[var(--app-text-muted)]">(optional)</span></summary>
+                <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-end">
+                  <label className="min-w-0 flex-1 text-xs font-medium text-[var(--app-text-secondary)]" htmlFor="task-suggestion-select">
+                    Choose an idea
+                    <select id="task-suggestion-select" className="input mt-1" value={selectedSuggestionIndex} onChange={(event) => { setSelectedSuggestionIndex(event.target.value); setPendingSuggestion(null); }}>
+                      <option value="">Select a suggestion…</option>
+                      {suggestions.map((suggestion, index) => <option key={`${suggestion.title}-${index}`} value={index}>{suggestion.title}{suggestion.category ? ` · ${suggestion.category}` : ''}</option>)}
+                    </select>
+                  </label>
+                  <button type="button" className="btn btn-secondary btn-sm shrink-0" disabled={selectedSuggestionIndex === ''} onClick={handleUseSuggestion}>Use idea</button>
+                </div>
+                {pendingSuggestion && (
+                  <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-100" role="status">
+                    <p>Some task details are already filled in. Replace the title, description, category, and estimate with “{pendingSuggestion.title}”?</p>
+                    <div className="mt-2 flex gap-2"><button type="button" className="btn btn-primary btn-sm" onClick={confirmUseSuggestion}>Replace details</button><button type="button" className="btn btn-secondary btn-sm" onClick={() => setPendingSuggestion(null)}>Keep my details</button></div>
+                  </div>
+                )}
+              </details>
+            )}
+
             <section className="task-form-section" aria-labelledby="task-details-heading">
               <div className="task-form-section-heading">
                 <span className="task-form-section-icon"><FiFileText size={16} /></span>
@@ -337,6 +406,21 @@ export default function TaskForm({ isOpen, onClose, onSubmit, task = null, loadi
               </div>
 
               <div className="task-schedule-grid">
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-scheduled-start-date">Scheduled start date <span>(optional)</span></label>
+                  <div className="task-date-input-wrap"><FiCalendar size={15} aria-hidden="true" />
+                    <input id="task-scheduled-start-date" type="date" name="scheduled_start_date" value={form.scheduled_start_date} onChange={handleChange} className="input task-modal-input" aria-invalid={Boolean(errors.scheduled_start_date)} />
+                  </div>
+                  {errors.scheduled_start_date && <p className="form-error">{errors.scheduled_start_date}</p>}
+                  <p className="task-field-hint">Used to place the task on your timeline. Existing tasks remain unscheduled until you set a start.</p>
+                </div>
+                <div className="task-form-field">
+                  <label className="label" htmlFor="task-scheduled-start-time">Scheduled start time <span>(optional)</span></label>
+                  <div className="task-date-input-wrap"><FiClock size={15} aria-hidden="true" />
+                    <input id="task-scheduled-start-time" type="time" name="scheduled_start_time" value={form.scheduled_start_time} onChange={handleChange} className="input task-modal-input" aria-invalid={Boolean(errors.scheduled_start_time)} />
+                  </div>
+                  {errors.scheduled_start_time && <p className="form-error">{errors.scheduled_start_time}</p>}
+                </div>
                 <div className="task-form-field">
                   <label className="label" htmlFor="task-estimated-duration">Estimated Duration (hours) <span>(optional)</span></label>
                   <div className="task-duration-input-wrap">

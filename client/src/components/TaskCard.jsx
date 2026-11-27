@@ -22,27 +22,19 @@ export default function TaskCard({ task, onOpen, onToggle, onDelete, onEdit, onA
           <button type="button" onClick={() => onOpen?.(task)} className="task-row-title task-board-open-detail">
             {task.title}<FiArrowUpRight aria-hidden="true" />
           </button>
-          <span className={`task-analysis-tag ${task.analyzed ? 'is-analyzed' : 'needs-analysis'}`}>
-            {task.analyzed ? 'Analyzed' : 'Needs analysis'}
+          {!completed && task.rank && <span className="task-rank-chip" aria-label={`Priority rank ${task.rank}`}>#{task.rank}</span>}
+          <span className={`task-analysis-tag ${task.analyzed ? 'is-analyzed' : 'is-scored'}`} title={task.analyzed ? 'Included in a saved Decision Lab analysis' : 'Official priority is calculated automatically'}>
+            {task.analyzed ? 'Compared' : 'Auto-scored'}
           </span>
         </div>
         {task.description && <p className="task-row-description line-clamp-2">{task.description}</p>}
-        {task.analyzed && task.analysis_explanation && (
-          <div className="task-analysis-explanation">
-            <div className="flex items-center justify-between gap-2">
-              <strong>Why this is your priority</strong>
-              {task.analysis_explanation_source && <span className="task-explanation-source">{task.analysis_explanation_source === 'ai' ? 'Gemini explanation' : 'Basic guidance'}</span>}
-            </div>
-            <p>{task.analysis_explanation}</p>
-          </div>
-        )}
       </td>
       <td>
         <span className={`task-status-tag ${completed ? 'is-complete' : overdue ? 'is-overdue' : 'is-pending'}`}>
           {completed ? 'Completed' : overdue ? 'Overdue' : 'Pending'}
         </span>
       </td>
-      <td>{task.analyzed ? <PriorityBadge level={task.priority_level} /> : <span className="task-board-muted">Analyze first</span>}</td>
+      <td>{task.priority_score != null ? <PriorityBadge level={task.priority_level} score={Number(task.priority_score).toFixed(1)} /> : <span className="task-board-muted">Score unavailable</span>}</td>
       <td className="task-board-deadline">{prettyDate(task.due_date, task.due_time)}</td>
       <td><span className={`task-countdown ${overdue ? 'is-overdue' : ''}`}>{countdown || '—'}</span></td>
       <td>{task.category ? <span className={`task-category-tag category-${String(task.category).toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>{task.category}</span> : <span className="task-board-muted">—</span>}</td>

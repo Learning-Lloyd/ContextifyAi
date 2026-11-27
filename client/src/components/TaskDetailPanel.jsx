@@ -34,7 +34,7 @@ export default function TaskDetailPanel({ task, onClose, onEdit, onToggle, onDel
         </header>
         <div className="task-detail-body">
           <h2 id="task-panel-title">{task.title}</h2>
-          <div className="task-detail-priority">{task.analyzed ? <PriorityBadge level={task.priority_level} /> : <span className="task-board-muted">Analyze this task in Decision Lab to see its priority.</span>}</div>
+          <div className="task-detail-priority">{task.priority_score != null ? <><PriorityBadge level={task.priority_level} score={Number(task.priority_score).toFixed(1)} />{task.rank && task.status === 'pending' && <span className="task-rank-chip">Rank #{task.rank}</span>}</> : <span className="task-board-muted">A score is unavailable because valid scoring factors are missing.</span>}</div>
           {task.description && <p className="task-detail-description">{task.description}</p>}
           <dl className="task-detail-fields">
             <div><dt><FiCalendar /> Deadline</dt><dd>{formatDeadline(task)}</dd></div>
@@ -45,7 +45,6 @@ export default function TaskDetailPanel({ task, onClose, onEdit, onToggle, onDel
             {task.weather_condition && <div><dt>Weather context</dt><dd>{weatherIcon(task.weather_condition)} {task.weather_condition}{task.temperature != null ? ` · ${task.temperature}°` : ''}{task.rain_probability != null ? ` · ${task.rain_probability}% rain` : ''}</dd></div>}
             {task.notes && <div><dt>Notes</dt><dd>{task.notes}</dd></div>}
           </dl>
-          {task.analyzed && task.analysis_explanation && <section className="task-analysis-explanation"><strong>Why this is your priority</strong><p>{task.analysis_explanation}</p></section>}
         </div>
         <footer className="task-detail-footer">
           <button type="button" className="btn btn-primary" onClick={() => onToggle(task.id)}><FiCheckCircle /> {completed ? 'Reopen task' : 'Mark complete'}</button>

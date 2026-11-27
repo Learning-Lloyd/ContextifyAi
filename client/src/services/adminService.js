@@ -61,6 +61,13 @@ export const adminService = {
     const response = await api.patch(`/admin/notifications/${id}/read`);
     return response.data;
   },
+  async getSystemSettings() { const response = await api.get('/admin/settings'); return response.data; },
+  async updateSystemSetting(key, data) { const response = await api.put(`/admin/settings/${key}`, data); return response.data; },
+  async getAnnouncements() { const response = await api.get('/admin/announcements'); return response.data; },
+  async createAnnouncement(data) { const response = await api.post('/admin/announcements', data); return response.data; },
+  async updateAnnouncement(id, data) { const response = await api.put(`/admin/announcements/${id}`, data); return response.data; },
+  async deleteAnnouncement(id) { const response = await api.delete(`/admin/announcements/${id}`); return response.data; },
+  async getHealth() { const response = await api.get('/admin/health'); return response.data; },
   exportReport(type, format = 'csv', params = {}) {
     const token = localStorage.getItem('token');
     const base = import.meta.env.VITE_API_URL || '/api';

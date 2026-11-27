@@ -43,6 +43,8 @@ class RecommendationOrderingTest extends TestCase
             [$earlier->id, $later->id, $noDeadline->id, $completed->id],
             array_column($queue->json('tasks'), 'id')
         );
+        $this->assertSame([1, 2, 3, null], array_column($queue->json('tasks'), 'rank'));
+        $this->assertNotNull($queue->json('tasks.0.priority_score'));
 
         $dashboard = $this->getJson('/api/dashboard')->assertOk();
         $this->assertSame($earlier->id, $dashboard->json('highest_priority_task.id'));

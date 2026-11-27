@@ -226,9 +226,12 @@ class DecisionLabController extends Controller
         $topTaskCounts = [];
         $dominantFactorCounts = [];
         $topScores = collect();
+        $topTaskAnalysisCount = 0;
+        $factorAnalysisCount = 0;
         foreach ($decisionAnalyses as $analysis) {
             $top = $analysis->ranked_tasks[0]['title'] ?? null;
             if ($top) {
+                $topTaskAnalysisCount++;
                 $score = $analysis->ranked_tasks[0]['priority_score'] ?? null;
                 if (is_numeric($score)) {
                     $topScores->push((float) $score);
@@ -242,6 +245,7 @@ class DecisionLabController extends Controller
                 $dominantFactor = $weightedFactors->first();
                 if ($dominantFactor) {
                     $dominantFactorCounts[$dominantFactor] = ($dominantFactorCounts[$dominantFactor] ?? 0) + 1;
+                    $factorAnalysisCount++;
                 }
             }
         }
@@ -264,6 +268,21 @@ class DecisionLabController extends Controller
             'created_at' => $a->created_at,
         ]);
 
+        $conflictCount = $decisionAnalyses->sum(fn (DecisionAnalysis $a) => count($a->conflicts ?? []));
+        $personalizedGuidance = [];
+        if ($dominantFactorCounts) {
+            $factor = str_replace('_', ' ', (string) array_key_first($dominantFactorCounts));
+            $count = (int) reset($dominantFactorCounts);
+            $personalizedGuidance[] = "In {$count} of {$factorAnalysisCount} saved analyses, {$factor} was the largest weighted contribution for the top-ranked task. Review that context when planning similar tasks.";
+        }
+        if ($conflictCount > 0) {
+            $personalizedGuidance[] = "Your saved analyses recorded {$conflictCount} same-day deadline conflict" . ($conflictCount === 1 ? '' : 's') . '. When planning, check whether overlapping deadlines can be spread out.';
+        } elseif (! $personalizedGuidance && $topTaskCounts) {
+            $topTask = (string) array_key_first($topTaskCounts);
+            $count = (int) reset($topTaskCounts);
+            $personalizedGuidance[] = "{$topTask} ranked first in {$count} of {$topTaskAnalysisCount} saved analyses. This reflects past comparisons, not a prediction; review today's task details and deadlines.";
+        }
+
         return response()->json([
             'insights' => [
                 'total_analyses' => $decisionAnalyses->count(),
@@ -271,12 +290,18 @@ class DecisionLabController extends Controller
                 'avg_tasks_per_analysis' => $decisionAnalyses->count() > 0
                     ? round($decisionAnalyses->avg('total_selected'), 1)
                     : 0,
-                'total_conflicts_detected' => $decisionAnalyses->sum(fn (DecisionAnalysis $a) => count($a->conflicts ?? [])),
+                'total_conflicts_detected' => $conflictCount,
                 'most_frequent_top_task' => array_key_first($topTaskCounts),
+                'most_frequent_top_task_count' => $topTaskCounts ? reset($topTaskCounts) : 0,
+                'top_task_analysis_count' => $topTaskAnalysisCount,
                 'most_influential_factor' => array_key_first($dominantFactorCounts),
                 'most_influential_factor_count' => $dominantFactorCounts ? reset($dominantFactorCounts) : 0,
+                'factor_analysis_count' => $factorAnalysisCount,
                 'average_top_score' => $topScores->isNotEmpty() ? round($topScores->avg(), 1) : null,
                 'confidence_distribution' => $confidenceCounts,
+                'comparison_confidence_basis' => 'Confidence labels are score-gap bands between compared tasks: high at 2 or more points, medium at 1 to less than 2 points, and low below 1 point. They are not statistically calibrated.',
+                'personalized_guidance' => $personalizedGuidance,
+                'personalized_guidance_basis' => 'Based only on this account’s saved multi-task analyses. It summarizes past comparisons and does not predict future priorities or alter task scores.',
                 'recent_analyses' => $recentAnalyses,
                 'monthly_analyses' => $decisionAnalyses
                     ->groupBy(fn (DecisionAnalysis $a) => $a->created_at->format('Y-m'))

@@ -23,6 +23,11 @@ export const taskService = {
     return response.data;
   },
 
+  async getAnalysisSummary(id) {
+    const response = await api.get(`/tasks/${id}/analysis-summary`);
+    return response.data;
+  },
+
   async create(data) {
     const response = await api.post('/tasks', data);
     return response.data;
@@ -82,6 +87,11 @@ export const taskService = {
     return coalesceAiRequest(`breakdown:${taskId}`, () =>
       api.post('/tasks/breakdown', { task_id: taskId }).then((response) => response.data)
     );
+  },
+
+  async addReviewedBreakdownSteps(taskId, payload) {
+    const response = await api.post(`/tasks/${taskId}/breakdown-steps`, payload);
+    return response.data;
   },
 
   previewScoring({ title, description, due_date, due_time }) {

@@ -4,6 +4,50 @@ namespace App\Services;
 
 class ExplanationService
 {
+    /** Explain the saved official score from its recorded factors without AI or history writes. */
+    public function forOfficialScore(array $task): string
+    {
+        $factorLabels = [
+            'importance' => 'Importance',
+            'urgency' => 'Deadline urgency',
+            'time_availability' => 'Available time',
+            'current_workload' => 'Current workload',
+        ];
+        $values = collect($factorLabels)->mapWithKeys(function (string $label, string $key) use ($task) {
+            $value = $task[$key] ?? null;
+            return is_numeric($value) ? [$key => ['label' => $label, 'value' => (int) $value]] : [];
+        });
+
+        if ($values->count() !== count($factorLabels) || ! is_numeric($task['priority_score'] ?? null)) {
+            return 'An official score explanation is unavailable because one or more saved scoring factors are missing.';
+        }
+
+        $score = number_format((float) $task['priority_score'], 1);
+        $parts = ["The saved official score is {$score}/10, using importance (40%), deadline urgency (30%), available time (20%), and current workload (10%)."];
+        $factorSummary = $values->map(fn (array $factor) => "{$factor['label']} {$factor['value']}/10")->implode(', ');
+        $parts[] = "Recorded factors: {$factorSummary}.";
+
+        $weighted = collect($factorLabels)->mapWithKeys(function (string $label, string $key) use ($values) {
+            if (! $values->has($key)) return [];
+            $weight = ['importance' => 0.4, 'urgency' => 0.3, 'time_availability' => 0.2, 'current_workload' => 0.1][$key];
+            return [$key => ['label' => $label, 'value' => $values[$key]['value'] * $weight]];
+        })->sortByDesc('value');
+        $leading = $weighted->first();
+        if ($leading) {
+            $parts[] = "{$leading['label']} contributes the most weighted points to this score.";
+        }
+
+        if (! empty($task['urgency_manual'])) {
+            $parts[] = 'Deadline urgency was manually set and is not inferred from the due date.';
+        } elseif (! empty($task['due_date'])) {
+            $parts[] = 'Deadline urgency is calculated from the saved due date and time.';
+        } else {
+            $parts[] = 'No deadline is set for this task.';
+        }
+
+        return implode(' ', $parts);
+    }
+
     /** Build a natural-language rationale from the actual ranking and task context. */
     public function forTaskCard(
         array $task,

@@ -203,6 +203,44 @@ class WhatIfSimulationTest extends TestCase
         $this->assertSame(1, $response->json('insights.total_analyses'));
         $this->assertSame('Finish report', $response->json('insights.most_frequent_top_task'));
         $this->assertSame('urgency', $response->json('insights.most_influential_factor'));
+        $this->assertSame(1, $response->json('insights.most_frequent_top_task_count'));
+        $this->assertSame(1, $response->json('insights.top_task_analysis_count'));
+        $this->assertSame(1, $response->json('insights.factor_analysis_count'));
+        $this->assertCount(1, $response->json('insights.personalized_guidance'));
+        $this->assertStringContainsString('largest weighted contribution', $response->json('insights.personalized_guidance.0'));
+        $this->assertStringContainsString('does not predict future priorities', $response->json('insights.personalized_guidance_basis'));
+        $this->assertStringContainsString('not statistical', $response->json('insights.comparison_confidence_basis'));
         $this->assertSame(8.4, $response->json('insights.average_top_score'));
+    }
+
+    public function test_personalized_insights_use_only_the_authenticated_users_saved_history(): void
+    {
+        $user = User::factory()->create();
+        $other = User::factory()->create();
+        $rankedTask = [
+            'title' => 'My saved decision',
+            'priority_score' => 8.0,
+            'breakdown' => [
+                'importance' => ['weighted' => 1.0],
+                'urgency' => ['weighted' => 3.0],
+                'time_availability' => ['weighted' => 2.0],
+                'current_workload' => ['weighted' => 2.0],
+            ],
+        ];
+        $user->decisionAnalyses()->create(['task_ids' => [11], 'ranked_tasks' => [$rankedTask], 'summary' => [], 'recommendation' => [], 'conflicts' => [], 'total_selected' => 1]);
+        $other->decisionAnalyses()->create(['task_ids' => [22], 'ranked_tasks' => [[
+            'title' => 'Other account decision', 'priority_score' => 7.0,
+            'breakdown' => ['importance' => ['weighted' => 1], 'urgency' => ['weighted' => 1], 'time_availability' => ['weighted' => 1], 'current_workload' => ['weighted' => 4]],
+        ]], 'summary' => [], 'recommendation' => [], 'conflicts' => [['date' => '2026-11-30']], 'total_selected' => 1]);
+
+        Sanctum::actingAs($user);
+        $insights = $this->getJson('/api/decision-lab/insights')->assertOk()->json('insights');
+
+        $this->assertSame('urgency', $insights['most_influential_factor']);
+        $this->assertSame(0, $insights['total_conflicts_detected']);
+        $this->assertCount(1, $insights['personalized_guidance']);
+        $this->assertStringContainsString('urgency', $insights['personalized_guidance'][0]);
+        $this->assertStringNotContainsString('workload', $insights['personalized_guidance'][0]);
+        $this->assertStringNotContainsString('Other account decision', implode(' ', $insights['personalized_guidance']));
     }
 }
