@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
+use Laravel\Sanctum\TransientToken;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -57,7 +60,7 @@ class AuthController extends Controller
                 return $user;
             });
         } catch (\Throwable $exception) {
-            Log::warning('Registration email could not be delivered.', ['exception' => $exception::class]);
+            Log::warning('Registration email could not be delivered.', $this->authMailDeliveryService->failureDiagnostics($exception));
 
             return response()->json([
                 'message' => 'We could not send the verification email. Please try again shortly.',
@@ -117,8 +120,38 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $this->auditLogService->log($request->user()->id, 'user_logout', $request);
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        $this->auditLogService->log($user->id, 'user_logout', $request);
+
+        $currentToken = $user->currentAccessToken();
+        if ($currentToken instanceof PersonalAccessToken) {
+            $currentToken->delete();
+        } elseif ($currentToken instanceof TransientToken && $request->bearerToken()) {
+            // Stateful SPA auth takes precedence over bearer auth in Sanctum.
+            // Revoke only a bearer token that also belongs to this user.
+            $tokenModel = Sanctum::personalAccessTokenModel();
+            $bearerToken = $tokenModel::findToken($request->bearerToken());
+
+            if (
+                $bearerToken instanceof PersonalAccessToken
+                && $bearerToken->tokenable_type === $user->getMorphClass()
+                && (string) $bearerToken->tokenable_id === (string) $user->getAuthIdentifier()
+            ) {
+                $bearerToken->delete();
+            }
+        }
+
+        // Sanctum uses a TransientToken for stateful SPA sessions. Only invalidate
+        // the session when it is present and belongs to the authenticated user.
+        if (
+            $request->hasSession()
+            && $request->session()->isStarted()
+            && Auth::guard('web')->id() === $user->getAuthIdentifier()
+        ) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'message' => 'Logged out successfully',
@@ -178,7 +211,7 @@ class AuthController extends Controller
             $this->authMailDeliveryService->assertAvailable();
             Password::sendResetLink($request->only('email'));
         } catch (\Throwable $exception) {
-            Log::warning('Password reset email could not be delivered.', ['exception' => $exception::class]);
+            Log::warning('Password reset email could not be delivered.', $this->authMailDeliveryService->failureDiagnostics($exception));
 
             return response()->json([
                 'message' => 'Email delivery is temporarily unavailable. Please try again later.',
@@ -216,7 +249,7 @@ class AuthController extends Controller
                 $this->authMailDeliveryService->assertAvailable();
                 $this->emailVerificationService->resend($user);
             } catch (\Throwable $exception) {
-                Log::warning('Verification email could not be delivered.', ['exception' => $exception::class]);
+                Log::warning('Verification email could not be delivered.', $this->authMailDeliveryService->failureDiagnostics($exception));
 
                 return response()->json([
                     'message' => 'Email delivery is temporarily unavailable. Please try again later.',

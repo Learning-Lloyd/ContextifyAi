@@ -123,7 +123,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_registration_does_not_leave_an_account_when_mail_preflight_fails(): void
     {
-        $this->mock(AuthMailDeliveryService::class, function ($mock): void {
+        $this->partialMock(AuthMailDeliveryService::class, function ($mock): void {
             $mock->shouldReceive('assertAvailable')->once()->andThrow(new RuntimeException('provider unavailable'));
         });
 
