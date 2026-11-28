@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FiCalendar, FiCpu, FiLock, FiMail, FiMessageSquare, FiMoon, FiSun } from 'react-icons/fi';
 import Logo from '../components/Logo';
 import AuthDecorations from '../components/AuthDecorations';
@@ -10,6 +10,7 @@ export default function Login() {
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -105,6 +106,11 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {location.state?.verified && (
+              <p role="status" className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-3 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                {location.state.message || 'Email verified. You can now sign in.'}
+              </p>
+            )}
             {errors.general && (
               <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-[#EF4444] text-xs font-medium leading-relaxed">
                 {errors.general}
@@ -174,6 +180,10 @@ export default function Login() {
                 Create Account
               </Link>
             </div>
+            <p className="text-center text-xs text-[var(--app-text-secondary)]">
+              Recently registered?{' '}
+              <Link to="/verify-email" className="auth-link hover:underline font-bold">Verify your email</Link>
+            </p>
           </form>
         </div>
       </div>

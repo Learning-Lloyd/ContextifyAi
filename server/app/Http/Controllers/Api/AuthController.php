@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\SystemSetting;
 use App\Services\AuditLogService;
+use App\Services\AuthMailDeliveryService;
+use App\Services\EmailVerificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
@@ -17,9 +21,11 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function __construct(private readonly AuditLogService $auditLogService)
-    {
-    }
+    public function __construct(
+        private readonly AuditLogService $auditLogService,
+        private readonly EmailVerificationService $emailVerificationService,
+        private readonly AuthMailDeliveryService $authMailDeliveryService,
+    ) {}
 
     public function register(Request $request): JsonResponse
     {
@@ -33,23 +39,35 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'user',
-            'is_active' => true,
-        ]);
+        try {
+            $user = DB::transaction(function () use ($validated, $request): User {
+                $user = User::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                    'role' => 'user',
+                    'is_active' => true,
+                    'email_verification_required_at' => now(),
+                ]);
 
-        $this->auditLogService->log($user->id, 'user_registered', $request, ['email' => $user->email]);
-        $this->auditLogService->notifyAdmin('new_user', 'New User Registered', "{$user->name} ({$user->email}) registered.", ['user_id' => $user->id]);
+                $this->auditLogService->log($user->id, 'user_registered', $request, ['email' => $user->email]);
+                $this->auditLogService->notifyAdmin('new_user', 'New User Registered', "{$user->name} ({$user->email}) registered.", ['user_id' => $user->id]);
+                $this->emailVerificationService->issue($user);
 
-        $token = $user->createToken('auth-token')->plainTextToken;
+                return $user;
+            });
+        } catch (\Throwable $exception) {
+            Log::warning('Registration email could not be delivered.', ['exception' => $exception::class]);
+
+            return response()->json([
+                'message' => 'We could not send the verification email. Please try again shortly.',
+            ], 503);
+        }
 
         return response()->json([
-            'message' => 'Registration successful. You are now signed in.',
-            'user' => $this->formatUser($user),
-            'token' => $token,
+            'message' => 'Account created. Enter the six-digit code sent to your email.',
+            'email' => $user->email,
+            'retry_after_seconds' => EmailVerificationService::RESEND_COOLDOWN_SECONDS,
         ], 201);
     }
 
@@ -60,16 +78,25 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (! Auth::attempt($validated)) {
+        $webGuard = Auth::guard('web');
+
+        if (! $webGuard->attempt($validated)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        $user = Auth::user();
+        $user = $webGuard->user();
+
+        if ($user->email_verification_required_at && ! $user->email_verified_at) {
+            $webGuard->logout();
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect or email verification is required.'],
+            ]);
+        }
 
         if (! $user->is_active) {
-            Auth::logout();
+            $webGuard->logout();
             throw ValidationException::withMessages([
                 'email' => ['Your account has been disabled.'],
             ]);
@@ -146,11 +173,61 @@ class AuthController extends Controller
     public function forgotPassword(Request $request): JsonResponse
     {
         $request->validate(['email' => 'required|email']);
-        Password::sendResetLink($request->only('email'));
+
+        try {
+            $this->authMailDeliveryService->assertAvailable();
+            Password::sendResetLink($request->only('email'));
+        } catch (\Throwable $exception) {
+            Log::warning('Password reset email could not be delivered.', ['exception' => $exception::class]);
+
+            return response()->json([
+                'message' => 'Email delivery is temporarily unavailable. Please try again later.',
+            ], 503);
+        }
 
         return response()->json([
             'message' => 'If an account exists for that email, a password reset link will be sent.',
+        ], 202);
+    }
+
+    public function verifyEmail(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|max:255',
+            'code' => ['required', 'string', 'regex:/^\d{6}$/'],
         ]);
+
+        if (! $this->emailVerificationService->verify($validated['email'], $validated['code'])) {
+            throw ValidationException::withMessages([
+                'code' => ['That code is invalid or expired. Request a new code and try again.'],
+            ]);
+        }
+
+        return response()->json(['message' => 'Email verified. You can now sign in.']);
+    }
+
+    public function resendVerificationCode(Request $request): JsonResponse
+    {
+        $validated = $request->validate(['email' => 'required|email|max:255']);
+        $user = User::where('email', $validated['email'])->first();
+
+        if ($user && $user->email_verification_required_at && ! $user->email_verified_at) {
+            try {
+                $this->authMailDeliveryService->assertAvailable();
+                $this->emailVerificationService->resend($user);
+            } catch (\Throwable $exception) {
+                Log::warning('Verification email could not be delivered.', ['exception' => $exception::class]);
+
+                return response()->json([
+                    'message' => 'Email delivery is temporarily unavailable. Please try again later.',
+                ], 503);
+            }
+        }
+
+        return response()->json([
+            'message' => 'If the account needs verification, a new code will be sent when available.',
+            'retry_after_seconds' => EmailVerificationService::RESEND_COOLDOWN_SECONDS,
+        ], 202);
     }
 
     public function resetPassword(Request $request): JsonResponse

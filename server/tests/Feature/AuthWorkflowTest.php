@@ -12,8 +12,9 @@ class AuthWorkflowTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_signs_user_in_without_email_verification(): void
+    public function test_registration_creates_a_pending_account_and_sends_verification_code(): void
     {
+        Notification::fake();
         $response = $this->postJson('/api/register', [
             'name' => 'New User',
             'email' => 'new@example.com',
@@ -22,12 +23,15 @@ class AuthWorkflowTest extends TestCase
         ]);
 
         $response->assertCreated()
-            ->assertJsonPath('message', 'Registration successful. You are now signed in.')
-            ->assertJsonStructure(['token', 'user' => ['id', 'email']]);
+            ->assertJsonPath('email', 'new@example.com')
+            ->assertJsonMissingPath('token')
+            ->assertJsonMissingPath('user');
 
         $user = User::where('email', 'new@example.com')->firstOrFail();
         $this->assertNull($user->email_verified_at);
-        $this->assertDatabaseHas('personal_access_tokens', ['tokenable_id' => $user->id]);
+        $this->assertNotNull($user->email_verification_required_at);
+        $this->assertDatabaseMissing('personal_access_tokens', ['tokenable_id' => $user->id]);
+        Notification::assertSentTo($user, \App\Notifications\EmailVerificationCodeNotification::class);
     }
 
     public function test_existing_unverified_user_can_sign_in(): void
@@ -45,7 +49,7 @@ class AuthWorkflowTest extends TestCase
         Notification::fake();
         $user = User::factory()->create(['password' => 'old-password']);
 
-        $this->postJson('/api/forgot-password', ['email' => $user->email])->assertOk();
+        $this->postJson('/api/forgot-password', ['email' => $user->email])->assertStatus(202);
         Notification::assertSentTo($user, ResetPassword::class);
         $token = app('auth.password.broker')->createToken($user);
 

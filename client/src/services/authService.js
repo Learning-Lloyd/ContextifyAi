@@ -21,6 +21,16 @@ export const authService = {
     return response.data;
   },
 
+  async verifyEmail(data) {
+    const response = await api.post('/verify-email', data);
+    return response.data;
+  },
+
+  async resendVerificationCode(data) {
+    const response = await api.post('/resend-verification-code', data);
+    return response.data;
+  },
+
   async logout() {
     const response = await api.post('/logout');
     return response.data;

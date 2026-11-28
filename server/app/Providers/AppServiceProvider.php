@@ -7,6 +7,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,19 @@ class AppServiceProvider extends ServiceProvider
                     ->response($limitedResponse),
             ];
         });
+
+        $emailLimits = function (Request $request, int $accountLimit, int $ipLimit): array {
+            $email = Str::lower(trim((string) $request->input('email')));
+            $digest = hash_hmac('sha256', $email, (string) config('app.key'));
+
+            return [
+                Limit::perMinute($accountLimit)->by('auth-email:account:'.$digest),
+                Limit::perMinute($ipLimit)->by('auth-email:ip:'.$request->ip()),
+            ];
+        };
+
+        RateLimiter::for('email-verification', fn (Request $request): array => $emailLimits($request, 5, 20));
+        RateLimiter::for('email-verification-resend', fn (Request $request): array => $emailLimits($request, 3, 20));
 
         ResetPassword::createUrlUsing(function ($user, string $token): string {
             $query = http_build_query(['token' => $token, 'email' => $user->getEmailForPasswordReset()]);

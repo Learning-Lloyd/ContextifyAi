@@ -31,13 +31,16 @@ use App\Http\Controllers\Api\UserReportController;
 use App\Http\Controllers\Api\ExperimentalPriorityPredictionController;
 use App\Http\Controllers\Api\SchedulingController;
 use App\Http\Controllers\Api\WeatherController;
+use App\Http\Middleware\EnsureEmailVerificationComplete;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:5,1');
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:6,1');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:6,1');
-Route::middleware('auth:sanctum')->group(function () {
+Route::post('/verify-email', [AuthController::class, 'verifyEmail'])->middleware('throttle:email-verification');
+Route::post('/resend-verification-code', [AuthController::class, 'resendVerificationCode'])->middleware('throttle:email-verification-resend');
+Route::middleware(['auth:sanctum', EnsureEmailVerificationComplete::class])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user/profile', [AuthController::class, 'updateProfile']);

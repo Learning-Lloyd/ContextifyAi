@@ -30,8 +30,12 @@ export default function Register() {
     setErrors({});
 
     try {
-      await register(form);
-      navigate('/dashboard', { replace: true });
+      const result = await register(form);
+      sessionStorage.setItem('contextify-pending-verification-email', form.email);
+      navigate('/verify-email', {
+        replace: true,
+        state: { email: form.email, resendAfterSeconds: result.retry_after_seconds || 60 },
+      });
     } catch (err) {
       const apiErrors = err.response?.data?.errors;
       if (apiErrors) {

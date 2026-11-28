@@ -39,11 +39,8 @@ export function AuthProvider({ children }) {
   };
 
   const register = async (formData) => {
-    const data = await authService.register(formData);
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    setUser(data.user);
-    return data;
+    // Registration now creates a pending, unauthenticated account until its email is verified.
+    return authService.register(formData);
   };
 
   const logout = async () => {
